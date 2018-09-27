@@ -34,5 +34,6 @@ func handlePing(w http.ResponseWriter, r *http.Request) {
 }
 
 func handleConfig(w http.ResponseWriter, r *http.Request) {
+	fmt.Println("Handle /config")
 	fmt.Fprintf(w, "%s", config.GetKubeConfig())
 }
