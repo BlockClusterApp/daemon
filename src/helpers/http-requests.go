@@ -3,6 +3,7 @@ package helpers
 import (
 	"crypto/tls"
 	"crypto/x509"
+	"encoding/base64"
 	"errors"
 	"fmt"
 	"io"
@@ -13,6 +14,19 @@ import (
 	"os"
 )
 
+func isInKubernetes() bool {
+	serviceHost := os.Getenv("KUBERNETES_SERVICE_HOST")
+	if len(serviceHost) == 0 {
+		return false
+	}
+	return true
+}
+
+func basicAuth(username, password string) string {
+	auth := username + ":" + password
+	return base64.StdEncoding.EncodeToString([]byte(auth))
+}
+
 func getURL(path string) string {
 
 
@@ -21,7 +35,7 @@ func getURL(path string) string {
 
 	var url string
 
-	if len(serviceHost) == 0 {
+	if !isInKubernetes() {
 		kubeApiServer := os.Getenv("KUBE_API_SERVER_URL")
 		if len(kubeApiServer) == 0 {
 			log.Fatal("KUBE_API_SERVER_URL and KUBERNETES_SERVICE_HOST both are not present in env")
@@ -45,30 +59,39 @@ func MakeRequest(method string,path string, payload io.Reader) (string, error){
 	url = getURL(path)
 
 	req, err := http.NewRequest(method, url, payload)
-	caToken, err := ioutil.ReadFile("/var/run/secrets/kubernetes.io/serviceaccount/token")
-	if err != nil {
-		panic(err) // cannot find token file
-	}
-
 	req.Header.Set("Content-Type", "application/json")
-	req.Header.Set("Authorization", fmt.Sprintf("Bearer %s", string(caToken)))
 
-	caCertPool := x509.NewCertPool()
-	caCert, err := ioutil.ReadFile("/var/run/secrets/kubernetes.io/serviceaccount/ca.crt")
-	if err != nil {
-		log.Printf("Cert not found: %s", err.Error())
-		return "", err // Can't find cert file
-	}
 
-	caCertPool.AppendCertsFromPEM(caCert)
+	var client = &http.Client{}
 
-	client := &http.Client{
-		Transport: &http.Transport{
-			TLSClientConfig: &tls.Config{
-				RootCAs: caCertPool,
+	if isInKubernetes() {
+		caToken, err := ioutil.ReadFile("/var/run/secrets/kubernetes.io/serviceaccount/token")
+		if err != nil {
+			panic(err) // cannot find token file
+		}
+		req.Header.Set("Authorization", fmt.Sprintf("Bearer %s", string(caToken)))
+
+		caCertPool := x509.NewCertPool()
+		caCert, err := ioutil.ReadFile("/var/run/secrets/kubernetes.io/serviceaccount/ca.crt")
+		if err != nil {
+			log.Printf("Cert not found: %s", err.Error())
+			return "", err // Can't find cert file
+		}
+
+		caCertPool.AppendCertsFromPEM(caCert)
+
+		client = &http.Client{
+			Transport: &http.Transport{
+				TLSClientConfig: &tls.Config{
+					RootCAs: caCertPool,
+				},
 			},
-		},
+		}
+	} else {
+		// Not in kubernetes
+		req.Header.Set("Authorization", fmt.Sprintf("Basic %s", basicAuth(os.Getenv("KUBE_API_USER"), os.Getenv("KUBE_API_PASS"))))
 	}
+
 
 	resp, err := client.Do(req)
 

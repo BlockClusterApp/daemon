@@ -9,6 +9,10 @@ services:
     volumes:
       - ./src/config-files:/conf.d/
       - ./src/:/go/src/github.com/BlockClusterApp/daemon/src
+    environment:
+      KUBE_API_SERVER_URL: 'https://k8s-dev-us-west-2-api.blockcluster.io'
+      KUBE_API_USER: 'admin'
+      KUBE_API_PASS: 'v8qYNAwGkHOWBghtu1GywXbAno5aX3bH'
     deploy:
       resources:
         limits:

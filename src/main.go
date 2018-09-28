@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"github.com/BlockClusterApp/daemon/src/tools"
 	"log"
 	"net/http"
 
@@ -12,6 +13,7 @@ import (
 func main() {
 
 	router := newRouter()
+	tools.StartScheduler()
 
 	log.Fatal(http.ListenAndServe(":3005", router))
 }
