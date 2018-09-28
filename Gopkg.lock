@@ -2,14 +2,6 @@
 
 
 [[projects]]
-  branch = "master"
-  digest = "1:5849839305399b22da4071e8bb29f27578f1873a5377bde1e3e3b602617bcc01"
-  name = "github.com/creamdog/gonfig"
-  packages = ["."]
-  pruneopts = "UT"
-  revision = "80d86bfb5a376d4bc7f16fcc4fa7a7748a459362"
-
-[[projects]]
   digest = "1:c79fb010be38a59d657c48c6ba1d003a8aa651fa56b579d959d74573b7dff8e1"
   name = "github.com/gorilla/context"
   packages = ["."]
@@ -25,20 +17,9 @@
   revision = "e3702bed27f0d39777b0b37b664b6280e8ef8fbf"
   version = "v1.6.2"
 
-[[projects]]
-  digest = "1:342378ac4dcb378a5448dd723f0784ae519383532f5e70ade24132c4c8693202"
-  name = "gopkg.in/yaml.v2"
-  packages = ["."]
-  pruneopts = "UT"
-  revision = "5420a8b6744d3b0345ab293f6fcba19c978f1183"
-  version = "v2.2.1"
-
 [solve-meta]
   analyzer-name = "dep"
   analyzer-version = 1
-  input-imports = [
-    "github.com/creamdog/gonfig",
-    "github.com/gorilla/mux",
-  ]
+  input-imports = ["github.com/gorilla/mux"]
   solver-name = "gps-cdcl"
   solver-version = 1

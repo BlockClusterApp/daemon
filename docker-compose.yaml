@@ -8,7 +8,7 @@ services:
       - '3005:3005'
     volumes:
       - ./src/config-files:/conf.d/
-      - ./src/:/go/src/github.com/BlockClusterApp/blockcluster-daemon/src
+      - ./src/:/go/src/github.com/BlockClusterApp/daemon/src
     deploy:
       resources:
         limits:

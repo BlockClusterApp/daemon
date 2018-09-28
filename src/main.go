@@ -5,7 +5,7 @@ import (
 	"log"
 	"net/http"
 
-	"github.com/BlockClusterApp/blockcluster-daemon/src/config"
+	"github.com/BlockClusterApp/daemon/src/config"
 	"github.com/gorilla/mux"
 )
 
