@@ -3,7 +3,6 @@ package tasks
 import (
 	"encoding/json"
 	"github.com/BlockClusterApp/daemon/src/helpers"
-	"log"
 	"net/http"
 )
 
@@ -98,8 +97,9 @@ type NodeInfoResponse struct {
 }
 
 func FetchNodeInformation() {
-	log.Println("GOCRON:TASK Fetching node information")
-	nodeInfo, err := helpers.MakeRequest(http.MethodGet, "/api/v1/nodes", nil)
+	log := helpers.GetLogger()
+	log.Println("G:TASK Fetching node information")
+	nodeInfo, err := helpers.MakeKubeRequest(http.MethodGet, "/api/v1/nodes", nil)
 
 	if err != nil {
 		return
@@ -107,10 +107,10 @@ func FetchNodeInformation() {
 	NodeMap := &NodeInfoResponse{}
 	err = json.Unmarshal([]byte(nodeInfo), NodeMap)
 
+	log.Println(nodeInfo)
+
 	if err != nil {
 		log.Printf("Error parsing json while fetching node info %s", err.Error())
 		return
 	}
-
-	log.Printf("Node Info %s", NodeMap)
 }

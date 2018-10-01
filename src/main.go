@@ -2,16 +2,18 @@ package main
 
 import (
 	"fmt"
+	"github.com/BlockClusterApp/daemon/src/helpers"
 	"github.com/BlockClusterApp/daemon/src/tools"
-	"log"
 	"net/http"
 
 	"github.com/BlockClusterApp/daemon/src/config"
 	"github.com/gorilla/mux"
 )
 
-func main() {
+var log *helpers.Logger
 
+func main() {
+	log = helpers.GetLogger()
 	router := newRouter()
 	tools.StartScheduler()
 
@@ -30,12 +32,12 @@ func newRouter() *mux.Router {
 }
 
 func handlePing(w http.ResponseWriter, r *http.Request) {
-	fmt.Println("Handle /ping")
+	//log.Println("Handle /ping")
 	w.WriteHeader(http.StatusOK)
 	fmt.Fprintf(w, "%s", "Pong")
 }
 
 func handleConfig(w http.ResponseWriter, r *http.Request) {
-	fmt.Println("Handle /config")
+	log.Println("Handle /config")
 	fmt.Fprintf(w, "%s", config.GetKubeConfig())
 }
