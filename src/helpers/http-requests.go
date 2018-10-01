@@ -2,6 +2,7 @@ package helpers
 
 import (
 	"bytes"
+	"encoding/base64"
 	"errors"
 	"fmt"
 	"io/ioutil"
@@ -13,10 +14,15 @@ func MakeHTTPRequest(url string, method string, payload string) (string, error){
 	req, err := http.NewRequest(method, url, bytes.NewBuffer([]byte(payload)))
 	req.Header.Set("Content-Type", "application/json")
 
+	bc := GetBlockclusterInstance()
+	if bc.AuthToken != "" {
+		req.Header.Set("Authorization", fmt.Sprintf("Basic %s", base64.StdEncoding.EncodeToString([]byte(bc.AuthToken))))
+	} else {
+		req.Header.Set("Authorization", fmt.Sprintf("Basic %s", base64.StdEncoding.EncodeToString([]byte("fetch-token"))))
+	}
+
 
 	var client = &http.Client{}
-
-	//req.Header.Set("Authorization", fmt.Sprintf("Basic %s", basicAuth(os.Getenv("KUBE_API_USER"), os.Getenv("KUBE_API_PASS"))))
 
 
 	resp, err := client.Do(req)

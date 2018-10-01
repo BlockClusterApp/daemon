@@ -12,6 +12,9 @@ type LicenceConfig struct {
 	Key string `yaml:"key"`
 }
 
+var Licence LicenceConfig
+
+
 func getLicenceFileContent() string {
 	fileAbsPath, _ := filepath.Abs("/conf.d/licence.yaml")
 	file, e := ioutil.ReadFile(fileAbsPath)
@@ -23,7 +26,7 @@ func getLicenceFileContent() string {
 	return string(file)
 }
 
-func GetLicenceKey() string {
+func getLicenceKey() LicenceConfig {
 	var log = GetLogger()
 	var licence = LicenceConfig{}
 	content := getLicenceFileContent()
@@ -31,5 +34,15 @@ func GetLicenceKey() string {
 	if err != nil {
 		log.Printf("Error reading licence key %s", err.Error())
 	}
-	return licence.Key
+	return licence
+}
+
+
+func UpdateLicence() {
+	licence := getLicenceKey()
+	Licence.Key = licence.Key
+}
+
+func GetLicence() LicenceConfig {
+	return Licence
 }

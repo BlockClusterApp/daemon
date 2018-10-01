@@ -3,9 +3,9 @@ package tasks
 import "github.com/BlockClusterApp/daemon/src/helpers"
 
 func ValidateLicence() {
-	licenceKey := helpers.GetLicenceKey()
+	helpers.UpdateLicence()
 
-	var bc helpers.BlockCluster
-	bc.Licence.Key = licenceKey
+	bc := helpers.GetBlockclusterInstance()
+	bc.Licence.Key = helpers.GetLicence().Key
 	bc.FetchLicenceDetails()
 }
