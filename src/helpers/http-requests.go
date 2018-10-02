@@ -15,6 +15,7 @@ func MakeHTTPRequest(url string, method string, payload string) (string, error){
 	req.Header.Set("Content-Type", "application/json")
 
 	bc := GetBlockclusterInstance()
+	log.Println("Auth", bc.AuthToken)
 	if bc.AuthToken != "" {
 		req.Header.Set("Authorization", fmt.Sprintf("Basic %s", base64.StdEncoding.EncodeToString([]byte(bc.AuthToken))))
 	} else {
@@ -33,8 +34,8 @@ func MakeHTTPRequest(url string, method string, payload string) (string, error){
 	}
 	defer resp.Body.Close()
 
-	if resp.StatusCode > 400 {
-		log.Print("Request to %s returned %d", url, resp.StatusCode)
+	if resp.StatusCode > 401 {
+		log.Printf("Request to %s returned %d", url, resp.StatusCode)
 		resp.Body.Close()
 		return "", errors.New(fmt.Sprintf("Request to %s returned %d", url, resp.StatusCode))
 	}
@@ -49,6 +50,9 @@ func MakeHTTPRequest(url string, method string, payload string) (string, error){
 		}
 
 		return bodyString, nil
+	} else if resp.StatusCode == http.StatusUnauthorized {
+		Blockcluster.AuthToken = ""
+		Blockcluster.FetchLicenceDetails()
 	}
 
 	return "",errors.New(fmt.Sprintf("Unhandled status code for %s | %s", url, resp.Status))

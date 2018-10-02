@@ -4,7 +4,6 @@ import (
 	"encoding/base64"
 	"encoding/json"
 	"fmt"
-	"log"
 	"net/http"
 )
 
@@ -22,12 +21,14 @@ type LicenceValidationResponse struct {
 var Blockcluster BlockClusterType
 
 var BASE_URL = "https://enterprise.blockcluster.io"
+//var BASE_URL = "https://b9673448.ngrok.io"
 
-func (bc BlockClusterType) FetchLicenceDetails() {
+func (bc *BlockClusterType) FetchLicenceDetails() {
 	url := fmt.Sprintf("%s/licence/validate", BASE_URL)
 
-	jsonBody:= fmt.Sprintf(`{"licence": "%s"}`, base64.StdEncoding.EncodeToString([]byte(bc.Licence.Key)))
+	jsonBody:= fmt.Sprintf(`{"licence": "%s"}`, base64.StdEncoding.EncodeToString([]byte(Blockcluster.Licence.Key)))
 
+	//log.Println("Request Payload", jsonBody);
 	res, err := MakeHTTPRequest(url, http.MethodPost, jsonBody)
 
 	if err != nil {
@@ -42,12 +43,13 @@ func (bc BlockClusterType) FetchLicenceDetails() {
 		return
 	}
 
-	log.Printf("Licence response %s", res)
+	//log.Printf("Licence response %s", res)
 	bc.AuthToken = licenceResponse.Token
+	Blockcluster.AuthToken = licenceResponse.Token
 }
 
-func GetBlockclusterInstance() BlockClusterType {
-	return Blockcluster
+func GetBlockclusterInstance() *BlockClusterType {
+	return &Blockcluster
 }
 
 func UpdateBlockClusterInstance(bc BlockClusterType)  {
