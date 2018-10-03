@@ -35,7 +35,8 @@ func MakeHTTPRequest(url string, method string, payload string) (string, error){
 	defer resp.Body.Close()
 
 	if resp.StatusCode > 401 {
-		log.Printf("Request to %s returned %d", url, resp.StatusCode)
+		bodyBytes, _ := ioutil.ReadAll(resp.Body)
+		log.Printf("Request to %s returned %d %s", url, resp.StatusCode, bodyBytes)
 		resp.Body.Close()
 		return "", errors.New(fmt.Sprintf("Request to %s returned %d", url, resp.StatusCode))
 	}
@@ -52,7 +53,7 @@ func MakeHTTPRequest(url string, method string, payload string) (string, error){
 		return bodyString, nil
 	} else if resp.StatusCode == http.StatusUnauthorized {
 		Blockcluster.AuthToken = ""
-		Blockcluster.FetchLicenceDetails()
+		Blockcluster.Reauthorize()
 	}
 
 	return "",errors.New(fmt.Sprintf("Unhandled status code for %s | %s", url, resp.Status))

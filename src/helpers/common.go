@@ -3,6 +3,7 @@ package helpers
 import (
 	"encoding/json"
 	"github.com/mitchellh/mapstructure"
+	"time"
 )
 
 func UnmarshalJson(input []byte) (map[string]interface{}, error) {
@@ -33,4 +34,8 @@ func UnmarshalJson(input []byte) (map[string]interface{}, error) {
 		unused[k] = foomap[k]
 	}
 	return unused, nil
+}
+
+func GetTimeInMillis() int64 {
+	return time.Now().UnixNano() / int64(time.Millisecond)
 }

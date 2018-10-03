@@ -10,26 +10,36 @@ import (
 type BlockClusterType struct {
 	Licence LicenceConfig
 	AuthToken string
+	Valid bool
 }
 
 type LicenceValidationResponse struct {
 	Success bool `json:"success"`
 	Token string `json:"message"`
 	Error string `json:"error"`
+	ErrorCode int `json:"errorCode"`
 }
+
 
 var Blockcluster BlockClusterType
 
 var BASE_URL = "https://enterprise.blockcluster.io"
-//var BASE_URL = "https://b9673448.ngrok.io"
+//var BASE_URL = "https://a1049eab.ngrok.io"
 
-func (bc *BlockClusterType) FetchLicenceDetails() {
-	url := fmt.Sprintf("%s/licence/validate", BASE_URL)
 
-	jsonBody:= fmt.Sprintf(`{"licence": "%s"}`, base64.StdEncoding.EncodeToString([]byte(Blockcluster.Licence.Key)))
+func (bc *BlockClusterType) SendRequest(path string, body string) (string,error) {
+	url := fmt.Sprintf("%s%s", BASE_URL, path)
+	res, err := MakeHTTPRequest(url, http.MethodPost, body)
+	return res,err
+}
 
-	//log.Println("Request Payload", jsonBody);
-	res, err := MakeHTTPRequest(url, http.MethodPost, jsonBody)
+
+// Duplicate function to account for cyclic import
+func (bc *BlockClusterType) Reauthorize() {
+	path := "/licence/validate"
+	jsonBody:= fmt.Sprintf(`{"licence": "%s"}`, base64.StdEncoding.EncodeToString([]byte(bc.Licence.Key)))
+
+	res,err := bc.SendRequest(path, jsonBody)
 
 	if err != nil {
 		return
@@ -43,15 +53,10 @@ func (bc *BlockClusterType) FetchLicenceDetails() {
 		return
 	}
 
-	//log.Printf("Licence response %s", res)
 	bc.AuthToken = licenceResponse.Token
-	Blockcluster.AuthToken = licenceResponse.Token
+	bc.Licence.Key = GetLicence().Key
 }
 
 func GetBlockclusterInstance() *BlockClusterType {
 	return &Blockcluster
-}
-
-func UpdateBlockClusterInstance(bc BlockClusterType)  {
-	Blockcluster = bc
 }

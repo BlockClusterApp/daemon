@@ -2,6 +2,7 @@ package tasks
 
 import (
 	"encoding/json"
+	"fmt"
 	"github.com/BlockClusterApp/daemon/src/helpers"
 	"net/http"
 )
@@ -74,6 +75,8 @@ type NodeStatus struct {
 
 
 type Metadata struct {
+	GenerateName string `json:"generateName"`
+	Namespace string `json:"namespace"`
 	SelfLink string `json:"selfLink"`
 	ResourceVersion string `json:"resourceVersion"`
 	Uid string `json:"uid"`
@@ -81,6 +84,14 @@ type Metadata struct {
 	CreationTimestamp string `json:"creationTimestamp"`
 	Labels interface{} `json:"labels"`
 	Annotations interface{} `json:"annotations"`
+	OwnerReferences []struct{
+		ApiVersion string `json:"apiVersion"`
+		Kind string `json:"kind"`
+		Name string `json:"name"`
+		Uid string `json:"uid"`
+		Controller bool `json:"controller"`
+		BlockOwnerDeletion bool `json:"blockOwnerDeletion"`
+	}
 }
 
 type InfoItems struct {
@@ -89,7 +100,7 @@ type InfoItems struct {
 	Status NodeStatus `json:"status"`
 }
 
-type NodeInfoResponse struct {
+type InfoResponse struct {
 	Kind string `json:"kind"`
 	ApiVersion string `json:"apiVersion"`
 	Metadata Metadata `json:"metadata"`
@@ -104,7 +115,7 @@ func FetchNodeInformation() {
 	if err != nil {
 		return
 	}
-	NodeMap := &NodeInfoResponse{}
+	NodeMap := &InfoResponse{}
 	err = json.Unmarshal([]byte(nodeInfo), NodeMap)
 
 	log.Println(nodeInfo)
@@ -113,4 +124,12 @@ func FetchNodeInformation() {
 		log.Printf("Error parsing json while fetching node info %s", err.Error())
 		return
 	}
+
+	requestBody := fmt.Sprintf(`{"info": "%s", "timestamp": "%d"}"`, nodeInfo, helpers.GetTimeInMillis())
+	path := "/info/nodes"
+
+	bc := helpers.GetBlockclusterInstance()
+	res, err := bc.SendRequest(path, requestBody)
+
+	log.Printf("G:TASK Fetching node information: Response: %s", res)
 }

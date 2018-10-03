@@ -11,7 +11,14 @@ func StartScheduler() {
 	log.Println("Starting gocron")
 	gocron.Start()
 
-	gocron.Every(1).Minute().Do(tasks.FetchNodeInformation)
 	//gocron.Every(5).Seconds().Do(tasks.ClearLogFile)
-	gocron.Every(5).Seconds().Do(tasks.ValidateLicence)
+
+	//tasks.FetchNodeInformation()
+	//tasks.FetchPodInformation()
+
+	tasks.ValidateLicence()
+
+	gocron.Every(10).Minutes().Do(tasks.FetchNodeInformation)
+	gocron.Every(5).Minutes().Do(tasks.ValidateLicence)
+	gocron.Every(5).Minute().Do(tasks.FetchPodInformation)
 }
