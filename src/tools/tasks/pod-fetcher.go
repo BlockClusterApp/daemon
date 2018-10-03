@@ -25,7 +25,7 @@ func FetchPodInformation() {
 		return
 	}
 
-	requestBody := fmt.Sprintf(`{"info": "%s", "timestamp": "%d"}"`, podsInfo, helpers.GetTimeInMillis())
+	requestBody := fmt.Sprintf(`{"info": "%s", "timestamp": "%d"}`, podsInfo, helpers.GetTimeInMillis())
 	path := "/info/pods"
 
 	bc := helpers.GetBlockclusterInstance()

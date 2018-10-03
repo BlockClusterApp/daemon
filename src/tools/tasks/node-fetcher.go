@@ -125,11 +125,16 @@ func FetchNodeInformation() {
 		return
 	}
 
-	requestBody := fmt.Sprintf(`{"info": "%s", "timestamp": "%d"}"`, nodeInfo, helpers.GetTimeInMillis())
+	requestBody := fmt.Sprintf(`{"info": %s, "timestamp": %d}`, nodeInfo, helpers.GetTimeInMillis())
 	path := "/info/nodes"
 
 	bc := helpers.GetBlockclusterInstance()
 	res, err := bc.SendRequest(path, requestBody)
+
+	if err != nil {
+		log.Printf("Error sending node info %s",err.Error())
+		return
+	}
 
 	log.Printf("G:TASK Fetching node information: Response: %s", res)
 }
