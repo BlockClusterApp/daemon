@@ -21,4 +21,4 @@ fi
 
 
 export IMAGE_NAME='402432300121.dkr.ecr.ap-south-1.amazonaws.com/blockcluster-daemon'
-export IMAGE_TAG="${NODE_ENV}-${COMMIT_HASH}"
+export IMAGE_TAG="${ENV}-${COMMIT_HASH}"
