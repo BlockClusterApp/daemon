@@ -47,6 +47,9 @@ jobs:
         name: "Docker build"
         command: ./.circleci/docker-build.sh
     - run:
+        name: "Dockerhub login"
+        command: docker login -u $DOCKER_USER -p $DOCKER_PASS
+    - run:
         name: "Docker push"
         command: ./.circleci/docker-push.sh
 

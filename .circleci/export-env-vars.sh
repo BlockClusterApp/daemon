@@ -5,6 +5,7 @@ if [ "$CIRCLE_TAG" = "production" ] || [ "$CIRCLE_BRANCH" = "master" ];
 then
   export ENV="production";
   export CLUSTER_PREFIX="production-ap-south-1b";
+  export IMAGE_NAME="blockcluster/blockcluster-daemon"
 # elif [ "$CIRCLE_TAG" = "staging" ] || [ "$CIRCLE_BRANCH"  = "staging" ];
 # then
 #   export NODE_ENV=staging
@@ -17,8 +18,7 @@ elif [ "$CIRCLE_TAG" = "dev" ] ||  [ "$CIRCLE_BRANCH" = "dev" ];
 then
   export ENV="dev";
   export CLUSTER_PREFIX="dev";
+  export IMAGE_NAME="402432300121.dkr.ecr.ap-south-1.amazonaws.com/blockcluster-daemon:${ENV}"
 fi
 
 
-export IMAGE_NAME='402432300121.dkr.ecr.ap-south-1.amazonaws.com/blockcluster-daemon'
-export IMAGE_TAG="${ENV}-${COMMIT_HASH}"

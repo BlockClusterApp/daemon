@@ -26,6 +26,7 @@ func newRouter() *mux.Router {
 	// log("Config %s", config.GetKubeConfig)
 
 	router.HandleFunc("/ping", handlePing).Methods("GET")
+	router.HandleFunc("/healthz", handlePing).Methods("GET")
 	router.HandleFunc("/config", handleConfig).Methods("GET")
 
 	return router
