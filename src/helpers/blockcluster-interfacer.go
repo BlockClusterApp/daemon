@@ -15,6 +15,11 @@ type BlockClusterType struct {
 
 type LicenceValidationResponse struct {
 	Success bool `json:"success"`
+	Metadata struct {
+		BlockClusterAgentVersion string `json:"blockclusterAgentVersion"`
+		WebAppVersion string `json:"webappVersion"`
+		ShouldDaemonDeployWebapp bool `json:"shouldDaemonDeployWebapp"`
+	} `json:"metadata"`
 	Token string `json:"message"`
 	Error string `json:"error"`
 	ErrorCode int `json:"errorCode"`
@@ -23,7 +28,7 @@ type LicenceValidationResponse struct {
 
 var Blockcluster BlockClusterType
 
-var BASE_URL = "https://enterprise.blockcluster.io"
+var BASE_URL = "https://enterprise-api.blockcluster.io/daemon"
 //var BASE_URL = "https://a1049eab.ngrok.io"
 
 
@@ -50,6 +55,12 @@ func (bc *BlockClusterType) Reauthorize() {
 
 	if err != nil {
 		GetLogger().Printf("Error parsing response %s", err.Error())
+		return
+	}
+
+	if licenceResponse.Error != "" {
+		GetLogger().Printf("Error from licence validation %s", licenceResponse.Error)
+		bc.AuthToken = ""
 		return
 	}
 

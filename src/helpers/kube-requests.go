@@ -102,7 +102,7 @@ func MakeKubeRequest(method string,path string, payload io.Reader) (string, erro
 	defer resp.Body.Close()
 
 	if resp.StatusCode > 400 {
-		log.Print("Request to %s returned %d", url, resp.StatusCode)
+		log.Printf("Request to %s returned %d", url, resp.StatusCode)
 		resp.Body.Close()
 		return "", errors.New(fmt.Sprintf("Request to %s returned %d", url, resp.StatusCode))
 	}
@@ -112,7 +112,7 @@ func MakeKubeRequest(method string,path string, payload io.Reader) (string, erro
 		bodyString := string(bodyBytes)
 
 		if err2 != nil {
-			log.Printf("Error reading body for %s", url, err2.Error())
+			log.Printf("Error reading body for %s %s", url, err2.Error())
 			return "",err2
 		}
 
