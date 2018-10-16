@@ -3,6 +3,7 @@ package tasks
 import (
 	"encoding/json"
 	"fmt"
+	"github.com/BlockClusterApp/daemon/src/dtos"
 	"github.com/BlockClusterApp/daemon/src/helpers"
 	"net/http"
 )
@@ -15,7 +16,7 @@ func FetchPodInformation() {
 	if err != nil {
 		return
 	}
-	NodeMap := &InfoResponse{}
+	NodeMap := &dtos.InfoResponse{}
 	err = json.Unmarshal([]byte(podsInfo), NodeMap)
 
 	log.Println(podsInfo)

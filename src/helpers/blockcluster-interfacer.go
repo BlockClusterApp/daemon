@@ -11,15 +11,11 @@ type BlockClusterType struct {
 	Licence LicenceConfig
 	AuthToken string
 	Valid bool
+	AuthRetryCount int8
 }
 
 type LicenceValidationResponse struct {
 	Success bool `json:"success"`
-	Metadata struct {
-		BlockClusterAgentVersion string `json:"blockclusterAgentVersion"`
-		WebAppVersion string `json:"webappVersion"`
-		ShouldDaemonDeployWebapp bool `json:"shouldDaemonDeployWebapp"`
-	} `json:"metadata"`
 	Token string `json:"message"`
 	Error string `json:"error"`
 	ErrorCode int `json:"errorCode"`
@@ -66,6 +62,7 @@ func (bc *BlockClusterType) Reauthorize() {
 
 	bc.AuthToken = licenceResponse.Token
 	bc.Licence.Key = GetLicence().Key
+
 }
 
 func GetBlockclusterInstance() *BlockClusterType {

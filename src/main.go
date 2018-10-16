@@ -40,5 +40,10 @@ func handlePing(w http.ResponseWriter, r *http.Request) {
 
 func handleConfig(w http.ResponseWriter, r *http.Request) {
 	log.Println("Handle /config")
+	var bc = helpers.GetBlockclusterInstance()
+	if bc.Valid == false {
+		fmt.Fprintf(w, "%s", "{\"error\": \"Licence Invalid\"}")
+		return
+	}
 	fmt.Fprintf(w, "%s", config.GetKubeConfig())
 }
