@@ -12,7 +12,7 @@ type Spec struct{
 	ProgressDeadlineSeconds int32 `json:"progressDeadlineSeconds"`
 	Strategy Strategy `json:"strategy"`
 	Selector Selector `json:"selector"`
-	Template InfoItems `json:"template"`
+	Template Template `json:"template"`
 
 	// Node Specific
 	PodCIDR string `json:"podCIDR"`

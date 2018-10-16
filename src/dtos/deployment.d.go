@@ -15,5 +15,7 @@ type Selector struct {
 }
 
 type Template struct {
-
+	Metadata Metadata `json:"metadata"`
+	Spec PodSpec `json:"spec"`
+	Status Status `json:"status"`
 }

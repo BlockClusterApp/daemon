@@ -125,3 +125,19 @@ type ContainerStatus struct {
 	ImageID string `json:"imageID"`
 	ContainerID string `json:"containerID"`
 }
+
+type PodSpec struct {
+	// Pod Specific
+	Volumes []Volume `json:"volumes"`
+	Containers []Container `json:"containers"`
+	RestartPolicy string `json:"restartPolicy"`
+	TerminationGracePeriodSeconds int32 `json:"terminationGracePeriodSeconds"`
+	DNSPolicy string `json:"dnsPolicy"`
+	ServiceAccountName string `json:"serviceAccountName"`
+	ServiceAccount string `json:"serviceAccount"`
+	NodeName string `json:"nodeName"`
+	ImagePullSecrets []ImagePullSecrets `json:"imagePullSecrets"`
+	Affinity Affinity `json:"affinity"`
+	SchedulerName string `json:"schedulerName"`
+	Tolerations []Toleration `json:"tolerations"`
+}
