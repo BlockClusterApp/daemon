@@ -6,6 +6,7 @@ import (
 	"encoding/base64"
 	"errors"
 	"fmt"
+	"github.com/getsentry/raven-go"
 	"io"
 	"io/ioutil"
 	"log"
@@ -96,6 +97,10 @@ func MakeKubeRequest(method string,path string, payload io.Reader) (string, erro
 	resp, err := client.Do(req)
 
 	if err != nil {
+		bc := GetBlockclusterInstance()
+		raven.CaptureError(err, map[string]string{
+			"licenceKey": bc.Licence.Key,
+		})
 		log.Printf("Error making request: %s", err.Error())
 		return "", err // Can't find cert file
 	}

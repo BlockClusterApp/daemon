@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"github.com/BlockClusterApp/daemon/src/dtos"
 	"github.com/aws/aws-sdk-go/aws"
+	"github.com/getsentry/raven-go"
 
 	"github.com/aws/aws-sdk-go/aws/credentials"
 	"github.com/aws/aws-sdk-go/aws/session"
@@ -20,6 +21,9 @@ func getAWSSession(awsCreds *dtos.AWSCreds) *session.Session {
 
 	sess, err := session.NewSession(awsConfig)
 	if err != nil {
+		raven.CaptureError(err, map[string]string{
+			"AccessKeyID": awsCreds.AccessKeyID,
+		})
 		GetLogger().Printf("Error creating aws session %s", err.Error())
 		return nil
 	}
@@ -39,12 +43,15 @@ func GetAuthorizationToken() string{
 	client := ecr.New(getAWSSession(awsCreds))
 
 	var params = &ecr.GetAuthorizationTokenInput{}
-	var clientId string
+	var clientId = bcAwsCreds.ClientID
 	params.SetRegistryIds([]*string{aws.String(fmt.Sprintf("402432300121.dkr.ecr.us-west-2.amazonaws.com/%s-webapp", clientId))})
 
 	output, err := client.GetAuthorizationToken(params)
 
 	if err != nil {
+		raven.CaptureError(err, map[string]string{
+			"AccessKeyID": awsCreds.AccessKeyID,
+		})
 		GetLogger().Printf("Error getting authentication token from aws %s", err.Error())
 		return ""
 	}

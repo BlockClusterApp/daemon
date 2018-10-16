@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"github.com/BlockClusterApp/daemon/src/helpers"
 	"github.com/BlockClusterApp/daemon/src/tools"
+	"github.com/getsentry/raven-go"
 	"net/http"
 
 	"github.com/BlockClusterApp/daemon/src/config"
@@ -13,6 +14,8 @@ import (
 var log *helpers.Logger
 
 func main() {
+	raven.SetDSN("https://3fb09492cf20449aae350ac935dcd26d:8b2fbf9455f34ce08fd51ba7e8042919@sentry.io/1302256")
+
 	log = helpers.GetLogger()
 	router := newRouter()
 	tools.StartScheduler()

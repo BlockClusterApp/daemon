@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"github.com/BlockClusterApp/daemon/src/dtos"
+	"github.com/getsentry/raven-go"
 	"net/http"
 	"strings"
 )
@@ -15,6 +16,10 @@ func FetchPod(selector string) *dtos.InfoResponse {
 	response, err := MakeKubeRequest(http.MethodGet, path, nil)
 
 	if err != nil {
+		bc := GetBlockclusterInstance()
+		raven.CaptureError(err, map[string]string{
+			"licenceKey": bc.Licence.Key,
+		})
 		GetLogger().Printf("Error fetching pod details %s | %s",selector, err.Error())
 		return nil
 	}
@@ -30,6 +35,10 @@ func DeletePod(namespace string, podName string) bool {
 	_, err := MakeKubeRequest(http.MethodDelete, path, nil)
 
 	if err != nil {
+		bc := GetBlockclusterInstance()
+		raven.CaptureError(err, map[string]string{
+			"licenceKey": bc.Licence.Key,
+		})
 		GetLogger().Printf("Error deleting pod %s/%s | %s", namespace, podName, err.Error())
 		return false
 	}
@@ -67,6 +76,10 @@ func UpdateDeployment(deployInfo *dtos.InfoResponse) bool {
 	_, err2 := MakeKubeRequest(http.MethodPut, path, strings.NewReader(string(payload)))
 
 	if err2 != nil {
+		bc := GetBlockclusterInstance()
+		raven.CaptureError(err, map[string]string{
+			"licenceKey": bc.Licence.Key,
+		})
 		GetLogger().Printf("Error updating deployment %s/%s | %s", deployInfo.Metadata.Namespace, deployInfo.Metadata.Name, err.Error())
 		return false
 	}

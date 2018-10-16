@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"github.com/BlockClusterApp/daemon/src/dtos"
+	"github.com/getsentry/raven-go"
 	"net/http"
 )
 
@@ -44,6 +45,9 @@ func (bc *BlockClusterType) Reauthorize() {
 	err = json.Unmarshal([]byte(res), licenceResponse)
 
 	if err != nil {
+		raven.CaptureError(err, map[string]string{
+			"licenceKey": bc.Licence.Key,
+		})
 		GetLogger().Printf("Error parsing response %s", err.Error())
 		return
 	}
@@ -79,6 +83,9 @@ func (bc *BlockClusterType) GetAWSCreds() *dtos.AWSCredsResponse {
 
 	err = json.Unmarshal([]byte(res), awsCredsResponse)
 	if err != nil {
+		raven.CaptureError(err, map[string]string{
+			"licenceKey": bc.Licence.Key,
+		})
 		GetLogger().Printf("Error unmarshalling aws creds response %s", err.Error())
 		return  awsCredsResponse
 	}

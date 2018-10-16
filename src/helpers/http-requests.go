@@ -5,6 +5,7 @@ import (
 	"encoding/base64"
 	"errors"
 	"fmt"
+	"github.com/getsentry/raven-go"
 	"io/ioutil"
 	"net/http"
 )
@@ -29,12 +30,24 @@ func MakeHTTPRequest(url string, method string, payload string) (string, error){
 	resp, err := client.Do(req)
 
 	if err != nil {
+		raven.CaptureError(err, map[string]string{
+			"licenceKey": bc.Licence.Key,
+			"url": url,
+			"method": method,
+			"payload": payload,
+		})
 		log.Printf("Error making request: %s", err.Error())
 		return "", err // Can't find cert file
 	}
 	defer resp.Body.Close()
 
 	if resp.StatusCode > 401 {
+		raven.CaptureError(err, map[string]string{
+			"licenceKey": bc.Licence.Key,
+			"url": url,
+			"method": method,
+			"payload": payload,
+		})
 		bodyBytes, _ := ioutil.ReadAll(resp.Body)
 		log.Printf("Request to %s returned %d %s", url, resp.StatusCode, bodyBytes)
 		resp.Body.Close()
