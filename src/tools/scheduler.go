@@ -12,7 +12,10 @@ func StartScheduler() {
 	gocron.Start()
 
 	tasks.ValidateLicence()
+	tasks.RefreshImagePullSecrets()
+
 	gocron.Every(10).Minutes().Do(tasks.FetchNodeInformation)
 	gocron.Every(5).Minutes().Do(tasks.ValidateLicence)
 	gocron.Every(5).Minutes().Do(tasks.FetchPodInformation)
+	gocron.Every(6).Hours().Do(tasks.RefreshImagePullSecrets)
 }

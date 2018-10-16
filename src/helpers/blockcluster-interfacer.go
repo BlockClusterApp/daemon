@@ -4,6 +4,7 @@ import (
 	"encoding/base64"
 	"encoding/json"
 	"fmt"
+	"github.com/BlockClusterApp/daemon/src/dtos"
 	"net/http"
 )
 
@@ -12,13 +13,6 @@ type BlockClusterType struct {
 	AuthToken string
 	Valid bool
 	AuthRetryCount int8
-}
-
-type LicenceValidationResponse struct {
-	Success bool `json:"success"`
-	Token string `json:"message"`
-	Error string `json:"error"`
-	ErrorCode int `json:"errorCode"`
 }
 
 
@@ -46,7 +40,7 @@ func (bc *BlockClusterType) Reauthorize() {
 		return
 	}
 
-	var licenceResponse = &LicenceValidationResponse{}
+	var licenceResponse = &dtos.LicenceValidationResponse{}
 	err = json.Unmarshal([]byte(res), licenceResponse)
 
 	if err != nil {
@@ -67,4 +61,27 @@ func (bc *BlockClusterType) Reauthorize() {
 
 func GetBlockclusterInstance() *BlockClusterType {
 	return &Blockcluster
+}
+
+func (bc *BlockClusterType) GetAWSCreds() *dtos.AWSCredsResponse {
+	path := "/aws-creds"
+
+	jsonBody:= "{}"
+
+	var awsCredsResponse = &dtos.AWSCredsResponse{}
+
+	res,err := bc.SendRequest(path, jsonBody)
+
+	if err != nil {
+		GetLogger().Printf("Error fetching aws creds %s", err.Error())
+		return awsCredsResponse
+	}
+
+	err = json.Unmarshal([]byte(res), awsCredsResponse)
+	if err != nil {
+		GetLogger().Printf("Error unmarshalling aws creds response %s", err.Error())
+		return  awsCredsResponse
+	}
+
+	return awsCredsResponse
 }

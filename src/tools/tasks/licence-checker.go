@@ -10,19 +10,7 @@ import (
 	"time"
 )
 
-var CURRENT_AGENT_VERSION = "1.0";
-
-type LicenceValidationResponse struct {
-	Success bool `json:"success"`
-	Token string `json:"message"`
-	Error string `json:"error"`
-	ErrorCode int `json:"errorCode"`
-	Metadata struct {
-		BlockClusterAgentVersion string `json:"blockclusterAgentVersion"`
-		WebAppVersion string `json:"webappVersion"`
-		ShouldDaemonDeployWebapp bool `json:"shouldDaemonDeployWebapp"`
-	} `json:"metadata"`
-}
+const CURRENT_AGENT_VERSION = "1.0";
 
 func updateWebAppDeployment(newImageTag string) {
 	deployment := helpers.FetchDeployment("name%3Dblockcluster-app")
@@ -49,7 +37,7 @@ func updateWebAppDeployment(newImageTag string) {
 	helpers.UpdateDeployment(deployment)
 }
 
-func handleVersionMetadata(licenceResponse *LicenceValidationResponse) {
+func handleVersionMetadata(licenceResponse *dtos.LicenceValidationResponse) {
 	if licenceResponse.Metadata.BlockClusterAgentVersion != CURRENT_AGENT_VERSION {
 		// delete this pod so that it can fetch new image
 		blockClusterPods := helpers.FetchPod("app%3Dblockcluster-agent")
@@ -98,7 +86,7 @@ func ValidateLicence() {
 		return
 	}
 
-	var licenceResponse = &LicenceValidationResponse{}
+	var licenceResponse = &dtos.LicenceValidationResponse{}
 	err = json.Unmarshal([]byte(res), licenceResponse)
 
 	if err != nil {
