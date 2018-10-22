@@ -18,7 +18,7 @@ elif [ "$CIRCLE_TAG" = "dev" ] ||  [ "$CIRCLE_BRANCH" = "dev" ];
 then
   export ENV="dev";
   export CLUSTER_PREFIX="dev";
-  export IMAGE_NAME="402432300121.dkr.ecr.ap-south-1.amazonaws.com/blockcluster-daemon:${ENV}"
+  export IMAGE_NAME="402432300121.dkr.ecr.us-west-2.amazonaws.com/blockcluster-daemon:${ENV}"
 fi
 
 
