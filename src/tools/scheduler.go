@@ -4,6 +4,7 @@ import (
 	"github.com/BlockClusterApp/daemon/src/helpers"
 	"github.com/BlockClusterApp/daemon/src/tools/tasks"
 	"github.com/jasonlvhit/gocron"
+	"time"
 )
 
 func StartScheduler() {
@@ -12,10 +13,14 @@ func StartScheduler() {
 	gocron.Start()
 
 	tasks.ValidateLicence()
-	tasks.RefreshImagePullSecrets()
+	go func() {
+		log.Println("Initial image pull secrets")
+		time.Sleep(20 * 1000)
+		tasks.RefreshImagePullSecrets()
+	}()
 
 	gocron.Every(10).Minutes().Do(tasks.FetchNodeInformation)
 	gocron.Every(5).Minutes().Do(tasks.ValidateLicence)
 	gocron.Every(5).Minutes().Do(tasks.FetchPodInformation)
-	gocron.Every(6).Hours().Do(tasks.RefreshImagePullSecrets)
+	gocron.Every(5).Hours().Do(tasks.RefreshImagePullSecrets)
 }

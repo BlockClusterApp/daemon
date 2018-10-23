@@ -14,6 +14,7 @@ type LicenceValidationResponse struct {
 
 type AWSCredsResponse struct {
 	ClientID string `json:"clientId"`
+	RegistryIds []string `json:"registryIds"`
 	AccessKeys struct{
 		PolicyId string `json:"PolicyId"`
 		AccessKeyId string `json:"AccessKeyId"`

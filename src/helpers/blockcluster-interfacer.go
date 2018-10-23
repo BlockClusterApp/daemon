@@ -20,7 +20,7 @@ type BlockClusterType struct {
 var Blockcluster BlockClusterType
 
 var BASE_URL = "https://enterprise-api.blockcluster.io/daemon"
-//var BASE_URL = "https://a1049eab.ngrok.io"
+//var BASE_URL = "https://3d7089e8.ngrok.io/daemon"
 
 
 func (bc *BlockClusterType) SendRequest(path string, body string) (string,error) {

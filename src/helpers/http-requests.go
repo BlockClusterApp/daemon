@@ -12,6 +12,7 @@ import (
 
 func MakeHTTPRequest(url string, method string, payload string) (string, error){
 	log := GetLogger()
+	//GetLogger().Printf("Sending body %s", payload)
 	req, err := http.NewRequest(method, url, bytes.NewBuffer([]byte(payload)))
 	req.Header.Set("Content-Type", "application/json")
 

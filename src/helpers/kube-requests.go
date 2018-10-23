@@ -112,7 +112,7 @@ func MakeKubeRequest(method string,path string, payload io.Reader) (string, erro
 		return "", errors.New(fmt.Sprintf("Request to %s returned %d", url, resp.StatusCode))
 	}
 
-	if resp.StatusCode == http.StatusOK {
+	if resp.StatusCode == http.StatusOK || resp.StatusCode == http.StatusCreated{
 		bodyBytes, err2 := ioutil.ReadAll(resp.Body)
 		bodyString := string(bodyBytes)
 

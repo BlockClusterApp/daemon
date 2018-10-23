@@ -1,6 +1,7 @@
 package helpers
 
 import (
+	"encoding/base64"
 	"fmt"
 	"github.com/BlockClusterApp/daemon/src/dtos"
 	"github.com/aws/aws-sdk-go/aws"
@@ -35,6 +36,7 @@ func GetAuthorizationToken() string{
 	bc := GetBlockclusterInstance()
 	bcAwsCreds := bc.GetAWSCreds()
 
+
 	var awsCreds = &dtos.AWSCreds{
 		AccessKeyID: bcAwsCreds.AccessKeys.AccessKeyId,
 		SecretAccessKey: bcAwsCreds.AccessKeys.SecretAccessKey,
@@ -42,11 +44,25 @@ func GetAuthorizationToken() string{
 
 	client := ecr.New(getAWSSession(awsCreds))
 
+	var registryIds []*string
+
+
+	for _,i := range bcAwsCreds.RegistryIds {
+		registryIds = append(registryIds, aws.String(i))
+	}
+
 	var params = &ecr.GetAuthorizationTokenInput{}
-	var clientId = bcAwsCreds.ClientID
-	params.SetRegistryIds([]*string{aws.String(fmt.Sprintf("402432300121.dkr.ecr.us-west-2.amazonaws.com/%s-webapp", clientId))})
+	params.SetRegistryIds(registryIds)
 
 	output, err := client.GetAuthorizationToken(params)
+
+	password := *output.AuthorizationData[0].AuthorizationToken
+	auth := base64.StdEncoding.EncodeToString([]byte(fmt.Sprintf("%s:%s", "AWS", password)))
+	repositories := "402432300121.dkr.ecr.us-west-2.amazonaws.com"
+	email := fmt.Sprintf("%s@enterprise.blockcluster.io", bcAwsCreds.ClientID)
+	dockerConfig := fmt.Sprintf("{\"auths\":{\"%s\": {\"username\": \"AWS\", \"password\": \"%s\", \"email\": \"%s\", \"auth\":\"%s\"}}}", repositories, password, email, auth)
+
+
 
 	if err != nil {
 		raven.CaptureError(err, map[string]string{
@@ -56,5 +72,5 @@ func GetAuthorizationToken() string{
 		return ""
 	}
 
-	return *output.AuthorizationData[0].AuthorizationToken
+	return base64.StdEncoding.EncodeToString([]byte(dockerConfig))
 }

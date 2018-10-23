@@ -16,23 +16,35 @@ func RefreshImagePullSecrets() {
 		return
 	}
 
-	var secretJSON = fmt.Sprintf(`
-		{
+	secretName := "blockcluster-regsecret"
+	namespace := "default"
+
+	var secretJSON = fmt.Sprintf(`{
     		"apiVersion": "v1",
     		"data": {
 				".dockerconfigjson": "%s"
     		},
     		"kind": "Secret",
     		"metadata": {
-        		"name": "regsecret",
+        		"name": "%s",
         		"namespace": "default"
     		},
     		"type": "kubernetes.io/dockerconfigjson"
 		}
-	`, authorizationToken)
+	`, authorizationToken, secretName)
 
-	path := fmt.Sprintf("/api/v1/namespaces/%s/secrets", "default")
-	_, err := helpers.MakeKubeRequest(http.MethodPut, path, strings.NewReader(secretJSON))
+	helpers.GetLogger().Printf("Secret %s", secretJSON)
+	path := fmt.Sprintf("/api/v1/namespaces/%s/secrets", namespace)
+
+	deletePath := fmt.Sprintf("/api/v1/namespaces/%s/secrets/%s", namespace, secretName)
+
+	_, err := helpers.MakeKubeRequest(http.MethodDelete, deletePath, nil)
+
+	if err != nil {
+		helpers.GetLogger().Printf("Error deleting image pull secrets %s", err.Error())
+	}
+
+	_, err = helpers.MakeKubeRequest(http.MethodPost, path, strings.NewReader(secretJSON))
 
 	if err != nil {
 		helpers.GetLogger().Printf("Error refreshing image pull secrets %s", err.Error())
