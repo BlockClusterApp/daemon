@@ -22,7 +22,7 @@ func RefreshImagePullSecrets() {
 
 
 	for _,namespace := range namespaces {
-		go func(){
+		go func(namespace string){
 			var secretJSON = fmt.Sprintf(`{
     			"apiVersion": "v1",
     			"data": {
@@ -51,7 +51,7 @@ func RefreshImagePullSecrets() {
 				return
 			}
 			helpers.GetLogger().Printf("Refreshed image pull secret in namespace %s", namespace)
-		}()
+		}(namespace)
 	}
 
 	helpers.GetLogger().Printf("Refreshed all image pull secrets")
