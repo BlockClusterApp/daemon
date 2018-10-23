@@ -120,7 +120,7 @@ type ContainerStatus struct {
 		} `json:"terminated"`
 	} `json:"lastState"`
 	Ready bool `json:"ready"`
-	RestartCount int8 `json:"restartCount"`
+	RestartCount int32 `json:"restartCount"`
 	Image string `json:"image"`
 	ImageID string `json:"imageID"`
 	ContainerID string `json:"containerID"`
