@@ -112,7 +112,7 @@ type ContainerStatus struct {
 	} `json:"struct"`
 	LastState struct{
 		Terminated struct{
-			ExitCode int8 `json:"exitCode"`
+			ExitCode int16 `json:"exitCode"`
 			Reason string `json:"reason"`
 			StartedAt string `json:"startedAt"`
 			FinishedAt string `json:"finishedAt"`
