@@ -2,7 +2,10 @@ package helpers
 
 import (
 	"encoding/json"
+	config2 "github.com/BlockClusterApp/daemon/src/config"
+	"github.com/BlockClusterApp/daemon/src/dtos"
 	"github.com/mitchellh/mapstructure"
+	"reflect"
 	"time"
 )
 
@@ -38,4 +41,23 @@ func UnmarshalJson(input []byte) (map[string]interface{}, error) {
 
 func GetTimeInMillis() int64 {
 	return time.Now().UnixNano() / int64(time.Millisecond)
+}
+
+func GetNamespaces() []string {
+	var config = dtos.ClusterConfig{}
+	err := json.Unmarshal([]byte(config2.GetKubeConfig()), config)
+
+	if err != nil {
+		GetLogger().Printf("Error parsing config for namespaces %s", err.Error())
+		return []string{}
+	}
+
+	keys := reflect.ValueOf(config).MapKeys()
+	namespaces := make([]string, 0, len(keys))
+
+	for i:=0;i<len(keys);i++{
+		namespaces[i] = keys[i].String()
+	}
+
+	return namespaces
 }

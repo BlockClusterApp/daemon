@@ -17,39 +17,42 @@ func RefreshImagePullSecrets() {
 	}
 
 	secretName := "blockcluster-regsecret"
-	namespace := "default"
 
-	var secretJSON = fmt.Sprintf(`{
-    		"apiVersion": "v1",
-    		"data": {
-				".dockerconfigjson": "%s"
-    		},
-    		"kind": "Secret",
-    		"metadata": {
-        		"name": "%s",
-        		"namespace": "default"
-    		},
-    		"type": "kubernetes.io/dockerconfigjson"
-		}
-	`, authorizationToken, secretName)
+	namespaces := helpers.GetNamespaces()
 
-	helpers.GetLogger().Printf("Secret %s", secretJSON)
-	path := fmt.Sprintf("/api/v1/namespaces/%s/secrets", namespace)
 
-	deletePath := fmt.Sprintf("/api/v1/namespaces/%s/secrets/%s", namespace, secretName)
+	for _,namespace := range namespaces {
+		go func(){
+			var secretJSON = fmt.Sprintf(`{
+    			"apiVersion": "v1",
+    			"data": {
+					".dockerconfigjson": "%s"
+    			},
+    			"kind": "Secret",
+    			"metadata": {
+        			"name": "%s",
+					"namespace": "%s"
+    			},
+    			"type": "kubernetes.io/dockerconfigjson"
+			}
+			`, authorizationToken, secretName, namespace)
 
-	_, err := helpers.MakeKubeRequest(http.MethodDelete, deletePath, nil)
+			path := fmt.Sprintf("/api/v1/namespaces/%s/secrets", namespace)
+			deletePath := fmt.Sprintf("/api/v1/namespaces/%s/secrets/%s", namespace, secretName)
+			_, err := helpers.MakeKubeRequest(http.MethodDelete, deletePath, nil)
+			if err != nil {
+				helpers.GetLogger().Printf("Error deleting image pull secrets %s", err.Error())
+			}
 
-	if err != nil {
-		helpers.GetLogger().Printf("Error deleting image pull secrets %s", err.Error())
+			_, err = helpers.MakeKubeRequest(http.MethodPost, path, strings.NewReader(secretJSON))
+
+			if err != nil {
+				helpers.GetLogger().Printf("Error refreshing image pull secrets %s", err.Error())
+				return
+			}
+			helpers.GetLogger().Printf("Refreshed image pull secret in namespace %s", namespace)
+		}()
 	}
 
-	_, err = helpers.MakeKubeRequest(http.MethodPost, path, strings.NewReader(secretJSON))
-
-	if err != nil {
-		helpers.GetLogger().Printf("Error refreshing image pull secrets %s", err.Error())
-		return
-	}
-
-	helpers.GetLogger().Printf("Refreshed image pull secrets")
+	helpers.GetLogger().Printf("Refreshed all image pull secrets")
 }

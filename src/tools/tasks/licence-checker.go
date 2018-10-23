@@ -99,9 +99,6 @@ func ValidateLicence() {
 	bc.AuthToken = licenceResponse.Token
 	bc.Licence.Key = helpers.GetLicence().Key
 
-	//helpers.GetLogger().Printf("Updating Authtoken %s %s", bc.AuthToken, licenceResponse.Token)
-
-
 	if licenceResponse.Success != true && licenceResponse.ErrorCode == 401 {
 		bc.AuthRetryCount += 1
 		if bc.AuthRetryCount >= 3 {
