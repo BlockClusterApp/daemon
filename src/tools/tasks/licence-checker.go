@@ -13,14 +13,15 @@ import (
 const CURRENT_AGENT_VERSION = "1.0";
 
 func updateWebAppDeployment(newImageTag string) {
-	deployment := helpers.FetchDeployment("name%3Dblockcluster-app")
+	deployment := helpers.FetchDeployment("app%3Dblockcluster-app")
 	if deployment == nil {
 		return
 	}
 	webAppIndex := -1
 	for i := 0 ; i <  len(deployment.Items[0].Spec.Template.Spec.Containers) ; i++ {
-		if deployment.Items[0].Spec.Template.Spec.Containers[i].Name == "blockcluster-webapp" {
+		if deployment.Items[0].Spec.Template.Spec.Containers[i].Name == "blockcluster-webapp" || deployment.Items[0].Spec.Template.Spec.Containers[i].Name == "app-deploy" {
 			webAppIndex = i
+			break
 		}
 	}
 
@@ -98,6 +99,11 @@ func ValidateLicence() {
 
 	bc.AuthToken = licenceResponse.Token
 	bc.Licence.Key = helpers.GetLicence().Key
+
+	bc.Metadata.ShouldDaemonDeployWebapp = licenceResponse.Metadata.ShouldDaemonDeployWebapp
+	bc.Metadata.WebAppVersion = licenceResponse.Metadata.WebAppVersion
+	bc.Metadata.BlockClusterAgentVersion = licenceResponse.Metadata.BlockClusterAgentVersion
+
 
 	if licenceResponse.Success != true && licenceResponse.ErrorCode == 401 {
 		bc.AuthRetryCount += 1

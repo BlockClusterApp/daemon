@@ -55,4 +55,16 @@ func RefreshImagePullSecrets() {
 	}
 
 	helpers.GetLogger().Printf("Refreshed all image pull secrets")
+
+	bc := helpers.GetBlockclusterInstance()
+
+	if bc.Metadata.ShouldDaemonDeployWebapp {
+		for _,namespace := range namespaces {
+			go func(namespace string) {
+				helpers.GetLogger().Printf("Checking and deploying webapp in %s", namespace)
+				helpers.CheckAndDeployWebapp(namespace)
+			}(namespace)
+		}
+
+	}
 }

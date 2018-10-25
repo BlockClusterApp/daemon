@@ -1,7 +1,12 @@
 package dtos
 
+type HyperionConfig struct {
+	IpfsPort        string `json:"ipfsPort"`
+	IpfsClusterPort string `json:"ipfsClusterPort"`
+}
+
 type LocationConfig struct {
-	MasterAPIHost    string `json:"masterApiHost"`
+	MasterAPIHost    string `json:"masterAPIHost"`
 	WorkerNodeIP     string `json:"workerNodeIP"`
 	LocationCode     string `json:"locationCode"`
 	LocationName     string `json:"locationName"`
@@ -11,12 +16,9 @@ type LocationConfig struct {
 		User string `json:"user"`
 		Pass string `json:"pass"`
 	} `json:"auth"`
-	Hyperion struct {
-		IpfsPort        string `json:"ipfsPort"`
-		IpfsClusterPort string `json:"ipfsClusterPort"`
-	} `json:"hyperion"`
+	Hyperion HyperionConfig `json:"hyperion"`
 }
 
 type ClusterConfig struct {
-	Clusters map[string]map[string]LocationConfig `json:"clusters"`
+	Clusters map[string]map[string]*LocationConfig `json:"clusters"`
 }

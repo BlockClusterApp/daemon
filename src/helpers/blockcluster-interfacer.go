@@ -14,6 +14,11 @@ type BlockClusterType struct {
 	AuthToken string
 	Valid bool
 	AuthRetryCount int8
+	Metadata struct {
+		BlockClusterAgentVersion string
+		WebAppVersion string
+		ShouldDaemonDeployWebapp bool
+	}
 }
 
 

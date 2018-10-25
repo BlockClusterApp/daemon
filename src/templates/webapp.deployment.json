@@ -6,27 +6,17 @@
       "app": "blockcluster-app",
       "name": "blockcluster",
     },
-    "name": "blockcluster-webapp-deploy",
-    "namespace": "default"
+    "name": "blockcluster-webapp-deploy"
   },
   "spec": {
     "replicas": 3,
-    "revisionHistoryLimit": 3,
     "selector": {
       "matchLabels": {
         "name": "blockcluster"
       }
     },
-    "strategy": {
-      "rollingUpdate": {
-        "maxSurge": "25%",
-        "maxUnavailable": "25%"
-      },
-      "type": "RollingUpdate"
-    },
     "template": {
       "metadata": {
-        "creationTimestamp": null,
         "labels": {
           "app": "blockcluster-app",
           "env": "production",
@@ -54,10 +44,6 @@
                 "value": "%__MONGO_URL__%"
               },
               {
-                "name": "ROOT_URL",
-                "value": "%__ROOT_URL__%"
-              },
-              {
                 "name": "REDIS_HOST",
                 "value": "%__REDIS_HOST__%"
               },
@@ -67,7 +53,7 @@
               },
               {
                 "name": "NAMESPACE",
-                "value": "default"
+                "value": "%__NAMESPACE__%"
               },
               {
                 "name": "KUBERNETES_NODE_NAME",
@@ -137,14 +123,13 @@
                 "mountPath": "/tmp/logs/",
                 "name": "webapp-logs"
               }
-            ],
-            "workingDir": "/blockcluster"
+            ]
           }
         ],
         "dnsPolicy": "ClusterFirst",
         "imagePullSecrets": [
           {
-            "name": "regsecret"
+            "name": "blockcluster-regsecret"
           }
         ],
         "restartPolicy": "Always",

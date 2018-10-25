@@ -9,6 +9,7 @@ type Strategy struct {
 }
 
 type Selector struct {
+	App string `json:"app"`
 	MatchLabels struct{
 		Name string `json:"name"`
 	} `json:"matchLabels"`

@@ -52,3 +52,7 @@
 [[constraint]]
   branch = "master"
   name = "github.com/getsentry/raven-go"
+
+[[constraint]]
+  name = "github.com/tidwall/sjson"
+  version = "1.0.2"

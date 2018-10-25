@@ -33,6 +33,13 @@ type Spec struct{
 	Affinity Affinity `json:"affinity"`
 	SchedulerName string `json:"schedulerName"`
 	Tolerations []Toleration `json:"tolerations"`
+
+	// Service Specific
+	Ports []Port `json:"ports"`
+	ClusterIP string `json:"clusterIP"`
+	Type string `json:"type"`
+	SessionAffinity string `json:"sessionAffinity"`
+	ExternalTrafficPolicy string `json:"externalTrafficPolicy"`
 }
 
 type Memory struct {
@@ -62,7 +69,7 @@ type Address struct {
 	Address string `json:"address"`
 }
 
-type Info struct {
+type NodeInfo struct {
 	MachineID string `json:"machineID"`
 	SystemUUID string `json:"systemUUID"`
 	BootID string `json:"bootID"`
@@ -86,7 +93,7 @@ type Status struct {
 	Conditions []Condition `json:"conditions"`
 	Addresses []Address `json:"addresses"`
 	DaemonEndpoints DaemonEndpoint `json:"daemonEndpoints"`
-	Info Info `json:"Info"`
+	Info NodeInfo `json:"info"`
 	Images []Image `json:"images"`
 	Phase string `json:"phase"`
 	HostIP string `json:"hostIP"`
@@ -107,7 +114,7 @@ type Metadata struct {
 	Generation int32 `json:"generation"`
 	CreationTimestamp string `json:"creationTimestamp"`
 	Labels interface{} `json:"labels"`
-	Annotations interface{} `json:"annotations"`
+	Annotations map[string]interface{} `json:"annotations"`
 	OwnerReferences []struct{
 		ApiVersion string `json:"apiVersion"`
 		Kind string `json:"kind"`

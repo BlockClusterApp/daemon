@@ -112,6 +112,30 @@
   version = "v0.8.0"
 
 [[projects]]
+  digest = "1:2cab41f59638fdb77dda96ab4f9b5860ef30f48967557254eba127e43c756f2e"
+  name = "github.com/tidwall/gjson"
+  packages = ["."]
+  pruneopts = "UT"
+  revision = "1e3f6aeaa5bad08d777ea7807b279a07885dd8b2"
+  version = "v1.1.3"
+
+[[projects]]
+  branch = "master"
+  digest = "1:d3f968e2a2c9f8506ed44b01b605ade0176ba6cf73ff679073e77cfdef2c0d55"
+  name = "github.com/tidwall/match"
+  packages = ["."]
+  pruneopts = "UT"
+  revision = "1731857f09b1f38450e2c12409748407822dc6be"
+
+[[projects]]
+  digest = "1:f02f814d3bd902a74fe0ff80a8de777d5698a847a509a4b92bfaf11859251806"
+  name = "github.com/tidwall/sjson"
+  packages = ["."]
+  pruneopts = "UT"
+  revision = "48d34adceb39a5bd6ed7c12f38c78cd425436442"
+  version = "v1.0.2"
+
+[[projects]]
   digest = "1:342378ac4dcb378a5448dd723f0784ae519383532f5e70ade24132c4c8693202"
   name = "gopkg.in/yaml.v2"
   packages = ["."]
@@ -131,6 +155,7 @@
     "github.com/gorilla/mux",
     "github.com/jasonlvhit/gocron",
     "github.com/mitchellh/mapstructure",
+    "github.com/tidwall/sjson",
     "gopkg.in/yaml.v2",
   ]
   solver-name = "gps-cdcl"
