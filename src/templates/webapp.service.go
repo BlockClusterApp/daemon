@@ -1,12 +1,15 @@
-{
-  "apiVersion": "v1",
-  "kind": "Service",
+package templates
+
+func GetWebappServiceTemplate() string {
+  return `{
+"apiVersion": "v1",
+"kind": "Service",
   "metadata": {
     "labels": {
       "app": "blockcluster-app",
     },
     "name": "blockcluster-svc",
-    "namespace": "default"
+    "namespace": "%__NAMESPACE__%"
   },
   "spec": {
     "ports": [
@@ -29,4 +32,5 @@
     "sessionAffinity": "None",
     "type": "LoadBalancer"
   }
+}`
 }

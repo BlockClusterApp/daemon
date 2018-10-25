@@ -1,10 +1,14 @@
-{
+package templates
+
+func GetWebappDeploymentTemplate() string {
+	return `{
   "apiVersion": "extensions/v1beta1",
   "kind": "Deployment",
   "metadata": {
     "labels": {
       "app": "blockcluster-app",
       "name": "blockcluster",
+      "namespace": "%__NAMESPACE__%"
     },
     "name": "blockcluster-webapp-deploy"
   },
@@ -74,7 +78,7 @@
                 }
               }
             ],
-            "image": "%__IMAGE_NAME__%",
+            "image": "%__IMAGE_URL__%",
             "imagePullPolicy": "IfNotPresent",
             "livenessProbe": {
               "exec": {
@@ -145,4 +149,5 @@
       }
     }
   }
+}`
 }

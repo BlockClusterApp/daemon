@@ -9,7 +9,6 @@ import (
 	"github.com/tidwall/sjson"
 	"net/http"
 	"os"
-	"reflect"
 	"strconv"
 )
 
@@ -31,12 +30,7 @@ func UpdateHyperionPorts(){
 	// Need to be synchronous else file writing may contain inconsistent values. Or if you have any better way of
 	for _, namespace := range namespaces {
 
-		keys := reflect.ValueOf(config.Clusters[namespace]).MapKeys()
-		locationCodes := make([]string, len(keys))
-
-		for i:=0;i<len(keys);i++{
-			locationCodes[i] = keys[i].String()
-		}
+		locationCodes := helpers.GetLocationCodesOfEnv(config.Clusters[namespace])
 
 		for _, locationCode := range locationCodes {
 			locationConfig := config.Clusters[namespace][locationCode]
