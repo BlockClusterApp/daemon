@@ -45,7 +45,7 @@ func GetTimeInMillis() int64 {
 
 func GetNamespaces() []string {
 	var config = dtos.ClusterConfig{}
-	err := json.Unmarshal([]byte(config2.GetKubeConfig()), &config)
+	err := json.Unmarshal([]byte(config2.GetRawKubeConfig()), &config)
 
 	if err != nil {
 		GetLogger().Printf("Error parsing config for namespaces %s", err.Error())

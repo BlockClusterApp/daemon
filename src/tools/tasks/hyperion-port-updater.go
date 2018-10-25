@@ -20,7 +20,7 @@ func UpdateHyperionPorts(){
 	var config = dtos.ClusterConfig{}
 	err := json.Unmarshal([]byte(config2.GetRawKubeConfig()), &config)
 
-	var newConfig = config2.GetKubeConfig()
+	var newConfig = config2.GetRawKubeConfig()
 
 	if err != nil {
 		helpers.GetLogger().Printf("Error parsing config for namespaces %s", err.Error())
@@ -47,6 +47,8 @@ func UpdateHyperionPorts(){
 				Method: http.MethodGet,
 			}
 
+			helpers.GetLogger().Printf("Fetching hyperion service details for (%s,%s) | %s", namespace, locationCode, requestParams.URL)
+
 			resp, err := helpers.MakeExternalKubeRequest(requestParams)
 
 			if err != nil {
@@ -58,6 +60,10 @@ func UpdateHyperionPorts(){
 
 			if err != nil {
 				helpers.GetLogger().Printf("Update Hyperion: Error unmarshalling service response %s", err.Error())
+				continue
+			}
+
+			if len(serviceResponse.Items) == 0 {
 				continue
 			}
 
