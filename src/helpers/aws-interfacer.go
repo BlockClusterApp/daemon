@@ -16,7 +16,7 @@ func getAWSSession(awsCreds *dtos.AWSCreds) *session.Session {
 	creds := credentials.NewStaticCredentials(awsCreds.AccessKeyID, awsCreds.SecretAccessKey, "")
 
 	var awsConfig = &aws.Config{
-		Region: aws.String("us-west-2"),
+		Region:      aws.String("us-west-2"),
 		Credentials: creds,
 	}
 
@@ -31,14 +31,13 @@ func getAWSSession(awsCreds *dtos.AWSCreds) *session.Session {
 	return session.Must(sess, err)
 }
 
-func GetAuthorizationToken() string{
+func GetAuthorizationToken() string {
 
 	bc := GetBlockclusterInstance()
 	bcAwsCreds := bc.GetAWSCreds()
 
-
 	var awsCreds = &dtos.AWSCreds{
-		AccessKeyID: bcAwsCreds.AccessKeys.AccessKeyId,
+		AccessKeyID:     bcAwsCreds.AccessKeys.AccessKeyId,
 		SecretAccessKey: bcAwsCreds.AccessKeys.SecretAccessKey,
 	}
 
@@ -46,8 +45,7 @@ func GetAuthorizationToken() string{
 
 	var registryIds []*string
 
-
-	for _,i := range bcAwsCreds.RegistryIds {
+	for _, i := range bcAwsCreds.RegistryIds {
 		registryIds = append(registryIds, aws.String(i))
 	}
 
@@ -61,8 +59,6 @@ func GetAuthorizationToken() string{
 	repositories := "402432300121.dkr.ecr.us-west-2.amazonaws.com"
 	email := fmt.Sprintf("%s@enterprise.blockcluster.io", bcAwsCreds.ClientID)
 	dockerConfig := fmt.Sprintf("{\"auths\":{\"%s\": {\"username\": \"AWS\", \"password\": \"%s\", \"email\": \"%s\", \"auth\":\"%s\"}}}", repositories, password, email, auth)
-
-
 
 	if err != nil {
 		raven.CaptureError(err, map[string]string{

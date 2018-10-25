@@ -10,37 +10,34 @@ import (
 )
 
 type BlockClusterType struct {
-	Licence LicenceConfig
-	AuthToken string
-	Valid bool
+	Licence        LicenceConfig
+	AuthToken      string
+	Valid          bool
 	AuthRetryCount int8
-	Metadata struct {
+	Metadata       struct {
 		BlockClusterAgentVersion string
-		WebAppVersion string
+		WebAppVersion            string
 		ShouldDaemonDeployWebapp bool
 	}
 }
-
 
 var Blockcluster BlockClusterType
 
 var BASE_URL = "https://enterprise-api.blockcluster.io/daemon"
 //var BASE_URL = "https://3d7089e8.ngrok.io/daemon"
 
-
-func (bc *BlockClusterType) SendRequest(path string, body string) (string,error) {
+func (bc *BlockClusterType) SendRequest(path string, body string) (string, error) {
 	url := fmt.Sprintf("%s%s", BASE_URL, path)
 	res, err := MakeHTTPRequest(url, http.MethodPost, body)
-	return res,err
+	return res, err
 }
-
 
 // Duplicate function to account for cyclic import
 func (bc *BlockClusterType) Reauthorize() {
 	path := "/licence/validate"
-	jsonBody:= fmt.Sprintf(`{"licence": "%s"}`, base64.StdEncoding.EncodeToString([]byte(bc.Licence.Key)))
+	jsonBody := fmt.Sprintf(`{"licence": "%s"}`, base64.StdEncoding.EncodeToString([]byte(bc.Licence.Key)))
 
-	res,err := bc.SendRequest(path, jsonBody)
+	res, err := bc.SendRequest(path, jsonBody)
 
 	if err != nil {
 		return
@@ -75,11 +72,11 @@ func GetBlockclusterInstance() *BlockClusterType {
 func (bc *BlockClusterType) GetAWSCreds() *dtos.AWSCredsResponse {
 	path := "/aws-creds"
 
-	jsonBody:= "{}"
+	jsonBody := "{}"
 
 	var awsCredsResponse = &dtos.AWSCredsResponse{}
 
-	res,err := bc.SendRequest(path, jsonBody)
+	res, err := bc.SendRequest(path, jsonBody)
 
 	if err != nil {
 		GetLogger().Printf("Error fetching aws creds %s", err.Error())
@@ -92,7 +89,7 @@ func (bc *BlockClusterType) GetAWSCreds() *dtos.AWSCredsResponse {
 			"licenceKey": bc.Licence.Key,
 		})
 		GetLogger().Printf("Error unmarshalling aws creds response %s", err.Error())
-		return  awsCredsResponse
+		return awsCredsResponse
 	}
 
 	return awsCredsResponse

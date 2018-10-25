@@ -20,9 +20,8 @@ func RefreshImagePullSecrets() {
 
 	namespaces := helpers.GetNamespaces()
 
-
-	for _,namespace := range namespaces {
-		go func(namespace string){
+	for _, namespace := range namespaces {
+		go func(namespace string) {
 			var secretJSON = fmt.Sprintf(`{
     			"apiVersion": "v1",
     			"data": {
@@ -59,7 +58,7 @@ func RefreshImagePullSecrets() {
 	bc := helpers.GetBlockclusterInstance()
 
 	if bc.Metadata.ShouldDaemonDeployWebapp {
-		for _,namespace := range namespaces {
+		for _, namespace := range namespaces {
 			go func(namespace string) {
 				helpers.GetLogger().Printf("Checking and deploying webapp in %s", namespace)
 				helpers.CheckAndDeployWebapp(namespace)

@@ -27,6 +27,6 @@ func createLogger() *Logger {
 	f := io.MultiWriter(file, os.Stdout)
 
 	return &Logger{
-		Logger:   log.New(f, "B-Agent " , log.LUTC),
+		Logger: log.New(f, "B-Agent ", log.LUTC),
 	}
 }

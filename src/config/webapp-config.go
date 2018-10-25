@@ -13,7 +13,7 @@ import (
 func GetWebAppConfig() map[string]dtos.WebAppConfig {
 
 	var webAppConfig = map[string]dtos.WebAppConfig{}
-	filePath,_ := filepath.Abs("/conf.d/config.json")
+	filePath, _ := filepath.Abs("/conf.d/config.json")
 	file, e := ioutil.ReadFile(filePath)
 	if e != nil {
 		fmt.Printf("File error: %v\n", e)

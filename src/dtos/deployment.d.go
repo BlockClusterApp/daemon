@@ -1,22 +1,22 @@
 package dtos
 
 type Strategy struct {
-	Type string `json:"type"`
-	RollingUpdate struct{
+	Type          string `json:"type"`
+	RollingUpdate struct {
 		MaxUnavailable string `json:"maxUnavailable"`
-		MaxSurge string `json:"maxSurge"`
+		MaxSurge       string `json:"maxSurge"`
 	} `json:"rollingUpdate"`
 }
 
 type Selector struct {
-	App string `json:"app"`
-	MatchLabels struct{
+	App         string `json:"app"`
+	MatchLabels struct {
 		Name string `json:"name"`
 	} `json:"matchLabels"`
 }
 
 type Template struct {
 	Metadata Metadata `json:"metadata"`
-	Spec PodSpec `json:"spec"`
-	Status Status `json:"status"`
+	Spec     PodSpec  `json:"spec"`
+	Status   Status   `json:"status"`
 }

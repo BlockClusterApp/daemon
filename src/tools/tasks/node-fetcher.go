@@ -8,7 +8,6 @@ import (
 	"net/http"
 )
 
-
 func FetchNodeInformation() {
 	log := helpers.GetLogger()
 	log.Println("G:TASK Fetching node information")
@@ -34,7 +33,7 @@ func FetchNodeInformation() {
 	res, err := bc.SendRequest(path, requestBody)
 
 	if err != nil {
-		log.Printf("Error sending node info %s",err.Error())
+		log.Printf("Error sending node info %s", err.Error())
 		return
 	}
 

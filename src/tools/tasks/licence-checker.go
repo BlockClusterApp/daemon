@@ -18,7 +18,7 @@ func updateWebAppDeployment(newImageTag string) {
 		return
 	}
 	webAppIndex := -1
-	for i := 0 ; i <  len(deployment.Items[0].Spec.Template.Spec.Containers) ; i++ {
+	for i := 0; i < len(deployment.Items[0].Spec.Template.Spec.Containers); i++ {
 		if deployment.Items[0].Spec.Template.Spec.Containers[i].Name == "blockcluster-webapp" || deployment.Items[0].Spec.Template.Spec.Containers[i].Name == "app-deploy" {
 			webAppIndex = i
 			break
@@ -42,11 +42,11 @@ func handleVersionMetadata(licenceResponse *dtos.LicenceValidationResponse) {
 	if licenceResponse.Metadata.BlockClusterAgentVersion != CURRENT_AGENT_VERSION {
 		// delete this pod so that it can fetch new image
 		blockClusterPods := helpers.FetchPod("app%3Dblockcluster-agent")
-		for i := 0 ; i < len(blockClusterPods.Items) ; i++ {
+		for i := 0; i < len(blockClusterPods.Items); i++ {
 			go func() {
 				// Don't delete all the pods at the same time.
 				sleepDuration := time.Duration(i * 20)
-				time.Sleep( sleepDuration * time.Second)
+				time.Sleep(sleepDuration * time.Second)
 				var pod = blockClusterPods.Items[i]
 				helpers.DeletePod(pod.Metadata.Namespace, pod.Metadata.Name)
 			}()
@@ -64,7 +64,7 @@ func handleVersionMetadata(licenceResponse *dtos.LicenceValidationResponse) {
 			appContainer = container
 			break
 		}
- 	}
+	}
 	imageTag := (strings.Split(appContainer.Image, ":"))[0]
 	if licenceResponse.Metadata.WebAppVersion != "" && licenceResponse.Metadata.WebAppVersion != imageTag {
 		updateWebAppDeployment(imageTag)
@@ -79,9 +79,9 @@ func ValidateLicence() {
 	bc.Licence = licence
 
 	path := "/licence/validate"
-	jsonBody:= fmt.Sprintf(`{"licence": "%s"}`, base64.StdEncoding.EncodeToString([]byte(licence.Key)))
+	jsonBody := fmt.Sprintf(`{"licence": "%s"}`, base64.StdEncoding.EncodeToString([]byte(licence.Key)))
 
-	res,err := bc.SendRequest(path, jsonBody)
+	res, err := bc.SendRequest(path, jsonBody)
 
 	if err != nil {
 		return
@@ -103,7 +103,6 @@ func ValidateLicence() {
 	bc.Metadata.ShouldDaemonDeployWebapp = licenceResponse.Metadata.ShouldDaemonDeployWebapp
 	bc.Metadata.WebAppVersion = licenceResponse.Metadata.WebAppVersion
 	bc.Metadata.BlockClusterAgentVersion = licenceResponse.Metadata.BlockClusterAgentVersion
-
 
 	if licenceResponse.Success != true && licenceResponse.ErrorCode == 401 {
 		bc.AuthRetryCount += 1

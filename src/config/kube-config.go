@@ -9,12 +9,12 @@ import (
 
 func GetKubeConfig() string {
 
-	filePath,_ := filepath.Abs("/conf.d/current-config.json")
+	filePath, _ := filepath.Abs("/conf.d/current-config.json")
 
 	_, err := os.Stat(filePath)
 
 	if os.IsNotExist(err) {
-		filePath,_ = filepath.Abs("/conf.d/cluster-config.json")
+		filePath, _ = filepath.Abs("/conf.d/cluster-config.json")
 	}
 
 	file, e := ioutil.ReadFile(filePath)
@@ -27,7 +27,7 @@ func GetKubeConfig() string {
 
 func GetRawKubeConfig() string {
 
-	filePath,_ := filepath.Abs("/conf.d/cluster-config.json")
+	filePath, _ := filepath.Abs("/conf.d/cluster-config.json")
 	file, e := ioutil.ReadFile(filePath)
 	if e != nil {
 		fmt.Printf("File error: %v\n", e)

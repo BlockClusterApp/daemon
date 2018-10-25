@@ -53,12 +53,10 @@ func GetNamespaces() []string {
 		return []string{}
 	}
 
-
 	keys := reflect.ValueOf(config.Clusters).MapKeys()
 	namespaces := make([]string, len(keys))
 
-
-	for i:=0;i<len(keys);i++{
+	for i := 0; i < len(keys); i++ {
 		namespaces[i] = keys[i].String()
 	}
 
@@ -69,11 +67,11 @@ func GetNamespaces() []string {
 
 func ReplaceWebAppConfig(fileContent string, webappConfig dtos.WebAppConfig, namespace string) string {
 	replacer := strings.NewReplacer("%__NAMESPACE__%", namespace,
-			"%__MONGO_URL__%", webappConfig.MongoConnectionURL,
-			"%__REDIS_HOST__%", webappConfig.RedisHost,
-			"%__REDIS_PORT__%", webappConfig.RedisPort,
-			"%__IMAGE_URL__%", webappConfig.ImageRepository,
-		)
+		"%__MONGO_URL__%", webappConfig.MongoConnectionURL,
+		"%__REDIS_HOST__%", webappConfig.RedisHost,
+		"%__REDIS_PORT__%", webappConfig.RedisPort,
+		"%__IMAGE_URL__%", webappConfig.ImageRepository,
+	)
 
 	return replacer.Replace(fileContent)
 }
@@ -82,7 +80,7 @@ func GetLocationCodesOfEnv(config map[string]*dtos.LocationConfig) []string {
 	keys := reflect.ValueOf(config).MapKeys()
 	locationCodes := make([]string, len(keys))
 
-	for i:=0;i<len(keys);i++{
+	for i := 0; i < len(keys); i++ {
 		locationCodes[i] = keys[i].String()
 	}
 	return locationCodes

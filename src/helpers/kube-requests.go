@@ -17,12 +17,12 @@ import (
 )
 
 type ExternalKubeRequest struct {
-	URL string
+	URL  string
 	Auth struct {
 		User string `json:"user"`
 		Pass string `json:"pass"`
 	}
-	Method string
+	Method  string
 	Payload string
 }
 
@@ -40,7 +40,6 @@ func basicAuth(username, password string) string {
 }
 
 func getURL(path string) string {
-
 
 	serviceHost := os.Getenv("KUBERNETES_SERVICE_HOST")
 	servicePort := os.Getenv("KUBERNETES_SERVICE_PORT")
@@ -66,7 +65,7 @@ func getURL(path string) string {
 	return u.String()
 }
 
-func MakeExternalKubeRequest(params ExternalKubeRequest) (string, error){
+func MakeExternalKubeRequest(params ExternalKubeRequest) (string, error) {
 	req, err := http.NewRequest(params.Method, params.URL, bytes.NewBuffer([]byte(params.Payload)))
 
 	if err != nil {
@@ -83,35 +82,34 @@ func MakeExternalKubeRequest(params ExternalKubeRequest) (string, error){
 
 	if err != nil {
 		GetLogger().Printf("Error making external kube request %s %s", params.URL, err.Error())
-		return "",err
+		return "", err
 	}
 
 	defer resp.Body.Close()
 
-	if resp.StatusCode == http.StatusOK || resp.StatusCode == http.StatusCreated{
+	if resp.StatusCode == http.StatusOK || resp.StatusCode == http.StatusCreated {
 		bodyBytes, err2 := ioutil.ReadAll(resp.Body)
 		bodyString := string(bodyBytes)
 
 		resp.Body.Close()
 		if err2 != nil {
 			GetLogger().Printf("Error reading body for %s %s", params.URL, err2.Error())
-			return "",err2
+			return "", err2
 		}
 
 		return bodyString, nil
 	}
 
 	resp.Body.Close()
-	return "",errors.New(fmt.Sprintf("Unhandled status code for %s | %s", params.URL, resp.Status))
+	return "", errors.New(fmt.Sprintf("Unhandled status code for %s | %s", params.URL, resp.Status))
 }
 
-func MakeKubeRequest(method string,path string, payload io.Reader) (string, error){
+func MakeKubeRequest(method string, path string, payload io.Reader) (string, error) {
 	var url string;
 	url = getURL(path)
 
 	req, err := http.NewRequest(method, url, payload)
 	req.Header.Set("Content-Type", "application/json")
-
 
 	var client = &http.Client{}
 
@@ -143,7 +141,6 @@ func MakeKubeRequest(method string,path string, payload io.Reader) (string, erro
 		req.Header.Set("Authorization", fmt.Sprintf("Basic %s", basicAuth(os.Getenv("KUBE_API_USER"), os.Getenv("KUBE_API_PASS"))))
 	}
 
-
 	resp, err := client.Do(req)
 
 	if err != nil {
@@ -162,20 +159,20 @@ func MakeKubeRequest(method string,path string, payload io.Reader) (string, erro
 		return "", errors.New(fmt.Sprintf("Request to %s returned %d", url, resp.StatusCode))
 	}
 
-	if resp.StatusCode == http.StatusOK || resp.StatusCode == http.StatusCreated{
+	if resp.StatusCode == http.StatusOK || resp.StatusCode == http.StatusCreated {
 		bodyBytes, err2 := ioutil.ReadAll(resp.Body)
 		bodyString := string(bodyBytes)
 
 		resp.Body.Close()
 		if err2 != nil {
 			GetLogger().Printf("Error reading body for %s %s", url, err2.Error())
-			return "",err2
+			return "", err2
 		}
 
 		return bodyString, nil
 	}
 
 	resp.Body.Close()
-	return "",errors.New(fmt.Sprintf("Unhandled status code for %s | %s", url, resp.Status))
+	return "", errors.New(fmt.Sprintf("Unhandled status code for %s | %s", url, resp.Status))
 
 }

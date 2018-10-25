@@ -1,7 +1,7 @@
 package dtos
 
 type AWSCreds struct {
-	AccessKeyID string
+	AccessKeyID     string
 	SecretAccessKey string
-	Region string
+	Region          string
 }

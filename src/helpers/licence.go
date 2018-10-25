@@ -15,7 +15,6 @@ type LicenceConfig struct {
 
 var Licence LicenceConfig
 
-
 func getLicenceFileContent() string {
 	fileAbsPath, _ := filepath.Abs("/conf.d/licence.yaml")
 	file, e := ioutil.ReadFile(fileAbsPath)
@@ -38,7 +37,6 @@ func getLicenceKey() LicenceConfig {
 	}
 	return licence
 }
-
 
 func UpdateLicence() {
 	licence := getLicenceKey()

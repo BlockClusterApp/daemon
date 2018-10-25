@@ -12,7 +12,7 @@ import (
 	"strconv"
 )
 
-func UpdateHyperionPorts(){
+func UpdateHyperionPorts() {
 
 	namespaces := helpers.GetNamespaces()
 
@@ -26,7 +26,6 @@ func UpdateHyperionPorts(){
 		return
 	}
 
-
 	// Need to be synchronous else file writing may contain inconsistent values. Or if you have any better way of
 	for _, namespace := range namespaces {
 
@@ -35,10 +34,10 @@ func UpdateHyperionPorts(){
 		for _, locationCode := range locationCodes {
 			locationConfig := config.Clusters[namespace][locationCode]
 			var requestParams = helpers.ExternalKubeRequest{
-				URL: fmt.Sprintf("%s/api/v1/namespaces/%s/services?fieldSelector=metadata.name%%3Dhyperion", locationConfig.MasterAPIHost, namespace),
-				Auth: locationConfig.Auth,
+				URL:     fmt.Sprintf("%s/api/v1/namespaces/%s/services?fieldSelector=metadata.name%%3Dhyperion", locationConfig.MasterAPIHost, namespace),
+				Auth:    locationConfig.Auth,
 				Payload: "",
-				Method: http.MethodGet,
+				Method:  http.MethodGet,
 			}
 
 			helpers.GetLogger().Printf("Fetching hyperion service details for (%s,%s) | %s", namespace, locationCode, requestParams.URL)
@@ -63,23 +62,22 @@ func UpdateHyperionPorts(){
 
 			hyperionService := serviceResponse.Items[0]
 
-			for _,port := range hyperionService.Spec.Ports {
+			for _, port := range hyperionService.Spec.Ports {
 				if port.Name == "cluster-gateway" {
-					value,_ := sjson.Set(newConfig, fmt.Sprintf("clusters.%s.%s.hyperion.ipfsPort", namespace, locationCode), strconv.Itoa(int(port.NodePort)))
+					value, _ := sjson.Set(newConfig, fmt.Sprintf("clusters.%s.%s.hyperion.ipfsPort", namespace, locationCode), strconv.Itoa(int(port.NodePort)))
 					newConfig = value
 				}
 				if port.Name == "cluster-api" {
-					value,_ := sjson.Set(newConfig, fmt.Sprintf("clusters.%s.%s.hyperion.ipfsClusterPort", namespace, locationCode), strconv.Itoa(int(port.NodePort)))
+					value, _ := sjson.Set(newConfig, fmt.Sprintf("clusters.%s.%s.hyperion.ipfsClusterPort", namespace, locationCode), strconv.Itoa(int(port.NodePort)))
 					newConfig = value
 				}
 			}
 		}
 	}
 
-
 	outputFilePath := "/conf.d/current-config.json"
 
-	 _, err = os.Stat(outputFilePath)
+	_, err = os.Stat(outputFilePath)
 
 	// create file if not exists
 	if os.IsNotExist(err) {
@@ -90,7 +88,6 @@ func UpdateHyperionPorts(){
 		}
 		defer file.Close()
 	}
-
 
 	file, err := os.OpenFile(outputFilePath, os.O_RDWR, 0644)
 

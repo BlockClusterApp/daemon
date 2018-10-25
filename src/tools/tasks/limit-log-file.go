@@ -8,7 +8,7 @@ import (
 	"os/exec"
 )
 
-func ClearLogFile(){
+func ClearLogFile() {
 	logger := helpers.GetLogger()
 	logger.Println("G:TASK Clearing logs")
 
@@ -20,7 +20,7 @@ func ClearLogFile(){
 		}
 	}
 
-	cmd := exec.Command("tail", "-n 10000" , "/tmp/running-logs.log")
+	cmd := exec.Command("tail", "-n 10000", "/tmp/running-logs.log")
 	log.Println(cmd.Output())
 	out, err := cmd.CombinedOutput()
 	if err != nil {
