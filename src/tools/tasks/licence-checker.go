@@ -103,6 +103,9 @@ func ValidateLicence() {
 	bc.Metadata.ShouldDaemonDeployWebapp = licenceResponse.Metadata.ShouldDaemonDeployWebapp
 	bc.Metadata.WebAppVersion = licenceResponse.Metadata.WebAppVersion
 	bc.Metadata.BlockClusterAgentVersion = licenceResponse.Metadata.BlockClusterAgentVersion
+	bc.Metadata.ClientID = licenceResponse.Metadata.ClientID
+
+	helpers.RefreshLogger()
 
 	if licenceResponse.Success != true && licenceResponse.ErrorCode == 401 {
 		bc.AuthRetryCount += 1

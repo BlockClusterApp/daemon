@@ -9,6 +9,7 @@ type LicenceValidationResponse struct {
 		BlockClusterAgentVersion string `json:"blockclusterAgentVersion"`
 		WebAppVersion            string `json:"webappVersion"`
 		ShouldDaemonDeployWebapp bool   `json:"shouldDaemonDeployWebapp"`
+		ClientID                 string `json:"clientId"`
 	} `json:"metadata"`
 }
 

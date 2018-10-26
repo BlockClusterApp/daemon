@@ -18,6 +18,7 @@ type BlockClusterType struct {
 		BlockClusterAgentVersion string
 		WebAppVersion            string
 		ShouldDaemonDeployWebapp bool
+		ClientID string
 	}
 }
 

@@ -30,6 +30,8 @@ func GetLogger() *Logger {
 
 func createLogger() *Logger {
 	t := time.Now()
+	bc := GetBlockclusterInstance()
+
 	timeDisplay := t.Format("2006-01-02-15")
 
 	filePath := fmt.Sprintf("/tmp/running-logs-%s.log", timeDisplay)
@@ -38,6 +40,10 @@ func createLogger() *Logger {
 	f := io.MultiWriter(file, os.Stdout)
 
 	return &Logger{
-		Logger: log.New(f, "B-Agent ", log.LUTC),
+		Logger: log.New(f, fmt.Sprintf("B-Agent %s ", bc.Metadata.ClientID), log.LUTC),
 	}
+}
+
+func RefreshLogger() {
+	logger = createLogger()
 }
