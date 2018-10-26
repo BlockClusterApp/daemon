@@ -19,6 +19,8 @@ func StartScheduler() {
 		tasks.RefreshImagePullSecrets()
 	}()
 
+	tasks.ClearLogFile()
+
 	tasks.UpdateHyperionPorts()
 
 	gocron.Every(10).Minutes().Do(tasks.FetchNodeInformation)
@@ -26,4 +28,5 @@ func StartScheduler() {
 	gocron.Every(5).Minutes().Do(tasks.FetchPodInformation)
 	gocron.Every(5).Hours().Do(tasks.RefreshImagePullSecrets)
 	gocron.Every(2).Minutes().Do(tasks.UpdateHyperionPorts)
+	gocron.Every(1).Day().Do(tasks.ClearLogFile)
 }
