@@ -75,7 +75,7 @@ func UpdateHyperionPorts() {
 		}
 	}
 
-	outputFilePath := "/conf.d/current-config.json"
+	outputFilePath := "/tmp/current-config.json"
 
 	_, err = os.Stat(outputFilePath)
 

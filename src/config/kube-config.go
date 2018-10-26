@@ -9,7 +9,7 @@ import (
 
 func GetKubeConfig() string {
 
-	filePath, _ := filepath.Abs("/conf.d/current-config.json")
+	filePath, _ := filepath.Abs("/tmp/current-config.json")
 
 	_, err := os.Stat(filePath)
 
