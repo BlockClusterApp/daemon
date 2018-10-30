@@ -4,6 +4,7 @@ import (
 	"github.com/BlockClusterApp/daemon/src/helpers"
 	"github.com/BlockClusterApp/daemon/src/tools/tasks"
 	"github.com/jasonlvhit/gocron"
+	"os"
 	"time"
 )
 
@@ -23,10 +24,14 @@ func StartScheduler() {
 
 	tasks.UpdateHyperionPorts()
 
-	gocron.Every(10).Minutes().Do(tasks.FetchNodeInformation)
 	gocron.Every(5).Minutes().Do(tasks.ValidateLicence)
+	gocron.Every(2).Minutes().Do(tasks.UpdateHyperionPorts)
+
+	if os.Getenv("GO_ENV") == "development" {
+		return
+	}
+	gocron.Every(10).Minutes().Do(tasks.FetchNodeInformation)
 	gocron.Every(5).Minutes().Do(tasks.FetchPodInformation)
 	gocron.Every(5).Hours().Do(tasks.RefreshImagePullSecrets)
-	gocron.Every(2).Minutes().Do(tasks.UpdateHyperionPorts)
 	gocron.Every(1).Day().Do(tasks.ClearLogFile)
 }
