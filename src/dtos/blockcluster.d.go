@@ -1,16 +1,19 @@
 package dtos
 
+type LicenceMetadata struct {
+	BlockClusterAgentVersion string   `json:"blockclusterAgentVersion"`
+	WebAppVersion            string   `json:"webappVersion"`
+	ShouldDaemonDeployWebapp bool     `json:"shouldDaemonDeployWebapp"`
+	ClientID                 string   `json:"clientId"`
+	ActivatedFeatures        []string `json:"activatedFeatures"`
+}
+
 type LicenceValidationResponse struct {
-	Success   bool   `json:"success"`
-	Token     string `json:"message"`
-	Error     string `json:"error"`
-	ErrorCode int    `json:"errorCode"`
-	Metadata  struct {
-		BlockClusterAgentVersion string `json:"blockclusterAgentVersion"`
-		WebAppVersion            string `json:"webappVersion"`
-		ShouldDaemonDeployWebapp bool   `json:"shouldDaemonDeployWebapp"`
-		ClientID                 string `json:"clientId"`
-	} `json:"metadata"`
+	Success   bool            `json:"success"`
+	Token     string          `json:"message"`
+	Error     string          `json:"error"`
+	ErrorCode int             `json:"errorCode"`
+	Metadata  LicenceMetadata `json:"metadata"`
 }
 
 type AWSCredsResponse struct {

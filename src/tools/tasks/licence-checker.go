@@ -100,10 +100,7 @@ func ValidateLicence() {
 	bc.AuthToken = licenceResponse.Token
 	bc.Licence.Key = helpers.GetLicence().Key
 
-	bc.Metadata.ShouldDaemonDeployWebapp = licenceResponse.Metadata.ShouldDaemonDeployWebapp
-	bc.Metadata.WebAppVersion = licenceResponse.Metadata.WebAppVersion
-	bc.Metadata.BlockClusterAgentVersion = licenceResponse.Metadata.BlockClusterAgentVersion
-	bc.Metadata.ClientID = licenceResponse.Metadata.ClientID
+	bc.Metadata = licenceResponse.Metadata
 
 	helpers.RefreshLogger()
 

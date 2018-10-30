@@ -98,6 +98,9 @@ func UpdateHyperionPorts() {
 
 	defer file.Close()
 
+	// Write other configs
+
+
 	_, err = file.Write([]byte(newConfig))
 
 	if err != nil {
