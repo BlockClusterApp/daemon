@@ -64,7 +64,7 @@ func handleVersionMetadata(licenceResponse *dtos.LicenceValidationResponse) {
 			break
 		}
 	}
-	imageTag := (strings.Split(appContainer.Image, ":"))[0]
+	imageTag := (strings.Split(appContainer.Image, ":"))[1]
 
 	bc.AgentInfo.WebAppVersion = imageTag
 
