@@ -16,6 +16,9 @@ type BlockClusterType struct {
 	Valid          bool
 	AuthRetryCount int8
 	Metadata       dtos.LicenceMetadata
+	AgentInfo 	   struct {
+		WebAppVersion string
+	}
 }
 
 var Blockcluster BlockClusterType
@@ -39,7 +42,7 @@ func (bc *BlockClusterType) SendRequest(path string, body string) (string, error
 // Duplicate function to account for cyclic import
 func (bc *BlockClusterType) Reauthorize() {
 	path := "/licence/validate"
-	jsonBody := fmt.Sprintf(`{"licence": "%s"}`, base64.StdEncoding.EncodeToString([]byte(bc.Licence.Key)))
+	jsonBody := fmt.Sprintf(`{"licence": "%s", "daemonVersion": "%s"}`, base64.StdEncoding.EncodeToString([]byte(bc.Licence.Key)), CURRENT_AGENT_VERSION)
 
 	res, err := bc.SendRequest(path, jsonBody)
 

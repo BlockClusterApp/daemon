@@ -10,6 +10,8 @@ import (
 	"time"
 )
 
+const CURRENT_AGENT_VERSION = "1.0";
+
 func UnmarshalJson(input []byte) (map[string]interface{}, error) {
 	var result interface{}
 	// unmarshal json to a map

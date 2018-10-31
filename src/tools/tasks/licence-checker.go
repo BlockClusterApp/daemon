@@ -10,8 +10,6 @@ import (
 	"time"
 )
 
-const CURRENT_AGENT_VERSION = "1.0";
-
 func updateWebAppDeployment(newImageTag string) {
 	deployment := helpers.FetchDeployment("app%3Dblockcluster-app")
 	if deployment == nil {
@@ -39,7 +37,8 @@ func updateWebAppDeployment(newImageTag string) {
 }
 
 func handleVersionMetadata(licenceResponse *dtos.LicenceValidationResponse) {
-	if licenceResponse.Metadata.BlockClusterAgentVersion != CURRENT_AGENT_VERSION {
+	bc := helpers.GetBlockclusterInstance()
+	if licenceResponse.Metadata.BlockClusterAgentVersion != helpers.CURRENT_AGENT_VERSION {
 		// delete this pod so that it can fetch new image
 		blockClusterPods := helpers.FetchPod("app%3Dblockcluster-agent")
 		for i := 0; i < len(blockClusterPods.Items); i++ {
@@ -66,8 +65,13 @@ func handleVersionMetadata(licenceResponse *dtos.LicenceValidationResponse) {
 		}
 	}
 	imageTag := (strings.Split(appContainer.Image, ":"))[0]
+
+	bc.AgentInfo.WebAppVersion = imageTag
+
 	if licenceResponse.Metadata.WebAppVersion != "" && licenceResponse.Metadata.WebAppVersion != imageTag {
-		updateWebAppDeployment(imageTag)
+		if bc.Metadata.ShouldDaemonDeployWebapp {
+			updateWebAppDeployment(imageTag)
+		}
 	}
 
 }
@@ -78,8 +82,12 @@ func ValidateLicence() {
 	bc := helpers.GetBlockclusterInstance()
 	bc.Licence = licence
 
+	if bc.AgentInfo.WebAppVersion == "" {
+		bc.AgentInfo.WebAppVersion = "NotFetched"
+	}
+
 	path := "/licence/validate"
-	jsonBody := fmt.Sprintf(`{"licence": "%s"}`, base64.StdEncoding.EncodeToString([]byte(licence.Key)))
+	jsonBody := fmt.Sprintf(`{"licence": "%s", "daemonVersion": "%s", "webAppVersion": "%s"}`, base64.StdEncoding.EncodeToString([]byte(licence.Key)), helpers.CURRENT_AGENT_VERSION, bc.AgentInfo.WebAppVersion)
 
 	res, err := bc.SendRequest(path, jsonBody)
 
