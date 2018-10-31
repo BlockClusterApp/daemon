@@ -54,6 +54,10 @@ func GetAuthorizationToken() string {
 
 	output, err := client.GetAuthorizationToken(params)
 
+	if err != nil {
+		return ""
+	}
+
 	password := *output.AuthorizationData[0].AuthorizationToken
 	auth := base64.StdEncoding.EncodeToString([]byte(fmt.Sprintf("%s:%s", "AWS", password)))
 	repositories := "402432300121.dkr.ecr.us-west-2.amazonaws.com"
