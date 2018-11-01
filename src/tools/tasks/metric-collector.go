@@ -36,7 +36,7 @@ func getNodeMetrics() {
 	}
 
 	var nodeMetricResponse = dtos.NodeMetricResponse{}
-	err = json.Unmarshal([]byte(response), nodeMetricResponse)
+	err = json.Unmarshal([]byte(response), &nodeMetricResponse)
 
 	if err != nil {
 		helpers.GetLogger().Printf("Error unmarshalling node metrics %s", err.Error())
@@ -86,7 +86,7 @@ func getPodMetrics() {
 			}
 
 			var podMetricResponse = dtos.PodMetricResponse{}
-			err = json.Unmarshal([]byte(response), podMetricResponse)
+			err = json.Unmarshal([]byte(response), &podMetricResponse)
 
 			if err != nil {
 				helpers.GetLogger().Printf("Error unmarshalling pod metrics %s", err.Error())
