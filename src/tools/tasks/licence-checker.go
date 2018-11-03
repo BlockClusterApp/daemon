@@ -41,14 +41,17 @@ func handleVersionMetadata(licenceResponse *dtos.LicenceValidationResponse) {
 	if licenceResponse.Metadata.BlockClusterAgentVersion != helpers.CURRENT_AGENT_VERSION {
 		// delete this pod so that it can fetch new image
 		blockClusterPods := helpers.FetchPod("app%3Dblockcluster-agent")
+		if len(blockClusterPods.Items) == 0 {
+			return
+		}
 		for i := 0; i < len(blockClusterPods.Items); i++ {
-			go func() {
+			go func(i int) {
 				// Don't delete all the pods at the same time.
 				sleepDuration := time.Duration(i * 20)
 				time.Sleep(sleepDuration * time.Second)
 				var pod = blockClusterPods.Items[i]
 				helpers.DeletePod(pod.Metadata.Namespace, pod.Metadata.Name)
-			}()
+			}(i)
 		}
 	}
 

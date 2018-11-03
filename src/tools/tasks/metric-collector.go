@@ -62,7 +62,7 @@ func getNodeMetrics() {
 		return
 	}
 
-	requestObject := fmt.Sprintf("{\"nodes\": \"%s\"}", jsonBody)
+	requestObject := fmt.Sprintf("{\"nodes\": %s}", jsonBody)
 
 	bc := helpers.GetBlockclusterInstance()
 	bc.SendRequest("/metrics", requestObject)
@@ -116,7 +116,7 @@ func getPodMetrics() {
 				return
 			}
 
-			requestObject := fmt.Sprintf("{\"pods\": \"%s\"}", jsonBody)
+			requestObject := fmt.Sprintf("{\"pods\": %s}", jsonBody)
 			bc := helpers.GetBlockclusterInstance()
 
 			log.Printf("Pod metrics %s", path)

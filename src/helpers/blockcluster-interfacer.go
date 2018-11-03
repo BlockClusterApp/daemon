@@ -26,8 +26,8 @@ var Blockcluster BlockClusterType
 const BASE_URL = "https://enterprise-api.blockcluster.io/daemon"
 
 func getBaseURL() string {
-	if os.Getenv("GO_ENV") == "development" {
-		if os.Getenv("ENTERPRISE_API_URL") != "" {
+	if os.Getenv("GO_ENV") == "development" && os.Getenv("KUBERNETES_SERVICE_PORT_HTTPS") == ""{
+		if os.Getenv("ENTERPRISE_API_URL") != "" && os.Getenv("ENTERPRISE_API_URL") != BASE_URL {
 			return os.Getenv("ENTERPRISE_API_URL")
 		}
 		return "https://enterprise-api-dev.blockcluster.io/daemon"

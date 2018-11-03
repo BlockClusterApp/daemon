@@ -44,7 +44,9 @@ func handlePing(w http.ResponseWriter, r *http.Request) {
 
 func handleConfig(w http.ResponseWriter, r *http.Request) {
 	log.Println("Handle /config")
-	if os.Getenv("GO_ENV") == "development" {
+
+	// In kubernetes cluster, always verify the license
+	if os.Getenv("GO_ENV") == "development" && os.Getenv("KUBERNETES_SERVICE_PORT_HTTPS") == "" {
 		fmt.Fprintf(w, "%s", config.GetKubeConfig())
 		return
 	}
