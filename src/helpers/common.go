@@ -88,21 +88,33 @@ func GetLocationCodesOfEnv(config map[string]*dtos.LocationConfig) []string {
 	return locationCodes
 }
 
-func GetWebAppConfig(content string, namespace string) dtos.WebAppConfig {
-	var config = dtos.WebAppConfig{}
+type SimpleRepository struct {
+	URL map[string]string `json:"url"`
+}
 
-	var rawConfig = dtos.WebAppConfigFile{}
-	err := json.Unmarshal([]byte(content), &rawConfig)
+type RepositoryConfig struct {
+	Dynamo SimpleRepository `json:"dynamo"`
+	Impulse SimpleRepository `json:"impulse"`
+}
 
-	if err != nil {
-		GetLogger().Printf("Error unmarshalling raw webapp config file: %s", err.Error())
-		return config
+func GetRepositoryConfigForConfig() RepositoryConfig {
+	var config = RepositoryConfig{}
+
+	webAppConfig := config2.GetWebAppConfig()
+
+	namespaces := reflect.ValueOf(webAppConfig.Dynamo).MapKeys()
+
+	dynamoRepo := make(map[string]string, len(namespaces))
+	impulseRepo := make(map[string]string, len(namespaces))
+
+	for _,namespace := range namespaces {
+		namespace := namespace.String()
+		dynamoRepo[namespace] = webAppConfig.Dynamo[namespace]
+		impulseRepo[namespace] = webAppConfig.Impulse[namespace]
 	}
 
-	config.ImageRepository = rawConfig.WebApp[namespace]
-	config.RedisPort = rawConfig.Redis[namespace].Port
-	config.RedisHost = rawConfig.Redis[namespace].Host
-	config.MongoConnectionURL = rawConfig.MongoURL[namespace]
+	config.Dynamo.URL = dynamoRepo
+	config.Impulse.URL = impulseRepo
 
 	return config
 }

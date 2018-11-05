@@ -117,6 +117,10 @@ func UpdateHyperionPorts() {
 
 	newConfig = value
 
+	repositoryConfig,_ := json.Marshal(helpers.GetRepositoryConfigForConfig())
+
+	newConfig,_ = sjson.Set(newConfig, "repositories", repositoryConfig)
+
 	_, err = file.Write([]byte(newConfig))
 
 	if err != nil {

@@ -206,14 +206,14 @@ func CheckAndDeployWebapp(namespace string) {
 		return
 	}
 
-	webAppConfig := config[namespace]
+
 	locationCodes := GetLocationCodesOfEnv(kubeConfig.Clusters[namespace])
 
 	var _webAppConfig = dtos.WebAppConfig{
-		MongoConnectionURL: webAppConfig.MongoURL[namespace],
-		RedisHost: webAppConfig.Redis[namespace].Host,
-		RedisPort: webAppConfig.Redis[namespace].Port,
-		ImageRepository: webAppConfig.WebApp[namespace],
+		MongoConnectionURL: config.MongoURL[namespace],
+		RedisHost: config.Redis[namespace].Host,
+		RedisPort: config.Redis[namespace].Port,
+		ImageRepository: config.WebApp[namespace],
 	}
 
 	for _, locationCode := range locationCodes {
