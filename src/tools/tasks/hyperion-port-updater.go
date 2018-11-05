@@ -98,8 +98,24 @@ func UpdateHyperionPorts() {
 
 	defer file.Close()
 
-	// Write other configs
+	bc := helpers.GetBlockclusterInstance()
 
+	// Write other configs
+	var activatedFeatures = make(map[string]bool, len(bc.Metadata.ActivatedFeatures))
+	for _,feature := range bc.Metadata.ActivatedFeatures {
+		activatedFeatures[feature] = true
+	}
+
+	val, err := json.Marshal(activatedFeatures)
+
+	if err != nil {
+		helpers.GetLogger().Printf("Error marshalling features:  %s", err.Error())
+		return
+	}
+
+	value, _ := sjson.Set(newConfig, "features", val)
+
+	newConfig = value
 
 	_, err = file.Write([]byte(newConfig))
 

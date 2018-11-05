@@ -10,9 +10,9 @@ import (
 	"path/filepath"
 )
 
-func GetWebAppConfig() map[string]dtos.WebAppConfig {
+func GetWebAppConfig() map[string]dtos.WebAppConfigFile {
 
-	var webAppConfig = map[string]dtos.WebAppConfig{}
+	var webAppConfig = map[string]dtos.WebAppConfigFile{}
 	filePath, _ := filepath.Abs("/conf.d/config.json")
 	file, e := ioutil.ReadFile(filePath)
 	if e != nil {

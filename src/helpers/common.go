@@ -87,3 +87,22 @@ func GetLocationCodesOfEnv(config map[string]*dtos.LocationConfig) []string {
 	}
 	return locationCodes
 }
+
+func GetWebAppConfig(content string, namespace string) dtos.WebAppConfig {
+	var config = dtos.WebAppConfig{}
+
+	var rawConfig = dtos.WebAppConfigFile{}
+	err := json.Unmarshal([]byte(content), &rawConfig)
+
+	if err != nil {
+		GetLogger().Printf("Error unmarshalling raw webapp config file: %s", err.Error())
+		return config
+	}
+
+	config.ImageRepository = rawConfig.WebApp[namespace]
+	config.RedisPort = rawConfig.Redis[namespace].Port
+	config.RedisHost = rawConfig.Redis[namespace].Host
+	config.MongoConnectionURL = rawConfig.MongoURL[namespace]
+
+	return config
+}
