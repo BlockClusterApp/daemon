@@ -5,6 +5,7 @@ import (
 	config2 "github.com/BlockClusterApp/daemon/src/config"
 	"github.com/BlockClusterApp/daemon/src/dtos"
 	"github.com/mitchellh/mapstructure"
+	"log"
 	"reflect"
 	"strings"
 	"time"
@@ -104,6 +105,8 @@ func GetRepositoryConfigForConfig() RepositoryConfig {
 
 	namespaces := reflect.ValueOf(webAppConfig.Dynamo).MapKeys()
 
+	log.Printf("Namespaces %s", namespaces)
+
 	dynamoRepo := make(map[string]string, len(namespaces))
 	impulseRepo := make(map[string]string, len(namespaces))
 
@@ -115,6 +118,8 @@ func GetRepositoryConfigForConfig() RepositoryConfig {
 
 	config.Dynamo.URL = dynamoRepo
 	config.Impulse.URL = impulseRepo
+
+	log.Printf("Config %s", config)
 
 	return config
 }
