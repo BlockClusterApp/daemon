@@ -5,7 +5,6 @@ import (
 	"fmt"
 	"github.com/BlockClusterApp/daemon/src/dtos"
 	"github.com/BlockClusterApp/daemon/src/helpers"
-	"log"
 	"net/http"
 )
 
@@ -119,14 +118,14 @@ func getPodMetrics() {
 			requestObject := fmt.Sprintf("{\"pods\": %s}", jsonBody)
 			bc := helpers.GetBlockclusterInstance()
 
-			log.Printf("Pod metrics %s", path)
+			helpers.GetLogger().Printf("Pod metrics %s", path)
 			bc.SendRequest("/metrics", requestObject)
 		}(_path)
 	}
 }
 
 func UpdateMetrics() {
-	log.Printf("Metric collection started")
+	helpers.GetLogger().Printf("Metric collection started")
 	go getNodeMetrics()
 	go getPodMetrics()
 }
