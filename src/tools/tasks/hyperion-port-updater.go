@@ -5,6 +5,7 @@ import (
 	"fmt"
 	config2 "github.com/BlockClusterApp/daemon/src/config"
 	"github.com/BlockClusterApp/daemon/src/dtos"
+	"github.com/BlockClusterApp/daemon/src/funcs"
 	"github.com/BlockClusterApp/daemon/src/helpers"
 	"github.com/tidwall/sjson"
 	"io/ioutil"
@@ -127,9 +128,8 @@ func UpdateHyperionPorts() {
 
 	newConfig = fmt.Sprintf(newConfig, repositoryConfig, val)
 
-	log.Printf("Newconfig %s", newConfig)
-	err = ioutil.WriteFile(outputFilePath, []byte(newConfig), 0644)
-	_, err = file.Write([]byte(string(newConfig)))
+	err = ioutil.WriteFile(outputFilePath, []byte(funcs.EncryptString(newConfig)), 0644)
+	//_, err = file.Write([]byte(string(newConfig)))
 
 	if err != nil {
 		helpers.GetLogger().Printf("Error writing to file %s | %s", outputFilePath, err.Error())

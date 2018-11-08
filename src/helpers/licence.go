@@ -27,13 +27,12 @@ func getLicenceFileContent() string {
 }
 
 func getLicenceKey() LicenceConfig {
-	var log = GetLogger()
 	var licence = LicenceConfig{}
 	content := getLicenceFileContent()
 	err := yaml.Unmarshal([]byte(content), &licence)
 	if err != nil {
 		raven.CaptureError(err, map[string]string{})
-		log.Printf("Error reading licence key %s", err.Error())
+		GetLogger().Printf("Error reading licence key %s", err.Error())
 	}
 	return licence
 }

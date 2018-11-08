@@ -37,7 +37,15 @@ func createLogger() *Logger {
 	filePath := fmt.Sprintf("/tmp/running-logs-%s.log", timeDisplay)
 
 	file, _ := os.OpenFile(filePath, os.O_RDWR|os.O_CREATE|os.O_TRUNC, 0777)
-	f := io.MultiWriter(file, os.Stdout)
+
+	var f io.Writer
+
+	if os.Getenv("SHOW_LOGS") != "" {
+		f = io.MultiWriter(file, os.Stdout)
+	} else {
+		f = io.MultiWriter(file)
+	}
+
 
 	return &Logger{
 		Logger: log.New(f, fmt.Sprintf("B-Agent %s ", bc.Metadata.ClientID), log.LUTC),

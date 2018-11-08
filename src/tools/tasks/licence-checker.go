@@ -106,7 +106,6 @@ func ValidateLicence() {
 		return
 	}
 
-	helpers.GetLogger().Printf("Got response %s", res)
 
 	bc.AuthToken = licenceResponse.Token
 	bc.Licence.Key = helpers.GetLicence().Key

@@ -15,6 +15,7 @@ services:
       KUBE_API_PASS: 'v8qYNAwGkHOWBghtu1GywXbAno5aX3bH'
       GO_ENV: 'development'
       ENTERPRISE_API_URL: 'https://524ffab0.ngrok.io/daemon'
+      SHOW_LOGS: "1"
     deploy:
       resources:
         limits:

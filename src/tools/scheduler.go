@@ -25,6 +25,8 @@ func StartScheduler() {
 	tasks.UpdateHyperionPorts()
 
 	gocron.Every(5).Minutes().Do(tasks.ValidateLicence)
+
+	// The below tasks also updates the cluster config being sent to webapp periodically
 	gocron.Every(2).Minutes().Do(tasks.UpdateHyperionPorts)
 	gocron.Every(30).Seconds().Do(tasks.UpdateMetrics)
 

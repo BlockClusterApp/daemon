@@ -11,13 +11,12 @@ import (
 )
 
 func MakeHTTPRequest(url string, method string, payload string) (string, error){
-	log := GetLogger()
 	//GetLogger().Printf("Sending body %s", payload)
 	req, err := http.NewRequest(method, url, bytes.NewBuffer([]byte(payload)))
 	req.Header.Set("Content-Type", "application/json")
 
 	bc := GetBlockclusterInstance()
-	log.Println("Auth", bc.AuthToken)
+	//log.Println("Auth", bc.AuthToken)
 	if bc.AuthToken != "" {
 		req.Header.Set("Authorization", fmt.Sprintf("Basic %s", base64.StdEncoding.EncodeToString([]byte(bc.AuthToken))))
 	} else {
@@ -37,7 +36,7 @@ func MakeHTTPRequest(url string, method string, payload string) (string, error){
 			"method": method,
 			"payload": payload,
 		})
-		log.Printf("Error making request: %s", err.Error())
+		GetLogger().Printf("Error making request: %s", err.Error())
 		return "", err // Can't find cert file
 	}
 	defer resp.Body.Close()
@@ -50,7 +49,7 @@ func MakeHTTPRequest(url string, method string, payload string) (string, error){
 			"payload": payload,
 		})
 		bodyBytes, _ := ioutil.ReadAll(resp.Body)
-		log.Printf("Request to %s returned %d %s", url, resp.StatusCode, bodyBytes)
+		GetLogger().Printf("Request to %s returned %d %s", url, resp.StatusCode, bodyBytes)
 		resp.Body.Close()
 		return "", errors.New(fmt.Sprintf("Request to %s returned %d", url, resp.StatusCode))
 	}
@@ -60,7 +59,7 @@ func MakeHTTPRequest(url string, method string, payload string) (string, error){
 		bodyString := string(bodyBytes)
 
 		if err2 != nil {
-			log.Printf("Error reading body for %s", url, err2.Error())
+			GetLogger().Printf("Error reading body for %s", url, err2.Error())
 			return "",err2
 		}
 
