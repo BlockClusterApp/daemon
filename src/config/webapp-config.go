@@ -28,7 +28,5 @@ func GetWebAppConfig() dtos.WebAppConfigFile {
 	}
 
 
-	log.Printf("Config file %s", webAppConfig.Dynamo)
-
 	return webAppConfig
 }
