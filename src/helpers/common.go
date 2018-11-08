@@ -119,7 +119,5 @@ func GetRepositoryConfigForConfig() RepositoryConfig {
 	config.Dynamo.URL = dynamoRepo
 	config.Impulse.URL = impulseRepo
 
-	log.Printf("Config %s", config)
-
 	return config
 }
