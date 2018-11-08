@@ -7,9 +7,12 @@ import (
 	"github.com/BlockClusterApp/daemon/src/dtos"
 	"github.com/BlockClusterApp/daemon/src/helpers"
 	"github.com/tidwall/sjson"
+	"io/ioutil"
+	"log"
 	"net/http"
 	"os"
 	"strconv"
+	"strings"
 )
 
 func UpdateHyperionPorts() {
@@ -25,6 +28,8 @@ func UpdateHyperionPorts() {
 		helpers.GetLogger().Printf("Error parsing config for namespaces %s", err.Error())
 		return
 	}
+
+	log.Printf("Namespaces %s", namespaces)
 
 	// Need to be synchronous else file writing may contain inconsistent values. Or if you have any better way of
 	for _, namespace := range namespaces {
@@ -98,7 +103,33 @@ func UpdateHyperionPorts() {
 
 	defer file.Close()
 
-	_, err = file.Write([]byte(newConfig))
+	bc := helpers.GetBlockclusterInstance()
+
+	// Write other configs
+	var activatedFeatures = make(map[string]bool, len(bc.Metadata.ActivatedFeatures))
+	for _,feature := range bc.Metadata.ActivatedFeatures {
+		activatedFeatures[feature] = true
+	}
+
+	val, err := json.Marshal(activatedFeatures)
+
+	if err != nil {
+		helpers.GetLogger().Printf("Error marshalling features:  %s", err.Error())
+		return
+	}
+
+	repositoryConfig,_ := json.Marshal(helpers.GetRepositoryConfigForConfig())
+
+	newConfig, _ = sjson.Set(newConfig, "features", "%s")
+	newConfig,_ = sjson.Set(newConfig, "repositories", "%s")
+
+	newConfig = strings.Replace(newConfig, `"%s"`, "%s", 2)
+
+	newConfig = fmt.Sprintf(newConfig, repositoryConfig, val)
+
+	log.Printf("Newconfig %s", newConfig)
+	err = ioutil.WriteFile(outputFilePath, []byte(newConfig), 0644)
+	_, err = file.Write([]byte(string(newConfig)))
 
 	if err != nil {
 		helpers.GetLogger().Printf("Error writing to file %s | %s", outputFilePath, err.Error())

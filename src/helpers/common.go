@@ -5,10 +5,13 @@ import (
 	config2 "github.com/BlockClusterApp/daemon/src/config"
 	"github.com/BlockClusterApp/daemon/src/dtos"
 	"github.com/mitchellh/mapstructure"
+	"log"
 	"reflect"
 	"strings"
 	"time"
 )
+
+const CURRENT_AGENT_VERSION = "1.0";
 
 func UnmarshalJson(input []byte) (map[string]interface{}, error) {
 	var result interface{}
@@ -84,4 +87,37 @@ func GetLocationCodesOfEnv(config map[string]*dtos.LocationConfig) []string {
 		locationCodes[i] = keys[i].String()
 	}
 	return locationCodes
+}
+
+type SimpleRepository struct {
+	URL map[string]string `json:"url"`
+}
+
+type RepositoryConfig struct {
+	Dynamo SimpleRepository `json:"dynamo"`
+	Impulse SimpleRepository `json:"impulse"`
+}
+
+func GetRepositoryConfigForConfig() RepositoryConfig {
+	var config = RepositoryConfig{}
+
+	webAppConfig := config2.GetWebAppConfig()
+
+	namespaces := reflect.ValueOf(webAppConfig.Dynamo).MapKeys()
+
+	log.Printf("Namespaces %s", namespaces)
+
+	dynamoRepo := make(map[string]string, len(namespaces))
+	impulseRepo := make(map[string]string, len(namespaces))
+
+	for _,namespace := range namespaces {
+		namespace := namespace.String()
+		dynamoRepo[namespace] = webAppConfig.Dynamo[namespace]
+		impulseRepo[namespace] = webAppConfig.Impulse[namespace]
+	}
+
+	config.Dynamo.URL = dynamoRepo
+	config.Impulse.URL = impulseRepo
+
+	return config
 }

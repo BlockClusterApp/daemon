@@ -6,6 +6,7 @@ import (
 	"github.com/BlockClusterApp/daemon/src/tools"
 	"github.com/getsentry/raven-go"
 	"net/http"
+	"os"
 
 	"github.com/BlockClusterApp/daemon/src/config"
 	"github.com/gorilla/mux"
@@ -43,6 +44,12 @@ func handlePing(w http.ResponseWriter, r *http.Request) {
 
 func handleConfig(w http.ResponseWriter, r *http.Request) {
 	log.Println("Handle /config")
+
+	// In kubernetes cluster, always verify the license
+	if os.Getenv("GO_ENV") == "development" && os.Getenv("KUBERNETES_SERVICE_PORT_HTTPS") == "" {
+		fmt.Fprintf(w, "%s", config.GetKubeConfig())
+		return
+	}
 	var bc = helpers.GetBlockclusterInstance()
 	if bc.Valid == false {
 		fmt.Fprintf(w, "%s", "{\"error\": \"Licence Invalid\", \"errorCode\": 404}")

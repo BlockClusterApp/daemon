@@ -184,6 +184,7 @@ func CheckAndDeployWebapp(namespace string) {
 	}
 
 	config := config2.GetWebAppConfig()
+
 	namespaces := reflect.ValueOf(config).MapKeys()
 
 	if len(namespaces) == 0 {
@@ -205,12 +206,19 @@ func CheckAndDeployWebapp(namespace string) {
 		return
 	}
 
-	webAppConfig := config[namespace]
+
 	locationCodes := GetLocationCodesOfEnv(kubeConfig.Clusters[namespace])
+
+	var _webAppConfig = dtos.WebAppConfig{
+		MongoConnectionURL: config.MongoURL[namespace],
+		RedisHost: config.Redis[namespace].Host,
+		RedisPort: config.Redis[namespace].Port,
+		ImageRepository: config.WebApp[namespace],
+	}
 
 	for _, locationCode := range locationCodes {
 		locationConfig := kubeConfig.Clusters[namespace][locationCode]
-		go _checkAndDeployWebapp(namespace, *locationConfig, webAppConfig)
+		go _checkAndDeployWebapp(namespace, *locationConfig, _webAppConfig)
 	}
 
 }

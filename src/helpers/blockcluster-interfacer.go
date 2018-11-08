@@ -7,6 +7,7 @@ import (
 	"github.com/BlockClusterApp/daemon/src/dtos"
 	"github.com/getsentry/raven-go"
 	"net/http"
+	"os"
 )
 
 type BlockClusterType struct {
@@ -14,21 +15,29 @@ type BlockClusterType struct {
 	AuthToken      string
 	Valid          bool
 	AuthRetryCount int8
-	Metadata       struct {
-		BlockClusterAgentVersion string
-		WebAppVersion            string
-		ShouldDaemonDeployWebapp bool
-		ClientID string
+	Metadata       dtos.LicenceMetadata
+	AgentInfo 	   struct {
+		WebAppVersion string
 	}
 }
 
 var Blockcluster BlockClusterType
 
-var BASE_URL = "https://enterprise-api.blockcluster.io/daemon"
-//var BASE_URL = "https://3d7089e8.ngrok.io/daemon"
+const BASE_URL = "https://enterprise-api.blockcluster.io/daemon"
+
+func getBaseURL() string {
+	if os.Getenv("GO_ENV") == "development" && os.Getenv("KUBERNETES_SERVICE_PORT_HTTPS") == ""{
+		if os.Getenv("ENTERPRISE_API_URL") != "" && os.Getenv("ENTERPRISE_API_URL") != BASE_URL {
+			return os.Getenv("ENTERPRISE_API_URL")
+		}
+		return "https://enterprise-api-dev.blockcluster.io/daemon"
+	}
+	return BASE_URL
+}
 
 func (bc *BlockClusterType) SendRequest(path string, body string) (string, error) {
-	url := fmt.Sprintf("%s%s", BASE_URL, path)
+
+	url := fmt.Sprintf("%s%s", getBaseURL(), path)
 	res, err := MakeHTTPRequest(url, http.MethodPost, body)
 	return res, err
 }
@@ -36,7 +45,7 @@ func (bc *BlockClusterType) SendRequest(path string, body string) (string, error
 // Duplicate function to account for cyclic import
 func (bc *BlockClusterType) Reauthorize() {
 	path := "/licence/validate"
-	jsonBody := fmt.Sprintf(`{"licence": "%s"}`, base64.StdEncoding.EncodeToString([]byte(bc.Licence.Key)))
+	jsonBody := fmt.Sprintf(`{"licence": "%s", "daemonVersion": "%s"}`, base64.StdEncoding.EncodeToString([]byte(bc.Licence.Key)), CURRENT_AGENT_VERSION)
 
 	res, err := bc.SendRequest(path, jsonBody)
 

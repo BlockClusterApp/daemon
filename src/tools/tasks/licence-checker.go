@@ -10,8 +10,6 @@ import (
 	"time"
 )
 
-const CURRENT_AGENT_VERSION = "1.0";
-
 func updateWebAppDeployment(newImageTag string) {
 	deployment := helpers.FetchDeployment("app%3Dblockcluster-app")
 	if deployment == nil {
@@ -39,17 +37,21 @@ func updateWebAppDeployment(newImageTag string) {
 }
 
 func handleVersionMetadata(licenceResponse *dtos.LicenceValidationResponse) {
-	if licenceResponse.Metadata.BlockClusterAgentVersion != CURRENT_AGENT_VERSION {
+	bc := helpers.GetBlockclusterInstance()
+	if licenceResponse.Metadata.BlockClusterAgentVersion != helpers.CURRENT_AGENT_VERSION {
 		// delete this pod so that it can fetch new image
 		blockClusterPods := helpers.FetchPod("app%3Dblockcluster-agent")
+		if len(blockClusterPods.Items) == 0 {
+			return
+		}
 		for i := 0; i < len(blockClusterPods.Items); i++ {
-			go func() {
+			go func(i int) {
 				// Don't delete all the pods at the same time.
 				sleepDuration := time.Duration(i * 20)
 				time.Sleep(sleepDuration * time.Second)
 				var pod = blockClusterPods.Items[i]
 				helpers.DeletePod(pod.Metadata.Namespace, pod.Metadata.Name)
-			}()
+			}(i)
 		}
 	}
 
@@ -65,9 +67,14 @@ func handleVersionMetadata(licenceResponse *dtos.LicenceValidationResponse) {
 			break
 		}
 	}
-	imageTag := (strings.Split(appContainer.Image, ":"))[0]
+	imageTag := (strings.Split(appContainer.Image, ":"))[1]
+
+	bc.AgentInfo.WebAppVersion = imageTag
+
 	if licenceResponse.Metadata.WebAppVersion != "" && licenceResponse.Metadata.WebAppVersion != imageTag {
-		updateWebAppDeployment(imageTag)
+		if bc.Metadata.ShouldDaemonDeployWebapp {
+			updateWebAppDeployment(imageTag)
+		}
 	}
 
 }
@@ -78,8 +85,12 @@ func ValidateLicence() {
 	bc := helpers.GetBlockclusterInstance()
 	bc.Licence = licence
 
+	if bc.AgentInfo.WebAppVersion == "" {
+		bc.AgentInfo.WebAppVersion = "NotFetched"
+	}
+
 	path := "/licence/validate"
-	jsonBody := fmt.Sprintf(`{"licence": "%s"}`, base64.StdEncoding.EncodeToString([]byte(licence.Key)))
+	jsonBody := fmt.Sprintf(`{"licence": "%s", "daemonVersion": "%s", "webAppVersion": "%s"}`, base64.StdEncoding.EncodeToString([]byte(licence.Key)), helpers.CURRENT_AGENT_VERSION, bc.AgentInfo.WebAppVersion)
 
 	res, err := bc.SendRequest(path, jsonBody)
 
@@ -100,10 +111,7 @@ func ValidateLicence() {
 	bc.AuthToken = licenceResponse.Token
 	bc.Licence.Key = helpers.GetLicence().Key
 
-	bc.Metadata.ShouldDaemonDeployWebapp = licenceResponse.Metadata.ShouldDaemonDeployWebapp
-	bc.Metadata.WebAppVersion = licenceResponse.Metadata.WebAppVersion
-	bc.Metadata.BlockClusterAgentVersion = licenceResponse.Metadata.BlockClusterAgentVersion
-	bc.Metadata.ClientID = licenceResponse.Metadata.ClientID
+	bc.Metadata = licenceResponse.Metadata
 
 	helpers.RefreshLogger()
 
