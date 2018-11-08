@@ -11,7 +11,7 @@ import (
 	"time"
 )
 
-const CURRENT_AGENT_VERSION = "1.0";
+const CURRENT_AGENT_VERSION = "1.2";
 
 func UnmarshalJson(input []byte) (map[string]interface{}, error) {
 	var result interface{}
