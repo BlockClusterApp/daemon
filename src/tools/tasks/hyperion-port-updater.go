@@ -108,7 +108,7 @@ func UpdateHyperionPorts() {
 
 	// Write other configs
 	var activatedFeatures = make(map[string]bool, len(bc.Metadata.ActivatedFeatures))
-	for _,feature := range bc.Metadata.ActivatedFeatures {
+	for _, feature := range bc.Metadata.ActivatedFeatures {
 		activatedFeatures[feature] = true
 	}
 
@@ -119,17 +119,23 @@ func UpdateHyperionPorts() {
 		return
 	}
 
-	repositoryConfig,_ := json.Marshal(helpers.GetRepositoryConfigForConfig())
+	repoConfig, webAppConfig := helpers.GetRepositoryConfigForConfig()
+	repositoryConfig, _ := json.Marshal(repoConfig)
+	smtpConfig, _ := json.Marshal(webAppConfig.SMTP)
 
 	newConfig, _ = sjson.Set(newConfig, "features", "%s")
-	newConfig,_ = sjson.Set(newConfig, "repositories", "%s")
+	newConfig = strings.Replace(newConfig, `"%s"`, "%s", 1)
+	newConfig = fmt.Sprintf(newConfig, val)
 
-	newConfig = strings.Replace(newConfig, `"%s"`, "%s", 2)
+	newConfig, _ = sjson.Set(newConfig, "repositories", "%s")
+	newConfig = strings.Replace(newConfig, `"%s"`, "%s", 1)
+	newConfig = fmt.Sprintf(newConfig, repositoryConfig)
 
-	newConfig = fmt.Sprintf(newConfig, repositoryConfig, val)
+	newConfig, _ = sjson.Set(newConfig, "smtpServer", "%s")
+	newConfig = strings.Replace(newConfig, `"%s"`, "%s", 1)
+	newConfig = fmt.Sprintf(newConfig, smtpConfig)
 
 	err = ioutil.WriteFile(outputFilePath, []byte(funcs.EncryptString(newConfig)), 0644)
-	//_, err = file.Write([]byte(string(newConfig)))
 
 	if err != nil {
 		helpers.GetLogger().Printf("Error writing to file %s | %s", outputFilePath, err.Error())

@@ -11,4 +11,12 @@ type WebAppConfigFile struct {
 	WebApp map[string]string `json:"webapp"`
 	MongoURL map[string]string 	`json:"mongoURL"`
 	Redis map[string]RedisConfig `json:"redis"`
+	SMTP struct {
+		Host string `json:"host"`
+		Port string `json:"port"`
+		Auth struct {
+			User string `json:"user"`
+			Pass string `json:"pass"`
+		} `json:"auth"`
+	} `json:"smtp"`
 }

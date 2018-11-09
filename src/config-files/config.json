@@ -40,5 +40,13 @@
     "test": "",
     "staging": "",
     "default": ""
+  },
+  "smtp": {
+    "host": "",
+    "port": "",
+    "auth": {
+      "user": "",
+      "pass": ""
+    }
   }
 }
