@@ -6,34 +6,25 @@ import (
 	"fmt"
 	"github.com/BlockClusterApp/daemon/src/dtos"
 	"github.com/BlockClusterApp/daemon/src/helpers"
-	"strings"
 	"time"
 )
 
-func updateWebAppDeployment(newImageTag string) {
-	deployment := helpers.FetchDeployment("app%3Dblockcluster-app")
-	if deployment == nil {
+func updateWebAppDeployment() {
+
+	webAppPods := helpers.FetchPod("app%3Dblockcluster-app")
+	if len(webAppPods.Items) == 0 {
 		return
 	}
-	webAppIndex := -1
-	for i := 0; i < len(deployment.Items[0].Spec.Template.Spec.Containers); i++ {
-		if deployment.Items[0].Spec.Template.Spec.Containers[i].Name == "blockcluster-webapp" || deployment.Items[0].Spec.Template.Spec.Containers[i].Name == "app-deploy" {
-			webAppIndex = i
-			break
-		}
+	for i := 0; i < len(webAppPods.Items); i++ {
+		go func(i int) {
+			// Don't delete all the pods at the same time.
+			sleepDuration := time.Duration(i * 60)
+			time.Sleep(sleepDuration * time.Second)
+			var pod = webAppPods.Items[i]
+			helpers.DeletePod(pod.Metadata.Namespace, pod.Metadata.Name)
+		}(i)
 	}
 
-	if webAppIndex < 0 {
-		helpers.GetLogger().Printf("Blockcluster-webapp container not found while updating deployment")
-		return
-	}
-
-	image := deployment.Items[0].Spec.Template.Spec.Containers[webAppIndex].Image
-	imageRepo := strings.Split(image, ":")[0]
-
-	deployment.Items[0].Spec.Template.Spec.Containers[webAppIndex].Image = fmt.Sprintf("%s:%s", imageRepo, newImageTag)
-
-	helpers.UpdateDeployment(deployment)
 }
 
 func handleVersionMetadata(licenceResponse *dtos.LicenceValidationResponse) {
@@ -55,25 +46,12 @@ func handleVersionMetadata(licenceResponse *dtos.LicenceValidationResponse) {
 		}
 	}
 
-	webAppPodInfo := helpers.FetchPod("app%3Dblockcluster-app")
-	if webAppPodInfo == nil {
-		return
-	}
 
-	var appContainer dtos.Container
-	for _, container := range webAppPodInfo.Items[0].Spec.Containers {
-		if container.Name == "app" {
-			appContainer = container
-			break
-		}
-	}
-	imageTag := (strings.Split(appContainer.Image, ":"))[1]
+	webAppMeta := helpers.GetCurrentWebAppMeta()
 
-	bc.AgentInfo.WebAppVersion = imageTag
-
-	if licenceResponse.Metadata.WebAppVersion != "" && licenceResponse.Metadata.WebAppVersion != imageTag {
+	if licenceResponse.Metadata.WebAppVersion != "" && licenceResponse.Metadata.WebAppVersion != webAppMeta.WebAppVersion {
 		if bc.Metadata.ShouldDaemonDeployWebapp {
-			updateWebAppDeployment(imageTag)
+			updateWebAppDeployment()
 		}
 	}
 
@@ -83,6 +61,7 @@ func ValidateLicence() {
 	helpers.UpdateLicence()
 	licence := helpers.GetLicence()
 	bc := helpers.GetBlockclusterInstance()
+	webAppMeta := helpers.GetCurrentWebAppMeta()
 	bc.Licence = licence
 
 	if bc.AgentInfo.WebAppVersion == "" {
@@ -90,7 +69,7 @@ func ValidateLicence() {
 	}
 
 	path := "/licence/validate"
-	jsonBody := fmt.Sprintf(`{"licence": "%s", "daemonVersion": "%s", "webAppVersion": "%s"}`, base64.StdEncoding.EncodeToString([]byte(licence.Key)), helpers.CURRENT_AGENT_VERSION, bc.AgentInfo.WebAppVersion)
+	jsonBody := fmt.Sprintf(`{"licence": "%s", "daemonVersion": "%s", "webAppVersion": "%s"}`, base64.StdEncoding.EncodeToString([]byte(licence.Key)), helpers.CURRENT_AGENT_VERSION, webAppMeta.WebAppVersion)
 
 	res, err := bc.SendRequest(path, jsonBody)
 

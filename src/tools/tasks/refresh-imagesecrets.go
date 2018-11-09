@@ -8,6 +8,24 @@ import (
 )
 
 func RefreshImagePullSecrets() {
+	bc := helpers.GetBlockclusterInstance()
+
+	namespaces := helpers.GetNamespaces()
+
+	if bc.Metadata.ShouldDaemonDeployWebapp {
+		for _, namespace := range namespaces {
+			go func(namespace string) {
+				helpers.GetLogger().Printf("Checking and deploying webapp in %s", namespace)
+				helpers.CheckAndDeployWebapp(namespace)
+			}(namespace)
+		}
+
+	}
+
+	if !bc.Metadata.ShouldWebAppRefreshAWSImageAuth {
+		return
+	}
+
 	helpers.GetLogger().Printf("Starting image pull secret refresh")
 	authorizationToken := helpers.GetAuthorizationToken()
 
@@ -18,7 +36,6 @@ func RefreshImagePullSecrets() {
 
 	secretName := "blockcluster-regsecret"
 
-	namespaces := helpers.GetNamespaces()
 
 	for _, namespace := range namespaces {
 		go func(namespace string) {
@@ -55,15 +72,5 @@ func RefreshImagePullSecrets() {
 
 	helpers.GetLogger().Printf("Refreshed all image pull secrets")
 
-	bc := helpers.GetBlockclusterInstance()
 
-	if bc.Metadata.ShouldDaemonDeployWebapp {
-		for _, namespace := range namespaces {
-			go func(namespace string) {
-				helpers.GetLogger().Printf("Checking and deploying webapp in %s", namespace)
-				helpers.CheckAndDeployWebapp(namespace)
-			}(namespace)
-		}
-
-	}
 }
