@@ -26,8 +26,9 @@ type ClusterConfig struct {
 }
 
 type WebAppConfig struct {
-	MongoConnectionURL string `json:"mongoComongoURLnnectionURL"`
-	RedisHost          string `json:"redisHost"`
-	RedisPort          string `json:"redisPort"`
-	ImageRepository    string `json:"webAppImageName"`
+	MongoConnectionURL string         `json:"mongoComongoURLnnectionURL"`
+	RedisHost          string         `json:"redisHost"`
+	RedisPort          string         `json:"redisPort"`
+	ImageRepository    string         `json:"webAppImageName"`
+	RazorPay           RazorPayConfig `json:"razorpay"`
 }

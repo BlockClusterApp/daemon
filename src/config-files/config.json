@@ -48,5 +48,19 @@
       "user": "",
       "pass": ""
     }
+  },
+  "razorpay": {
+    "dev": {
+      "id": "",
+      "key": ""
+    },
+    "test": {
+      "id": "",
+      "key": ""
+    },
+    "staging": {
+      "id": "",
+      "key": ""
+    }
   }
 }

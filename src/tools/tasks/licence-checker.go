@@ -46,7 +46,6 @@ func handleVersionMetadata(licenceResponse *dtos.LicenceValidationResponse) {
 		}
 	}
 
-
 	webAppMeta := helpers.GetCurrentWebAppMeta()
 
 	if licenceResponse.Metadata.WebAppVersion != "" && licenceResponse.Metadata.WebAppVersion != webAppMeta.WebAppVersion {
@@ -69,7 +68,7 @@ func ValidateLicence() {
 	}
 
 	path := "/licence/validate"
-	jsonBody := fmt.Sprintf(`{"licence": "%s", "daemonVersion": "%s", "webAppVersion": "%s"}`, base64.StdEncoding.EncodeToString([]byte(licence.Key)), helpers.CURRENT_AGENT_VERSION, webAppMeta.WebAppVersion)
+	jsonBody := fmt.Sprintf(`{"licence": "%s", "daemonVersion": "%s", "webAppVersion": "%s", "migrationVersion": "%s", "migrationStatus": "%s"}`, base64.StdEncoding.EncodeToString([]byte(licence.Key)), helpers.CURRENT_AGENT_VERSION, webAppMeta.WebAppVersion, webAppMeta.MigrationVersion, webAppMeta.MigrationStatus)
 
 	res, err := bc.SendRequest(path, jsonBody)
 
@@ -84,7 +83,6 @@ func ValidateLicence() {
 		helpers.GetLogger().Printf("Error parsing response %s", err.Error())
 		return
 	}
-
 
 	bc.AuthToken = licenceResponse.Token
 	bc.Licence.Key = helpers.GetLicence().Key

@@ -73,6 +73,8 @@ func ReplaceWebAppConfig(fileContent string, webappConfig dtos.WebAppConfig, nam
 		"%__REDIS_HOST__%", webappConfig.RedisHost,
 		"%__REDIS_PORT__%", webappConfig.RedisPort,
 		"%__IMAGE_URL__%", webappConfig.ImageRepository,
+		"%__RAZORPAY_ID__%", webappConfig.RazorPay.Id,
+		"%__RAZORPAY_KEY__%", webappConfig.RazorPay.Key,
 	)
 
 	return replacer.Replace(fileContent)
