@@ -1,11 +1,13 @@
 package dtos
 
 type LicenceMetadata struct {
-	BlockClusterAgentVersion string   `json:"blockclusterAgentVersion"`
-	WebAppVersion            string   `json:"webappVersion"`
-	ShouldDaemonDeployWebapp bool     `json:"shouldDaemonDeployWebapp"`
-	ClientID                 string   `json:"clientId"`
-	ActivatedFeatures        []string `json:"activatedFeatures"`
+	BlockClusterAgentVersion        string   `json:"blockclusterAgentVersion"`
+	WebAppVersion                   string   `json:"webappVersion"`
+	ShouldDaemonDeployWebapp        bool     `json:"shouldDaemonDeployWebapp"`
+	ClientID                        string   `json:"clientId"`
+	ActivatedFeatures               []string `json:"activatedFeatures"`
+	ShouldWebAppRefreshAWSImageAuth bool     `json:"shouldWebAppRefreshAWSImageAuth"`
+	WebAppMigration                 int32    `json:"webAppMigration"`
 }
 
 type LicenceValidationResponse struct {

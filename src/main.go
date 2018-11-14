@@ -43,7 +43,23 @@ func handlePing(w http.ResponseWriter, r *http.Request) {
 }
 
 func handleConfig(w http.ResponseWriter, r *http.Request) {
-	log.Println("Handle /config")
+	log.Println("Handle configuration request")
+
+	webAppVersion := r.FormValue("webAppVersion")
+	clientMigrationVersion := r.FormValue("migrationVersion")
+	clientMigrationStatus := r.FormValue("migrationStatus")
+
+	webAppMeta := helpers.GetCurrentWebAppMeta()
+
+	if len(webAppVersion) > 0 {
+		webAppMeta.WebAppVersion = webAppVersion
+	}
+	if len(clientMigrationVersion) > 0 {
+		webAppMeta.MigrationVersion = clientMigrationVersion
+	}
+	if len(clientMigrationStatus) > 0 {
+		webAppMeta.MigrationStatus = clientMigrationStatus
+	}
 
 	// In kubernetes cluster, always verify the license
 	if os.Getenv("GO_ENV") == "development" && os.Getenv("KUBERNETES_SERVICE_PORT_HTTPS") == "" {

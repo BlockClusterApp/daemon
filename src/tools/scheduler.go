@@ -23,6 +23,7 @@ func StartScheduler() {
 	tasks.ClearLogFile()
 
 	tasks.UpdateHyperionPorts()
+	tasks.CheckHyperionScaler()
 
 	gocron.Every(5).Minutes().Do(tasks.ValidateLicence)
 
@@ -33,8 +34,9 @@ func StartScheduler() {
 	if os.Getenv("GO_ENV") == "development" {
 		return
 	}
-	gocron.Every(10).Minutes().Do(tasks.FetchNodeInformation)
-	gocron.Every(5).Minutes().Do(tasks.FetchPodInformation)
+	gocron.Every(9).Minutes().Do(tasks.FetchNodeInformation)
+	gocron.Every(3).Minutes().Do(tasks.FetchPodInformation)
 	gocron.Every(5).Hours().Do(tasks.RefreshImagePullSecrets)
 	gocron.Every(1).Day().Do(tasks.ClearLogFile)
+	gocron.Every(1).Hour().Do(tasks.CheckHyperionScaler)
 }

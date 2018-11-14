@@ -60,6 +60,14 @@ func GetWebappDeploymentTemplate() string {
                 "value": "%__NAMESPACE__%"
               },
               {
+                "name": "RAZORPAY_ID",
+				"value": "%__RAZORPAY_ID__%"
+              },
+              {
+                "name": "RAZORPAY_KEY",
+				"value": "%__RAZORPAY_KEY__%"
+              },
+              {
                 "name": "KUBERNETES_NODE_NAME",
                 "valueFrom": {
                   "fieldRef": {

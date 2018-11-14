@@ -40,6 +40,12 @@ type Spec struct {
 	Type                  string `json:"type"`
 	SessionAffinity       string `json:"sessionAffinity"`
 	ExternalTrafficPolicy string `json:"externalTrafficPolicy"`
+
+	// Cron Job Specific
+	Schedule string `json:"schedule"`
+	ConcurrencyPolicy string `json:"concurrencyPolicy"`
+	Suspend bool `json:"suspend"`
+	JobTemplate JobTemplate `json:"jobTemplate"`
 }
 
 type Memory struct {

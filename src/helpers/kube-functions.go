@@ -92,7 +92,7 @@ func UpdateDeployment(deployInfo *dtos.InfoResponse) bool {
 	return true
 }
 
-func createResource(config string, url string, auth dtos.Auth) {
+func CreateResource(config string, url string, auth dtos.Auth) {
 	params := ExternalKubeRequest{
 		URL:     url,
 		Auth:    auth,
@@ -103,7 +103,7 @@ func createResource(config string, url string, auth dtos.Auth) {
 	resp, err := MakeExternalKubeRequest(params)
 
 	if err != nil {
-		GetLogger().Printf("Error creating resource %s", params)
+		GetLogger().Printf("Error creating resource %s | %s", params, err.Error())
 		return
 	}
 
@@ -167,9 +167,9 @@ func _checkAndDeployWebapp(namespace string, locationConfig dtos.LocationConfig,
 	serviceURL := fmt.Sprintf("%s/api/v1/namespaces/%s/services", locationConfig.MasterAPIHost, namespace)
 	hpaURL := fmt.Sprintf("%s/apis/autoscaling/v1/namespaces/%s/horizontalpodautoscalers", locationConfig.MasterAPIHost, namespace)
 
-	go createResource(deploymentConfig, deployURL, locationConfig.Auth)
-	go createResource(serviceConfig, serviceURL, locationConfig.Auth)
-	go createResource(hpaConfig, hpaURL, locationConfig.Auth)
+	go CreateResource(deploymentConfig, deployURL, locationConfig.Auth)
+	go CreateResource(serviceConfig, serviceURL, locationConfig.Auth)
+	go CreateResource(hpaConfig, hpaURL, locationConfig.Auth)
 
 }
 

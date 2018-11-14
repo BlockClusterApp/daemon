@@ -21,7 +21,14 @@ type BlockClusterType struct {
 	}
 }
 
+type CurrentWebAppMeta struct {
+	WebAppVersion string
+	MigrationVersion string
+	MigrationStatus string
+}
+
 var Blockcluster BlockClusterType
+var WebAppMeta CurrentWebAppMeta
 
 const BASE_URL = "https://enterprise-api.blockcluster.io/daemon"
 
@@ -77,6 +84,10 @@ func (bc *BlockClusterType) Reauthorize() {
 
 func GetBlockclusterInstance() *BlockClusterType {
 	return &Blockcluster
+}
+
+func GetCurrentWebAppMeta() *CurrentWebAppMeta {
+	return &WebAppMeta
 }
 
 func (bc *BlockClusterType) GetAWSCreds() *dtos.AWSCredsResponse {
