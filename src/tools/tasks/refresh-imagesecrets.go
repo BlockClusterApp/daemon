@@ -22,10 +22,6 @@ func RefreshImagePullSecrets() {
 
 	}
 
-	if !bc.Metadata.ShouldWebAppRefreshAWSImageAuth {
-		return
-	}
-
 	helpers.GetLogger().Printf("Starting image pull secret refresh")
 	authorizationToken := helpers.GetAuthorizationToken()
 
