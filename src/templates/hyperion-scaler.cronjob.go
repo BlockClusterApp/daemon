@@ -14,6 +14,7 @@ func GetHyperionScalerCronJobTemplate() string {
         "template": {
           "spec": {
             "restartPolicy": "OnFailure",
+            "serviceAccountName": "hyperion-scaler-sa",
             "containers": [
               {
                 "name": "scaler",
@@ -21,28 +22,8 @@ func GetHyperionScalerCronJobTemplate() string {
                 "imagePullPolicy": "IfNotPresent",
                 "env": [
                   {
-                    "name": "K8_URI",
-                    "value": "%__K8S_HOST__%"
-                  },
-                  {
-                    "name": "K8_USER",
-                    "value": "%__K8S_USER__%"
-                  },
-                  {
-                    "name": "K8_PASS",
-                    "value": "%__K8S_PASS__%"
-                  },
-                  {
-                    "name": "K8_VERSION",
-                    "value": "1.9"
-                  },
-                  {
                     "name": "NAMESPACE",
                     "value": "%__NAMESPACE__%"
-                  },
-                  {
-                    "name": "PROM_BASE_URI",
-                    "value": "%__PROM_BASE_URI__%"
                   }
                 ]
               }
