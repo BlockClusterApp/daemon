@@ -7,20 +7,15 @@ import (
 	"strings"
 )
 
+func DeployWebApp(namespace string){
+	helpers.GetLogger().Printf("Checking and deploying webapp in %s", namespace)
+	helpers.CheckAndDeployWebapp(namespace)
+}
+
 func RefreshImagePullSecrets() {
 	bc := helpers.GetBlockclusterInstance()
 
 	namespaces := helpers.GetNamespaces()
-
-	if bc.Metadata.ShouldDaemonDeployWebapp {
-		for _, namespace := range namespaces {
-			go func(namespace string) {
-				helpers.GetLogger().Printf("Checking and deploying webapp in %s", namespace)
-				helpers.CheckAndDeployWebapp(namespace)
-			}(namespace)
-		}
-
-	}
 
 	helpers.GetLogger().Printf("Starting image pull secret refresh")
 	authorizationToken := helpers.GetAuthorizationToken()
@@ -63,10 +58,12 @@ func RefreshImagePullSecrets() {
 				return
 			}
 			helpers.GetLogger().Printf("Refreshed image pull secret in namespace %s", namespace)
+
+			if bc.Metadata.ShouldDaemonDeployWebapp {
+				DeployWebApp(namespace)
+			}
 		}(namespace)
 	}
 
 	helpers.GetLogger().Printf("Refreshed all image pull secrets")
-
-
 }

@@ -120,6 +120,7 @@ func getPodMetrics() {
 
 			helpers.GetLogger().Printf("Pod metrics %s", path)
 			bc.SendRequest("/metrics", requestObject)
+			helpers.GetLogger().Printf("Finished sending pod metrics %s", path)
 		}(_path)
 	}
 }
