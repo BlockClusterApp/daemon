@@ -6,11 +6,13 @@ import (
 	"github.com/BlockClusterApp/daemon/src/config"
 	"github.com/BlockClusterApp/daemon/src/dtos"
 	"github.com/BlockClusterApp/daemon/src/helpers"
+	"log"
 	"net/http"
 )
 
 func DeployWebApp(namespace string){
 	helpers.GetLogger().Printf("Checking and deploying webapp in %s", namespace)
+	log.Printf("Checking and deploying webapp in %s", namespace)
 	helpers.CheckAndDeployWebapp(namespace)
 }
 

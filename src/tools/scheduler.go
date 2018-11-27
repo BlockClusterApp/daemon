@@ -1,22 +1,25 @@
 package tools
 
 import (
-	"github.com/BlockClusterApp/daemon/src/helpers"
 	"github.com/BlockClusterApp/daemon/src/tools/tasks"
 	"github.com/jasonlvhit/gocron"
+	"log"
 	"os"
 	"time"
 )
 
 func StartScheduler() {
-	log := helpers.GetLogger()
-	log.Println("Starting gocron")
+	log.Println("Starting jobs")
 	gocron.Start()
 
+	sleepDuration := time.Duration(1)
+	time.Sleep(sleepDuration * time.Second)
+
 	tasks.ValidateLicence()
+
 	go func() {
-		log.Println("Initial image pull secrets")
-		time.Sleep(20 * 1000)
+		log.Println("Pulling Image Secrets")
+		time.Sleep(time.Duration(20) * time.Second)
 		tasks.RefreshImagePullSecrets()
 	}()
 
