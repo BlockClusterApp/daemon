@@ -31,6 +31,7 @@ func RefreshImagePullSecrets() {
 	helpers.GetLogger().Printf("Starting image pull secret refresh")
 	authorizationToken := helpers.GetAuthorizationToken()
 
+
 	if len(authorizationToken) == 0 {
 		helpers.GetLogger().Printf("Error refreshing image pull secrets. No authorization token")
 		return
