@@ -1,10 +1,12 @@
 package tasks
 
 import (
+	"encoding/json"
 	"fmt"
+	"github.com/BlockClusterApp/daemon/src/config"
+	"github.com/BlockClusterApp/daemon/src/dtos"
 	"github.com/BlockClusterApp/daemon/src/helpers"
 	"net/http"
-	"strings"
 )
 
 func DeployWebApp(namespace string){
@@ -14,6 +16,15 @@ func DeployWebApp(namespace string){
 
 func RefreshImagePullSecrets() {
 	bc := helpers.GetBlockclusterInstance()
+
+
+	var kubeConfig = dtos.ClusterConfig{}
+	err := json.Unmarshal([]byte(config.GetKubeConfig()), &kubeConfig)
+
+	if err != nil {
+		helpers.GetLogger().Printf("Refresh Image Pull Secrets | Error unmarshalling kube config %s", err.Error())
+		return
+	}
 
 	namespaces := helpers.GetNamespaces()
 
@@ -44,19 +55,43 @@ func RefreshImagePullSecrets() {
 			}
 			`, authorizationToken, secretName, namespace)
 
-			path := fmt.Sprintf("/api/v1/namespaces/%s/secrets", namespace)
-			deletePath := fmt.Sprintf("/api/v1/namespaces/%s/secrets/%s", namespace, secretName)
-			_, err := helpers.MakeKubeRequest(http.MethodDelete, deletePath, nil)
-			if err != nil {
-				helpers.GetLogger().Printf("Error deleting image pull secrets %s", err.Error())
+
+			locationCodes := helpers.GetLocationCodesOfEnv(kubeConfig.Clusters[namespace])
+
+			for _, locationCode := range locationCodes {
+				locationConfig := kubeConfig.Clusters[namespace][locationCode]
+
+
+				path := fmt.Sprintf("%s/api/v1/namespaces/%s/secrets", locationConfig.MasterAPIHost, namespace)
+				deletePath := fmt.Sprintf("%s/api/v1/namespaces/%s/secrets/%s", locationConfig.MasterAPIHost, namespace, secretName)
+
+				deleteRequestOptions := helpers.ExternalKubeRequest{
+					URL: deletePath,
+					Auth: locationConfig.Auth,
+					Method: http.MethodDelete,
+				}
+
+				_, err := helpers.MakeExternalKubeRequest(deleteRequestOptions)
+				if err != nil {
+					helpers.GetLogger().Printf("Error deleting image pull secrets %s", err.Error())
+				}
+
+				createRequestOptions := helpers.ExternalKubeRequest{
+					URL: path,
+					Auth: locationConfig.Auth,
+					Method: http.MethodPost,
+					Payload: secretJSON,
+				}
+
+				_, err = helpers.MakeExternalKubeRequest(createRequestOptions)
+
+				if err != nil {
+					helpers.GetLogger().Printf("Error refreshing image pull secrets %s", err.Error())
+					continue
+				}
 			}
 
-			_, err = helpers.MakeKubeRequest(http.MethodPost, path, strings.NewReader(secretJSON))
 
-			if err != nil {
-				helpers.GetLogger().Printf("Error refreshing image pull secrets %s", err.Error())
-				return
-			}
 			helpers.GetLogger().Printf("Refreshed image pull secret in namespace %s", namespace)
 
 			if bc.Metadata.ShouldDaemonDeployWebapp {

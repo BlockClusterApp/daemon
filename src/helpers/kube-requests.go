@@ -76,7 +76,12 @@ func MakeExternalKubeRequest(params ExternalKubeRequest) (string, error) {
 	req.Header.Set("Content-Type", "application/json")
 	req.Header.Set("Authorization", fmt.Sprintf("Basic %s", basicAuth(params.Auth.User, params.Auth.Pass)))
 
-	var client = &http.Client{}
+	tr := &http.Transport{
+		TLSClientConfig: &tls.Config{InsecureSkipVerify: true},
+	}
+	var client = &http.Client{
+		Transport: tr,
+	}
 
 	resp, err := client.Do(req)
 
