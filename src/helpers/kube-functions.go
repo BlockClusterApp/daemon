@@ -185,7 +185,7 @@ func CheckAndDeployWebapp(namespace string) {
 
 	config := config2.GetWebAppConfig()
 
-	namespaces := reflect.ValueOf(config).MapKeys()
+	namespaces := reflect.ValueOf(kubeConfig.Clusters).MapKeys()
 
 	if len(namespaces) == 0 {
 		GetLogger().Printf("Tried to deploy webapp to %s but webapp config has no namespace | %s", namespace, config)
