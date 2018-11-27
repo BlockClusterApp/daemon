@@ -127,8 +127,8 @@ func _checkAndDeployWebapp(namespace string, locationConfig dtos.LocationConfig,
 	if err != nil {
 		return
 	}
-	var deployment dtos.InfoResponse
-	err = json.Unmarshal([]byte(response), response)
+	var deployment = dtos.InfoResponse{}
+	err = json.Unmarshal([]byte(response), &deployment)
 
 	if err != nil {
 		GetLogger().Printf("Error parsing deployment response to struct %s | %s", url, err.Error())
@@ -138,14 +138,14 @@ func _checkAndDeployWebapp(namespace string, locationConfig dtos.LocationConfig,
 	url = fmt.Sprintf("%s/api/v1/namespaces/%s/services?fieldSelector=metadata.name%%blockcluster-svc", locationConfig.MasterAPIHost, namespace)
 	params.URL = url
 	response, err = MakeExternalKubeRequest(params)
-	var service dtos.InfoResponse
-	err = json.Unmarshal([]byte(response), service)
+	var service  = dtos.InfoResponse{}
+	err = json.Unmarshal([]byte(response), &service)
 
 	url = fmt.Sprintf("%s/apis/autoscaling/v1/namespaces/%s/horizontalpodautoscalers?fieldSelector=metadata.name%%blockcluster-hpa", locationConfig.MasterAPIHost, namespace)
 	params.URL = url
 	response, err = MakeExternalKubeRequest(params)
-	var hpa dtos.InfoResponse
-	err = json.Unmarshal([]byte(response), hpa)
+	var hpa = dtos.InfoResponse{}
+	err = json.Unmarshal([]byte(response), &hpa)
 
 	if err != nil {
 		GetLogger().Printf("Error parsing deployment response to struct %s | %s", url, err.Error())

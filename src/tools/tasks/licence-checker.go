@@ -6,7 +6,6 @@ import (
 	"fmt"
 	"github.com/BlockClusterApp/daemon/src/dtos"
 	"github.com/BlockClusterApp/daemon/src/helpers"
-	"log"
 	"time"
 )
 
@@ -88,7 +87,6 @@ func ValidateLicence() {
 	}
 
 	helpers.GetLogger().Printf("Licence checker response %s", res)
-	log.Printf("Licence response %s", res)
 
 	bc.AuthToken = licenceResponse.Token
 	bc.Licence.Key = helpers.GetLicence().Key
