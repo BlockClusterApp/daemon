@@ -2,7 +2,7 @@ package templates
 
 func GetWebappDeploymentTemplate() string {
 	return `{
-  "apiVersion": "extensions/v1beta1",
+  "apiVersion": "apps/v1beta1",
   "kind": "Deployment",
   "metadata": {
     "labels": {
@@ -46,6 +46,10 @@ func GetWebappDeploymentTemplate() string {
               {
                 "name": "MONGO_URL",
                 "value": "%__MONGO_URL__%"
+              },
+              {
+				"name": "ROOT_URL",
+				"value": "%__ROOT_URL__%"
               },
               {
                 "name": "REDIS_HOST",
@@ -148,7 +152,7 @@ func GetWebappDeploymentTemplate() string {
         "volumes": [
           {
             "hostPath": {
-              "path": "/webapp-logs/",
+              "path": "/tmp/webapp-logs/",
               "type": ""
             },
             "name": "webapp-logs"

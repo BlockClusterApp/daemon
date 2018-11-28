@@ -31,4 +31,5 @@ type WebAppConfig struct {
 	RedisPort          string         `json:"redisPort"`
 	ImageRepository    string         `json:"webAppImageName"`
 	RazorPay           RazorPayConfig `json:"razorpay"`
+	RootURL            string         `json:"rootUrl"`
 }

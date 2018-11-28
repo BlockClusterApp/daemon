@@ -16,7 +16,7 @@ func _deployHyperionScaler(locationConfig *dtos.LocationConfig, namespace string
 		"%__K8S_HOST__%", locationConfig.MasterAPIHost,
 		"%__K8S_USER__%", locationConfig.Auth.User,
 		"%__K8S_PASS__%", locationConfig.Auth.Pass,
-		"%__PROM_BASE_URI__%", "",
+		"%__PROM_BASE_URI__%", "http://prometheus.blockcluster-monitoring.svc.cluster.local",
 	)
 
 	template := replacer.Replace(templates.GetHyperionScalerCronJobTemplate())
