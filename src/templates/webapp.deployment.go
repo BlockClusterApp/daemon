@@ -2,7 +2,7 @@ package templates
 
 func GetWebappDeploymentTemplate() string {
 	return `{
-  "apiVersion": "extensions/v1beta1",
+  "apiVersion": "apps/v1beta1",
   "kind": "Deployment",
   "metadata": {
     "labels": {
