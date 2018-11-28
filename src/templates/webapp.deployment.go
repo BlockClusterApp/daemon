@@ -152,7 +152,7 @@ func GetWebappDeploymentTemplate() string {
         "volumes": [
           {
             "hostPath": {
-              "path": "/webapp-logs/",
+              "path": "/tmp/webapp-logs/",
               "type": ""
             },
             "name": "webapp-logs"
