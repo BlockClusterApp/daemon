@@ -214,6 +214,7 @@ func CheckAndDeployWebapp(namespace string) {
 		RedisHost: config.Redis[namespace].Host,
 		RedisPort: config.Redis[namespace].Port,
 		ImageRepository: config.WebApp[namespace],
+		RootURL: config.RootUrl[namespace],
 	}
 
 	for _, locationCode := range locationCodes {

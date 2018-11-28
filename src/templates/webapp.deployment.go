@@ -48,6 +48,10 @@ func GetWebappDeploymentTemplate() string {
                 "value": "%__MONGO_URL__%"
               },
               {
+				"name": "ROOT_URL",
+				"value": "%__ROOT_URL__%"
+              },
+              {
                 "name": "REDIS_HOST",
                 "value": "%__REDIS_HOST__%"
               },

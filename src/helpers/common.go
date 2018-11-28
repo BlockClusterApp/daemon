@@ -75,6 +75,7 @@ func ReplaceWebAppConfig(fileContent string, webappConfig dtos.WebAppConfig, nam
 		"%__IMAGE_URL__%", webappConfig.ImageRepository,
 		"%__RAZORPAY_ID__%", webappConfig.RazorPay.Id,
 		"%__RAZORPAY_KEY__%", webappConfig.RazorPay.Key,
+		"%__ROOT_URL__%", webappConfig.RootURL,
 	)
 
 	return replacer.Replace(fileContent)
