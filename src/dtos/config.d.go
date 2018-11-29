@@ -6,8 +6,9 @@ type HyperionConfig struct {
 }
 
 type Auth struct {
-	User string `json:"user"`
-	Pass string `json:"pass"`
+	User  string `json:"user"`
+	Pass  string `json:"pass"`
+	Token string `json:"token"`
 }
 
 type LocationConfig struct {

@@ -43,7 +43,7 @@ func CheckHyperionScaler() {
 				locationConfig := clusterConfig.Clusters[namespace][locationCode]
 
 				var requestParams = helpers.ExternalKubeRequest{
-					URL:     fmt.Sprintf("%s/apis/batch/v1beta1/namespaces/%s/cronjobs?fieldSelector=metadata.name%3Dhyperion-scaler", locationConfig.MasterAPIHost, namespace),
+					URL:     fmt.Sprintf("%s/apis/batch/v1beta1/namespaces/%s/cronjobs?fieldSelector=metadata.name%%3Dhyperion-scaler", locationConfig.MasterAPIHost, namespace),
 					Auth:    locationConfig.Auth,
 					Payload: "",
 					Method:  http.MethodGet,
