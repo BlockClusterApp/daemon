@@ -11,6 +11,11 @@ type Auth struct {
 	Token string `json:"token"`
 }
 
+type Ingress struct {
+	Annotations map[string]string `json:"Annotations"`
+	Secret      string            `json:"secretName"`
+}
+
 type LocationConfig struct {
 	MasterAPIHost    string         `json:"masterAPIHost"`
 	WorkerNodeIP     string         `json:"workerNodeIP"`
@@ -33,4 +38,5 @@ type WebAppConfig struct {
 	ImageRepository    string         `json:"webAppImageName"`
 	RazorPay           RazorPayConfig `json:"razorpay"`
 	RootURL            string         `json:"rootUrl"`
+	Ingress            Ingress        `json:"Ingress"`
 }
