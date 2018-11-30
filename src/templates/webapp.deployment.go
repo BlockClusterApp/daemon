@@ -91,7 +91,7 @@ func GetWebappDeploymentTemplate() string {
               }
             ],
             "image": "%__IMAGE_URL__%",
-            "imagePullPolicy": "IfNotPresent",
+            "imagePullPolicy": "Always",
             "livenessProbe": {
               "exec": {
                 "command": [

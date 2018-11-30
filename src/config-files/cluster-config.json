@@ -9,8 +9,7 @@
         "dynamoDomainName": "dev.blockcluster.io",
         "apiHost": "https://dev.blockcluster.io",
         "auth": {
-          "user": "admin",
-          "pass": "v8qYNAwGkHOWBghtu1GywXbAno5aX3bH"
+          "token": "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJrdWJlcm5ldGVzL3NlcnZpY2VhY2NvdW50Iiwia3ViZXJuZXRlcy5pby9zZXJ2aWNlYWNjb3VudC9uYW1lc3BhY2UiOiJibG9ja2NsdXN0ZXIiLCJrdWJlcm5ldGVzLmlvL3NlcnZpY2VhY2NvdW50L3NlY3JldC5uYW1lIjoiYmxvY2tjbHVzdGVyLWFnZW50LXRva2VuLTRodGo1Iiwia3ViZXJuZXRlcy5pby9zZXJ2aWNlYWNjb3VudC9zZXJ2aWNlLWFjY291bnQubmFtZSI6ImJsb2NrY2x1c3Rlci1hZ2VudCIsImt1YmVybmV0ZXMuaW8vc2VydmljZWFjY291bnQvc2VydmljZS1hY2NvdW50LnVpZCI6IjU1OWM0ODNmLWQ2ZTQtMTFlOC1iNjVlLTAyYjYzYWIyMDNiZSIsInN1YiI6InN5c3RlbTpzZXJ2aWNlYWNjb3VudDpibG9ja2NsdXN0ZXI6YmxvY2tjbHVzdGVyLWFnZW50In0.tvjvyHBGO40rqK2AbUW7aqsrZtrj_lln4JSlMYpJHapsriNxuEf_8szinwe1N9QxjaxYZtMBdpniouwuC-7H3FKi9zAXm8rrw6fRGLGQ7BbzyWjFjAac9yK1lTdKyy-qECGXfkWZ-eSL2LPfrhtISbydGH815YAcRNl2t7cbPoZ9aO43cU9u7O49FfXgA9yxTIhGtPLQ2ST-yfQYWkjZgGH39ZkQPQMUsjqx7SMKNECAG7y2BLhDb0j40jHTbJ0x3CW3FTI79NogrJwA3OeUiLfQVSZ4LL6veHDdEJN3QqGDAaeD2136NZweaGhEe-cxd1cmRtI5UkJJBCznuY3U7w"
         },
         "hyperion": {
           "ipfsPort": "0000",
@@ -27,8 +26,7 @@
         "dynamoDomainName": "test.blockcluster.io",
         "apiHost": "https://test.blockcluster.io",
         "auth": {
-          "user": "admin",
-          "pass": "v8qYNAwGkHOWBghtu1GywXbAno5aX3bH"
+          "token": "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJrdWJlcm5ldGVzL3NlcnZpY2VhY2NvdW50Iiwia3ViZXJuZXRlcy5pby9zZXJ2aWNlYWNjb3VudC9uYW1lc3BhY2UiOiJibG9ja2NsdXN0ZXIiLCJrdWJlcm5ldGVzLmlvL3NlcnZpY2VhY2NvdW50L3NlY3JldC5uYW1lIjoiYmxvY2tjbHVzdGVyLWFnZW50LXRva2VuLTRodGo1Iiwia3ViZXJuZXRlcy5pby9zZXJ2aWNlYWNjb3VudC9zZXJ2aWNlLWFjY291bnQubmFtZSI6ImJsb2NrY2x1c3Rlci1hZ2VudCIsImt1YmVybmV0ZXMuaW8vc2VydmljZWFjY291bnQvc2VydmljZS1hY2NvdW50LnVpZCI6IjU1OWM0ODNmLWQ2ZTQtMTFlOC1iNjVlLTAyYjYzYWIyMDNiZSIsInN1YiI6InN5c3RlbTpzZXJ2aWNlYWNjb3VudDpibG9ja2NsdXN0ZXI6YmxvY2tjbHVzdGVyLWFnZW50In0.tvjvyHBGO40rqK2AbUW7aqsrZtrj_lln4JSlMYpJHapsriNxuEf_8szinwe1N9QxjaxYZtMBdpniouwuC-7H3FKi9zAXm8rrw6fRGLGQ7BbzyWjFjAac9yK1lTdKyy-qECGXfkWZ-eSL2LPfrhtISbydGH815YAcRNl2t7cbPoZ9aO43cU9u7O49FfXgA9yxTIhGtPLQ2ST-yfQYWkjZgGH39ZkQPQMUsjqx7SMKNECAG7y2BLhDb0j40jHTbJ0x3CW3FTI79NogrJwA3OeUiLfQVSZ4LL6veHDdEJN3QqGDAaeD2136NZweaGhEe-cxd1cmRtI5UkJJBCznuY3U7w"
         },
         "hyperion": {
           "ipfsPort": "0000",
@@ -45,8 +43,7 @@
         "dynamoDomainName": "staging.blockcluster.io",
         "apiHost": "https://staging.blockcluster.io",
         "auth": {
-          "user": "admin",
-          "pass": "v8qYNAwGkHOWBghtu1GywXbAno5aX3bH"
+          "token": "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJrdWJlcm5ldGVzL3NlcnZpY2VhY2NvdW50Iiwia3ViZXJuZXRlcy5pby9zZXJ2aWNlYWNjb3VudC9uYW1lc3BhY2UiOiJibG9ja2NsdXN0ZXIiLCJrdWJlcm5ldGVzLmlvL3NlcnZpY2VhY2NvdW50L3NlY3JldC5uYW1lIjoiYmxvY2tjbHVzdGVyLWFnZW50LXRva2VuLTRodGo1Iiwia3ViZXJuZXRlcy5pby9zZXJ2aWNlYWNjb3VudC9zZXJ2aWNlLWFjY291bnQubmFtZSI6ImJsb2NrY2x1c3Rlci1hZ2VudCIsImt1YmVybmV0ZXMuaW8vc2VydmljZWFjY291bnQvc2VydmljZS1hY2NvdW50LnVpZCI6IjU1OWM0ODNmLWQ2ZTQtMTFlOC1iNjVlLTAyYjYzYWIyMDNiZSIsInN1YiI6InN5c3RlbTpzZXJ2aWNlYWNjb3VudDpibG9ja2NsdXN0ZXI6YmxvY2tjbHVzdGVyLWFnZW50In0.tvjvyHBGO40rqK2AbUW7aqsrZtrj_lln4JSlMYpJHapsriNxuEf_8szinwe1N9QxjaxYZtMBdpniouwuC-7H3FKi9zAXm8rrw6fRGLGQ7BbzyWjFjAac9yK1lTdKyy-qECGXfkWZ-eSL2LPfrhtISbydGH815YAcRNl2t7cbPoZ9aO43cU9u7O49FfXgA9yxTIhGtPLQ2ST-yfQYWkjZgGH39ZkQPQMUsjqx7SMKNECAG7y2BLhDb0j40jHTbJ0x3CW3FTI79NogrJwA3OeUiLfQVSZ4LL6veHDdEJN3QqGDAaeD2136NZweaGhEe-cxd1cmRtI5UkJJBCznuY3U7w"
         },
         "hyperion": {
           "ipfsPort": "0000",

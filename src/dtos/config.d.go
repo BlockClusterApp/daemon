@@ -6,8 +6,14 @@ type HyperionConfig struct {
 }
 
 type Auth struct {
-	User string `json:"user"`
-	Pass string `json:"pass"`
+	User  string `json:"user"`
+	Pass  string `json:"pass"`
+	Token string `json:"token"`
+}
+
+type Ingress struct {
+	Annotations map[string]string `json:"Annotations"`
+	Secret      string            `json:"secretName"`
 }
 
 type LocationConfig struct {
@@ -32,4 +38,5 @@ type WebAppConfig struct {
 	ImageRepository    string         `json:"webAppImageName"`
 	RazorPay           RazorPayConfig `json:"razorpay"`
 	RootURL            string         `json:"rootUrl"`
+	Ingress            Ingress        `json:"Ingress"`
 }
