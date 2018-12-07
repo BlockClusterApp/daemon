@@ -17,8 +17,16 @@
           "ipfsClusterPort": "0000"
         },
         "paymeter": {
-          "ip": "eth-node.dev.svc.cluster.local",
-          "port": "8545"
+          "eth": {
+            "testnet": {
+              "ip": "eth-node.dev.svc.cluster.local",
+              "port": "8545"
+            }, 
+            "mainnet": {
+              "ip": "eth-node.dev.svc.cluster.local",
+              "port": "8545"
+            }
+          }
         }
       }
     },
@@ -39,8 +47,16 @@
           "ipfsClusterPort": "0000"
         },
         "paymeter": {
-          "ip": "eth-node.dev.svc.cluster.local",
-          "port": "8545"
+          "eth": {
+            "testnet": {
+              "ip": "eth-node.dev.svc.cluster.local",
+              "port": "8545"
+            }, 
+            "mainnet": {
+              "ip": "eth-node.dev.svc.cluster.local",
+              "port": "8545"
+            }
+          }
         }
       }
     },
@@ -61,8 +77,16 @@
           "ipfsClusterPort": "0000"
         },
         "paymeter": {
-          "ip": "eth-node.dev.svc.cluster.local",
-          "port": "8545"
+          "eth": {
+            "testnet": {
+              "ip": "eth-node.dev.svc.cluster.local",
+              "port": "8545"
+            }, 
+            "mainnet": {
+              "ip": "eth-node.dev.svc.cluster.local",
+              "port": "8545"
+            }
+          }
         }
       }
     }
