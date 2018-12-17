@@ -19,12 +19,10 @@
         "paymeter": {
           "eth": {
             "testnet": {
-              "ip": "eth-node.dev.svc.cluster.local",
-              "port": "8545"
+              "url": "wss://rinkeby.infura.io/ws/v3/a71954447581416991b1371b44b305dd"
             }, 
             "mainnet": {
-              "ip": "eth-node.dev.svc.cluster.local",
-              "port": "8545"
+              "url": "wss://mainnet.infura.io/ws/v3/a71954447581416991b1371b44b305dd"
             }
           }
         }
