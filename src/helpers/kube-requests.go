@@ -21,6 +21,7 @@ type ExternalKubeRequest struct {
 	Auth struct {
 		User string `json:"user"`
 		Pass string `json:"pass"`
+		Token string `json:"token"`
 	}
 	Method  string
 	Payload string
@@ -74,9 +75,22 @@ func MakeExternalKubeRequest(params ExternalKubeRequest) (string, error) {
 	}
 
 	req.Header.Set("Content-Type", "application/json")
-	req.Header.Set("Authorization", fmt.Sprintf("Basic %s", basicAuth(params.Auth.User, params.Auth.Pass)))
+	if len(params.Auth.User) > 0 {
+		req.Header.Set("Authorization", fmt.Sprintf("Basic %s", basicAuth(params.Auth.User, params.Auth.Pass)))
+	} else if len(params.Auth.Token) > 0 {
+		req.Header.Set("Authorization", fmt.Sprintf("Bearer %s", params.Auth.Token))
+	} else {
+		GetLogger().Printf("No auth provided for external kube request. %s", params.URL)
+		return "",nil
+	}
 
-	var client = &http.Client{}
+
+	tr := &http.Transport{
+		TLSClientConfig: &tls.Config{InsecureSkipVerify: true},
+	}
+	var client = &http.Client{
+		Transport: tr,
+	}
 
 	resp, err := client.Do(req)
 
@@ -138,7 +152,11 @@ func MakeKubeRequest(method string, path string, payload io.Reader) (string, err
 		}
 	} else {
 		// Not in kubernetes
-		req.Header.Set("Authorization", fmt.Sprintf("Basic %s", basicAuth(os.Getenv("KUBE_API_USER"), os.Getenv("KUBE_API_PASS"))))
+		if len(os.Getenv("KUBE_TOKEN")) > 0 {
+			req.Header.Set("Authorization", fmt.Sprintf("Bearer %s", os.Getenv("KUBE_TOKEN")))
+		} else {
+			req.Header.Set("Authorization", fmt.Sprintf("Basic %s", basicAuth(os.Getenv("KUBE_API_USER"), os.Getenv("KUBE_API_PASS"))))
+		}
 	}
 
 	resp, err := client.Do(req)

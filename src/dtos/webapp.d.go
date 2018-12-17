@@ -25,4 +25,6 @@ type WebAppConfigFile struct {
 		} `json:"auth"`
 	} `json:"smtp"`
 	RazorPay map[string]RazorPayConfig `json:"razorpay"`
+	RootUrl  map[string]string         `json:"rootUrl"`
+	Ingress  map[string]Ingress        `json:"Ingress"`
 }

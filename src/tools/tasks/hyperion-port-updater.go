@@ -122,6 +122,7 @@ func UpdateHyperionPorts() {
 	repoConfig, webAppConfig := helpers.GetRepositoryConfigForConfig()
 	repositoryConfig, _ := json.Marshal(repoConfig)
 	smtpConfig, _ := json.Marshal(webAppConfig.SMTP)
+	ingressConfig,_ := json.Marshal(webAppConfig.Ingress)
 
 	newConfig, _ = sjson.Set(newConfig, "features", "%s")
 	newConfig = strings.Replace(newConfig, `"%s"`, "%s", 1)
@@ -134,6 +135,10 @@ func UpdateHyperionPorts() {
 	newConfig, _ = sjson.Set(newConfig, "smtpServer", "%s")
 	newConfig = strings.Replace(newConfig, `"%s"`, "%s", 1)
 	newConfig = fmt.Sprintf(newConfig, smtpConfig)
+
+	newConfig,_ = sjson.Set(newConfig, "Ingress", "%s")
+	newConfig = strings.Replace(newConfig, `"%s"`, "%s", 1)
+	newConfig = fmt.Sprintf(newConfig, ingressConfig)
 
 	err = ioutil.WriteFile(outputFilePath, []byte(funcs.EncryptString(newConfig)), 0644)
 

@@ -57,6 +57,7 @@ func handleVersionMetadata(licenceResponse *dtos.LicenceValidationResponse) {
 }
 
 func ValidateLicence() {
+	helpers.GetLogger().Printf("Validating Licence")
 	helpers.UpdateLicence()
 	licence := helpers.GetLicence()
 	bc := helpers.GetBlockclusterInstance()
@@ -73,6 +74,7 @@ func ValidateLicence() {
 	res, err := bc.SendRequest(path, jsonBody)
 
 	if err != nil {
+		helpers.GetLogger().Printf("Error sending request %s" , err.Error())
 		return
 	}
 
@@ -83,6 +85,8 @@ func ValidateLicence() {
 		helpers.GetLogger().Printf("Error parsing response %s", err.Error())
 		return
 	}
+
+	helpers.GetLogger().Printf("Licence checker response %s", res)
 
 	bc.AuthToken = licenceResponse.Token
 	bc.Licence.Key = helpers.GetLicence().Key

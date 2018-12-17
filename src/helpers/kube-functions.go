@@ -127,8 +127,8 @@ func _checkAndDeployWebapp(namespace string, locationConfig dtos.LocationConfig,
 	if err != nil {
 		return
 	}
-	var deployment dtos.InfoResponse
-	err = json.Unmarshal([]byte(response), response)
+	var deployment = dtos.InfoResponse{}
+	err = json.Unmarshal([]byte(response), &deployment)
 
 	if err != nil {
 		GetLogger().Printf("Error parsing deployment response to struct %s | %s", url, err.Error())
@@ -138,14 +138,14 @@ func _checkAndDeployWebapp(namespace string, locationConfig dtos.LocationConfig,
 	url = fmt.Sprintf("%s/api/v1/namespaces/%s/services?fieldSelector=metadata.name%%blockcluster-svc", locationConfig.MasterAPIHost, namespace)
 	params.URL = url
 	response, err = MakeExternalKubeRequest(params)
-	var service dtos.InfoResponse
-	err = json.Unmarshal([]byte(response), service)
+	var service  = dtos.InfoResponse{}
+	err = json.Unmarshal([]byte(response), &service)
 
 	url = fmt.Sprintf("%s/apis/autoscaling/v1/namespaces/%s/horizontalpodautoscalers?fieldSelector=metadata.name%%blockcluster-hpa", locationConfig.MasterAPIHost, namespace)
 	params.URL = url
 	response, err = MakeExternalKubeRequest(params)
-	var hpa dtos.InfoResponse
-	err = json.Unmarshal([]byte(response), hpa)
+	var hpa = dtos.InfoResponse{}
+	err = json.Unmarshal([]byte(response), &hpa)
 
 	if err != nil {
 		GetLogger().Printf("Error parsing deployment response to struct %s | %s", url, err.Error())
@@ -163,7 +163,7 @@ func _checkAndDeployWebapp(namespace string, locationConfig dtos.LocationConfig,
 	serviceConfig := ReplaceWebAppConfig(templates.GetWebappServiceTemplate(), webAppConfig, namespace)
 	hpaConfig := ReplaceWebAppConfig(templates.GetWebappHPATemplate(), webAppConfig, namespace)
 
-	deployURL := fmt.Sprintf("%s/apis/apps/v1beta2/namespaces/%s/deployments", locationConfig.MasterAPIHost, namespace)
+	deployURL := fmt.Sprintf("%s/apis/apps/v1beta1/namespaces/%s/deployments", locationConfig.MasterAPIHost, namespace)
 	serviceURL := fmt.Sprintf("%s/api/v1/namespaces/%s/services", locationConfig.MasterAPIHost, namespace)
 	hpaURL := fmt.Sprintf("%s/apis/autoscaling/v1/namespaces/%s/horizontalpodautoscalers", locationConfig.MasterAPIHost, namespace)
 
@@ -185,7 +185,7 @@ func CheckAndDeployWebapp(namespace string) {
 
 	config := config2.GetWebAppConfig()
 
-	namespaces := reflect.ValueOf(config).MapKeys()
+	namespaces := reflect.ValueOf(kubeConfig.Clusters).MapKeys()
 
 	if len(namespaces) == 0 {
 		GetLogger().Printf("Tried to deploy webapp to %s but webapp config has no namespace | %s", namespace, config)
@@ -214,6 +214,7 @@ func CheckAndDeployWebapp(namespace string) {
 		RedisHost: config.Redis[namespace].Host,
 		RedisPort: config.Redis[namespace].Port,
 		ImageRepository: config.WebApp[namespace],
+		RootURL: config.RootUrl[namespace],
 	}
 
 	for _, locationCode := range locationCodes {

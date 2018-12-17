@@ -1,45 +1,21 @@
 {
   "dynamo": {
-    "dev": "402432300121.dkr.ecr.us-west-2.amazonaws.com/dynamo:dev",
-    "test": "402432300121.dkr.ecr.us-west-2.amazonaws.com/dynamo:dev",
-    "staging": "402432300121.dkr.ecr.us-west-2.amazonaws.com/dynamo:staging",
-    "default": "402432300121.dkr.ecr.us-west-2.amazonaws.com/dynamo:latest"
+    "default": "402432300121.dkr.ecr.us-west-2.amazonaws.com/dynamo:dev"
   },
   "impulse": {
-    "dev": "402432300121.dkr.ecr.us-west-2.amazonaws.com/impulse:dev",
-    "test": "402432300121.dkr.ecr.us-west-2.amazonaws.com/impulse:dev",
-    "staging": "402432300121.dkr.ecr.us-west-2.amazonaws.com/impulse:staging",
-    "default": "402432300121.dkr.ecr.us-west-2.amazonaws.com/impulse:latest"
+    "default": "402432300121.dkr.ecr.us-west-2.amazonaws.com/impulse:dev"
   },
   "mongoURL": {
-    "dev": "",
-    "test": "",
-    "staging": "",
-    "default": ""
+    "default": "mongodb://35.161.9.16:30811"
   },
   "redis": {
-    "dev": {
-      "host": "",
-      "port": "6379"
-    },
-    "test": {
-      "host": "",
-      "port": "6379"
-    },
-    "staging": {
-      "host": "",
-      "port": "6379"
-    },
     "default": {
-      "host": "",
-      "port": "6379"
+      "host": "35.161.9.16",
+      "port": "30965"
     }
   },
   "webapp": {
-    "dev": "",
-    "test": "",
-    "staging": "",
-    "default": ""
+    "default": "402432300121.dkr.ecr.us-west-2.amazonaws.com/naw7cxfijp-webapp:production"
   },
   "smtp": {
     "host": "",
@@ -50,17 +26,18 @@
     }
   },
   "razorpay": {
-    "dev": {
+    "default": {
       "id": "",
       "key": ""
-    },
-    "test": {
-      "id": "",
-      "key": ""
-    },
-    "staging": {
-      "id": "",
-      "key": ""
+    }
+  },
+  "rootUrl": {
+    "default": "http://e-t-1.blockcluster.io"
+  },
+  "Ingress": {
+    "default": {
+      "Annotations": {},
+      "secretName": "blockcluster-ssl"
     }
   }
 }

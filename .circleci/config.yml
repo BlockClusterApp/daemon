@@ -27,6 +27,7 @@ references:
       branches:
         only:
         - master
+        - enterprise
         - dev
 
 jobs:

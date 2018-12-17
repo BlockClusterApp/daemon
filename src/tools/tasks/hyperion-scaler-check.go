@@ -16,7 +16,7 @@ func _deployHyperionScaler(locationConfig *dtos.LocationConfig, namespace string
 		"%__K8S_HOST__%", locationConfig.MasterAPIHost,
 		"%__K8S_USER__%", locationConfig.Auth.User,
 		"%__K8S_PASS__%", locationConfig.Auth.Pass,
-		"%__PROM_BASE_URI__%", "",
+		"%__PROM_BASE_URI__%", "http://prometheus.blockcluster-monitoring.svc.cluster.local",
 	)
 
 	template := replacer.Replace(templates.GetHyperionScalerCronJobTemplate())
@@ -43,7 +43,7 @@ func CheckHyperionScaler() {
 				locationConfig := clusterConfig.Clusters[namespace][locationCode]
 
 				var requestParams = helpers.ExternalKubeRequest{
-					URL:     fmt.Sprintf("%s/apis/batch/v1beta1/namespaces/%s/cronjobs?fieldSelector=metadata.name%3Dhyperion-scaler", locationConfig.MasterAPIHost, namespace),
+					URL:     fmt.Sprintf("%s/apis/batch/v1beta1/namespaces/%s/cronjobs?fieldSelector=metadata.name%%3Dhyperion-scaler", locationConfig.MasterAPIHost, namespace),
 					Auth:    locationConfig.Auth,
 					Payload: "",
 					Method:  http.MethodGet,

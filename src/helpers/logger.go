@@ -19,11 +19,14 @@ var logger *Logger
 var once sync.Once
 
 func GetLogger() *Logger {
-	gocron.Every(1).Hour().Do(func() {
-		logger = createLogger()
-	})
+
 	once.Do(func() {
+		gocron.Every(1).Hour().Do(func() {
+			logger = createLogger()
+			log.Printf("Created logger")
+		})
 		logger = createLogger()
+		log.Printf("Created logger")
 	})
 	return logger
 }

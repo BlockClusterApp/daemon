@@ -58,8 +58,19 @@ func GetAuthorizationToken() string {
 		return ""
 	}
 
-	password := *output.AuthorizationData[0].AuthorizationToken
-	auth := base64.StdEncoding.EncodeToString([]byte(fmt.Sprintf("%s:%s", "AWS", password)))
+	auth := *output.AuthorizationData[0].AuthorizationToken;
+
+	// We don't need the authorization token we need to password. So decode base 64 and remove first 4 chars i.e. `AWS:`
+	decoded,err := base64.StdEncoding.DecodeString(auth)
+
+	if err != nil {
+		GetLogger().Printf("Decoding auth token | Invalid base64 : %s", err.Error())
+		return ""
+	}
+
+	decodedString := string(decoded)
+	password := TrimLeftChars(decodedString, len("AWS:"))
+
 	repositories := "402432300121.dkr.ecr.us-west-2.amazonaws.com"
 	email := fmt.Sprintf("%s@enterprise.blockcluster.io", bcAwsCreds.ClientID)
 	dockerConfig := fmt.Sprintf("{\"auths\":{\"%s\": {\"username\": \"AWS\", \"password\": \"%s\", \"email\": \"%s\", \"auth\":\"%s\"}}}", repositories, password, email, auth)

@@ -6,7 +6,7 @@ func GetWebappServiceTemplate() string {
 "kind": "Service",
   "metadata": {
     "labels": {
-      "app": "blockcluster-app",
+      "app": "blockcluster-app"
     },
     "name": "blockcluster-svc",
     "namespace": "%__NAMESPACE__%"
