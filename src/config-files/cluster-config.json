@@ -16,13 +16,19 @@
           "ipfsClusterPort": "0000"
         },
         "paymeter": {
-          "eth": {
-            "testnet": {
-              "url": "wss://rinkeby.infura.io/ws/v3/a71954447581416991b1371b44b305dd"
-            }, 
-            "mainnet": {
-              "url": "wss://mainnet.infura.io/ws/v3/a71954447581416991b1371b44b305dd"
+          "blockchains": {
+            "eth": {
+              "testnet": {
+                "url": "wss://rinkeby.infura.io/ws/v3/a71954447581416991b1371b44b305dd"
+              }, 
+              "mainnet": {
+                "url": "wss://mainnet.infura.io/ws/v3/a71954447581416991b1371b44b305dd"
+              }
             }
+          },
+          "api_keys": {
+            "coinmarketcap": "5695d8e3-ecf8-47e1-895b-1fd0c67edea9",
+            "ethplorer": "freekey"
           }
         }
       }
@@ -43,15 +49,19 @@
           "ipfsClusterPort": "0000"
         },
         "paymeter": {
-          "eth": {
-            "testnet": {
-              "ip": "eth-node.dev.svc.cluster.local",
-              "port": "8545"
-            }, 
-            "mainnet": {
-              "ip": "eth-node.dev.svc.cluster.local",
-              "port": "8545"
+          "blockchains": {
+            "eth": {
+              "testnet": {
+                "url": "wss://rinkeby.infura.io/ws/v3/a71954447581416991b1371b44b305dd"
+              }, 
+              "mainnet": {
+                "url": "wss://mainnet.infura.io/ws/v3/a71954447581416991b1371b44b305dd"
+              }
             }
+          },
+          "api_keys": {
+            "coinmarketcap": "5695d8e3-ecf8-47e1-895b-1fd0c67edea9",
+            "ethplorer": "freekey"
           }
         }
       }
@@ -72,15 +82,19 @@
           "ipfsClusterPort": "0000"
         },
         "paymeter": {
-          "eth": {
-            "testnet": {
-              "ip": "eth-node.dev.svc.cluster.local",
-              "port": "8545"
-            }, 
-            "mainnet": {
-              "ip": "eth-node.dev.svc.cluster.local",
-              "port": "8545"
+          "blockchains": {
+            "eth": {
+              "testnet": {
+                "url": "wss://rinkeby.infura.io/ws/v3/a71954447581416991b1371b44b305dd"
+              }, 
+              "mainnet": {
+                "url": "wss://mainnet.infura.io/ws/v3/a71954447581416991b1371b44b305dd"
+              }
             }
+          },
+          "api_keys": {
+            "coinmarketcap": "5695d8e3-ecf8-47e1-895b-1fd0c67edea9",
+            "ethplorer": "freekey"
           }
         }
       }
