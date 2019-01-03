@@ -31,6 +31,20 @@ type ClusterConfig struct {
 	Clusters map[string]map[string]*LocationConfig `json:"clusters"`
 }
 
+type Blockchain struct {
+	Testnet struct {
+		URL string `json:"url"`
+	} `json:"testnet"`
+	Mainnet struct {
+		URL string `json:"url"`
+	} `json:"mainnet"`
+}
+
+type Paymeter struct {
+	Blockchain map[string]Blockchain `json:"blockchains"`
+	ApiKeys    map[string]string `json:"api_keys"`
+}
+
 type WebAppConfig struct {
 	MongoConnectionURL string         `json:"mongoComongoURLnnectionURL"`
 	RedisHost          string         `json:"redisHost"`
@@ -39,4 +53,5 @@ type WebAppConfig struct {
 	RazorPay           RazorPayConfig `json:"razorpay"`
 	RootURL            string         `json:"rootUrl"`
 	Ingress            Ingress        `json:"Ingress"`
+	Paymeter           Paymeter       `json:"paymeter"`
 }
