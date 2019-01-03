@@ -1,26 +1,27 @@
 {
   "clusters": {
+    "default": {},
     "dev": {
       "us-west-2": {
         "masterAPIHost": "https://k8s-dev-us-west-2-api.blockcluster.io",
         "workerNodeIP": "35.161.9.16",
         "locationCode": "us-west-2",
-        "locationName": "US West (Oregon)",
         "dynamoDomainName": "dev.blockcluster.io",
         "apiHost": "https://dev.blockcluster.io",
+        "locationName": "US West (Oregon)",
         "auth": {
           "token": "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJrdWJlcm5ldGVzL3NlcnZpY2VhY2NvdW50Iiwia3ViZXJuZXRlcy5pby9zZXJ2aWNlYWNjb3VudC9uYW1lc3BhY2UiOiJibG9ja2NsdXN0ZXIiLCJrdWJlcm5ldGVzLmlvL3NlcnZpY2VhY2NvdW50L3NlY3JldC5uYW1lIjoiYmxvY2tjbHVzdGVyLWFnZW50LXRva2VuLTRodGo1Iiwia3ViZXJuZXRlcy5pby9zZXJ2aWNlYWNjb3VudC9zZXJ2aWNlLWFjY291bnQubmFtZSI6ImJsb2NrY2x1c3Rlci1hZ2VudCIsImt1YmVybmV0ZXMuaW8vc2VydmljZWFjY291bnQvc2VydmljZS1hY2NvdW50LnVpZCI6IjU1OWM0ODNmLWQ2ZTQtMTFlOC1iNjVlLTAyYjYzYWIyMDNiZSIsInN1YiI6InN5c3RlbTpzZXJ2aWNlYWNjb3VudDpibG9ja2NsdXN0ZXI6YmxvY2tjbHVzdGVyLWFnZW50In0.tvjvyHBGO40rqK2AbUW7aqsrZtrj_lln4JSlMYpJHapsriNxuEf_8szinwe1N9QxjaxYZtMBdpniouwuC-7H3FKi9zAXm8rrw6fRGLGQ7BbzyWjFjAac9yK1lTdKyy-qECGXfkWZ-eSL2LPfrhtISbydGH815YAcRNl2t7cbPoZ9aO43cU9u7O49FfXgA9yxTIhGtPLQ2ST-yfQYWkjZgGH39ZkQPQMUsjqx7SMKNECAG7y2BLhDb0j40jHTbJ0x3CW3FTI79NogrJwA3OeUiLfQVSZ4LL6veHDdEJN3QqGDAaeD2136NZweaGhEe-cxd1cmRtI5UkJJBCznuY3U7w"
         },
         "hyperion": {
-          "ipfsPort": "0000",
-          "ipfsClusterPort": "0000"
+          "ipfsPort": "31975",
+          "ipfsClusterPort": "31115"
         },
         "paymeter": {
           "blockchains": {
             "eth": {
               "testnet": {
                 "url": "wss://rinkeby.infura.io/ws/v3/a71954447581416991b1371b44b305dd"
-              }, 
+              },
               "mainnet": {
                 "url": "wss://mainnet.infura.io/ws/v3/a71954447581416991b1371b44b305dd"
               }
@@ -38,22 +39,22 @@
         "masterAPIHost": "https://k8s-dev-us-west-2-api.blockcluster.io",
         "workerNodeIP": "35.161.9.16",
         "locationCode": "us-west-2",
-        "locationName": "US West (Oregon)",
         "dynamoDomainName": "test.blockcluster.io",
         "apiHost": "https://test.blockcluster.io",
+        "locationName": "US West (Oregon)",
         "auth": {
           "token": "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJrdWJlcm5ldGVzL3NlcnZpY2VhY2NvdW50Iiwia3ViZXJuZXRlcy5pby9zZXJ2aWNlYWNjb3VudC9uYW1lc3BhY2UiOiJibG9ja2NsdXN0ZXIiLCJrdWJlcm5ldGVzLmlvL3NlcnZpY2VhY2NvdW50L3NlY3JldC5uYW1lIjoiYmxvY2tjbHVzdGVyLWFnZW50LXRva2VuLTRodGo1Iiwia3ViZXJuZXRlcy5pby9zZXJ2aWNlYWNjb3VudC9zZXJ2aWNlLWFjY291bnQubmFtZSI6ImJsb2NrY2x1c3Rlci1hZ2VudCIsImt1YmVybmV0ZXMuaW8vc2VydmljZWFjY291bnQvc2VydmljZS1hY2NvdW50LnVpZCI6IjU1OWM0ODNmLWQ2ZTQtMTFlOC1iNjVlLTAyYjYzYWIyMDNiZSIsInN1YiI6InN5c3RlbTpzZXJ2aWNlYWNjb3VudDpibG9ja2NsdXN0ZXI6YmxvY2tjbHVzdGVyLWFnZW50In0.tvjvyHBGO40rqK2AbUW7aqsrZtrj_lln4JSlMYpJHapsriNxuEf_8szinwe1N9QxjaxYZtMBdpniouwuC-7H3FKi9zAXm8rrw6fRGLGQ7BbzyWjFjAac9yK1lTdKyy-qECGXfkWZ-eSL2LPfrhtISbydGH815YAcRNl2t7cbPoZ9aO43cU9u7O49FfXgA9yxTIhGtPLQ2ST-yfQYWkjZgGH39ZkQPQMUsjqx7SMKNECAG7y2BLhDb0j40jHTbJ0x3CW3FTI79NogrJwA3OeUiLfQVSZ4LL6veHDdEJN3QqGDAaeD2136NZweaGhEe-cxd1cmRtI5UkJJBCznuY3U7w"
         },
         "hyperion": {
-          "ipfsPort": "0000",
-          "ipfsClusterPort": "0000"
+          "ipfsPort": "31975",
+          "ipfsClusterPort": "31115"
         },
         "paymeter": {
           "blockchains": {
             "eth": {
               "testnet": {
                 "url": "wss://rinkeby.infura.io/ws/v3/a71954447581416991b1371b44b305dd"
-              }, 
+              },
               "mainnet": {
                 "url": "wss://mainnet.infura.io/ws/v3/a71954447581416991b1371b44b305dd"
               }
@@ -71,22 +72,22 @@
         "masterAPIHost": "https://k8s-dev-us-west-2-api.blockcluster.io",
         "workerNodeIP": "35.161.9.16",
         "locationCode": "us-west-2",
-        "locationName": "US West (Oregon)",
         "dynamoDomainName": "staging.blockcluster.io",
         "apiHost": "https://staging.blockcluster.io",
+        "locationName": "US West (Oregon)",
         "auth": {
           "token": "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJrdWJlcm5ldGVzL3NlcnZpY2VhY2NvdW50Iiwia3ViZXJuZXRlcy5pby9zZXJ2aWNlYWNjb3VudC9uYW1lc3BhY2UiOiJibG9ja2NsdXN0ZXIiLCJrdWJlcm5ldGVzLmlvL3NlcnZpY2VhY2NvdW50L3NlY3JldC5uYW1lIjoiYmxvY2tjbHVzdGVyLWFnZW50LXRva2VuLTRodGo1Iiwia3ViZXJuZXRlcy5pby9zZXJ2aWNlYWNjb3VudC9zZXJ2aWNlLWFjY291bnQubmFtZSI6ImJsb2NrY2x1c3Rlci1hZ2VudCIsImt1YmVybmV0ZXMuaW8vc2VydmljZWFjY291bnQvc2VydmljZS1hY2NvdW50LnVpZCI6IjU1OWM0ODNmLWQ2ZTQtMTFlOC1iNjVlLTAyYjYzYWIyMDNiZSIsInN1YiI6InN5c3RlbTpzZXJ2aWNlYWNjb3VudDpibG9ja2NsdXN0ZXI6YmxvY2tjbHVzdGVyLWFnZW50In0.tvjvyHBGO40rqK2AbUW7aqsrZtrj_lln4JSlMYpJHapsriNxuEf_8szinwe1N9QxjaxYZtMBdpniouwuC-7H3FKi9zAXm8rrw6fRGLGQ7BbzyWjFjAac9yK1lTdKyy-qECGXfkWZ-eSL2LPfrhtISbydGH815YAcRNl2t7cbPoZ9aO43cU9u7O49FfXgA9yxTIhGtPLQ2ST-yfQYWkjZgGH39ZkQPQMUsjqx7SMKNECAG7y2BLhDb0j40jHTbJ0x3CW3FTI79NogrJwA3OeUiLfQVSZ4LL6veHDdEJN3QqGDAaeD2136NZweaGhEe-cxd1cmRtI5UkJJBCznuY3U7w"
         },
         "hyperion": {
-          "ipfsPort": "0000",
-          "ipfsClusterPort": "0000"
+          "ipfsPort": "31433",
+          "ipfsClusterPort": "30877"
         },
         "paymeter": {
           "blockchains": {
             "eth": {
               "testnet": {
                 "url": "wss://rinkeby.infura.io/ws/v3/a71954447581416991b1371b44b305dd"
-              }, 
+              },
               "mainnet": {
                 "url": "wss://mainnet.infura.io/ws/v3/a71954447581416991b1371b44b305dd"
               }
@@ -101,4 +102,3 @@
     }
   }
 }
-
