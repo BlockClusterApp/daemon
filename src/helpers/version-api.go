@@ -3,6 +3,7 @@ package helpers
 import (
 	"fmt"
 	"github.com/BlockClusterApp/daemon/src/dtos"
+	"log"
 )
 
 type GroupAPIMapping struct {
@@ -47,10 +48,7 @@ func GetKubeAPIVersion(kubeVersion *dtos.KubeVersion, service string) GroupAPIMa
 	if version == "1.9" {
 		group := KubeAPIMapping[version][service]
 		if group == nil {
-			return GroupAPIMapping{
-				APIVersion: "api/v1",
-				Path: "api/v1",
-			}
+			log.Fatalf("Invalid service specified %s/%s", group, service)
 		}
 		return *group
 	} else {

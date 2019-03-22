@@ -17,6 +17,14 @@ func StartScheduler() {
 
 	tasks.ValidateLicence()
 
+	tasks.CheckAllSystems()
+
+
+	if os.Getenv("GO_ENV") == "development" {
+		return
+	}
+
+
 	go func() {
 		log.Println("Pulling Image Secrets")
 		time.Sleep(time.Duration(20) * time.Second)
@@ -24,19 +32,16 @@ func StartScheduler() {
 	}()
 
 	tasks.ClearLogFile()
+	tasks.UpdateConfigs()
 
-	tasks.UpdateHyperionPorts()
 	tasks.CheckHyperionScaler()
 
 	gocron.Every(5).Minutes().Do(tasks.ValidateLicence)
+	gocron.Every(10).Minutes().Do(tasks.CheckAllSystems)
 
-	// The below tasks also updates the cluster config being sent to webapp periodically
-	gocron.Every(2).Minutes().Do(tasks.UpdateHyperionPorts)
+
+	gocron.Every(2).Minutes().Do(tasks.UpdateConfigs)
 	gocron.Every(30).Seconds().Do(tasks.UpdateMetrics)
-
-	if os.Getenv("GO_ENV") == "development" {
-		return
-	}
 	gocron.Every(9).Minutes().Do(tasks.FetchNodeInformation)
 	gocron.Every(3).Minutes().Do(tasks.FetchPodInformation)
 	gocron.Every(4).Hours().Do(tasks.RefreshImagePullSecrets)

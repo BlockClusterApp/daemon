@@ -159,7 +159,7 @@ func _checkAndDeployWebapp(namespace string, locationConfig dtos.LocationConfig,
 	url = fmt.Sprintf("%s/api/v1/namespaces/%s/services?fieldSelector=metadata.name%%blockcluster-svc", locationConfig.MasterAPIHost, namespace)
 	params.URL = url
 	response, err = MakeExternalKubeRequest(params)
-	var service  = dtos.InfoResponse{}
+	var service = dtos.InfoResponse{}
 	err = json.Unmarshal([]byte(response), &service)
 
 	url = fmt.Sprintf("%s/apis/autoscaling/v1/namespaces/%s/horizontalpodautoscalers?fieldSelector=metadata.name%%blockcluster-hpa", locationConfig.MasterAPIHost, namespace)
@@ -227,15 +227,14 @@ func CheckAndDeployWebapp(namespace string) {
 		return
 	}
 
-
 	locationCodes := GetLocationCodesOfEnv(kubeConfig.Clusters[namespace])
 
 	var _webAppConfig = dtos.WebAppConfig{
 		MongoConnectionURL: config.MongoURL[namespace],
-		RedisHost: config.Redis[namespace].Host,
-		RedisPort: config.Redis[namespace].Port,
-		ImageRepository: config.WebApp[namespace],
-		RootURL: config.RootUrl[namespace],
+		RedisHost:          config.Redis[namespace].Host,
+		RedisPort:          config.Redis[namespace].Port,
+		ImageRepository:    config.WebApp[namespace],
+		RootURL:            config.RootUrl[namespace],
 	}
 
 	for _, locationCode := range locationCodes {
@@ -246,71 +245,119 @@ func CheckAndDeployWebapp(namespace string) {
 }
 
 func _checkAndDeployHyperion(namespace string, locationConfig dtos.LocationConfig) {
-	GetLogger().Printf("Checking and deploying hyperion for %s/%s", namespace, locationConfig.LocationCode)
-
+	GetLogger().Printf("Checking and deploying hyperion for %s/%s", locationConfig.LocationCode, namespace)
 
 	kubeVersion := FetchKubeVersion(locationConfig)
 	if kubeVersion == nil {
 		kubeVersion = &dtos.KubeVersion{
-			Major: "1",
-			Minor: "9",
+			Major:      "1",
+			Minor:      "9",
 			GitVersion: "v1.9.8",
 		}
 	}
+	statefulSetMapping := GetKubeAPIVersion(kubeVersion, "statefulsets")
+	checkHyperionPath := fmt.Sprintf("%s/%s/namespaces/%s/statefulsets/%s", locationConfig.MasterAPIHost, statefulSetMapping.Path, namespace, "hyperion")
+	res, err := MakeExternalKubeRequest(ExternalKubeRequest{
+		URL:     checkHyperionPath,
+		Auth:    locationConfig.Auth,
+		Payload: "",
+		Method:  http.MethodGet,
+	})
+
+	statefulset := &dtos.InfoResponse{}
+	err = json.Unmarshal([]byte(res), statefulset)
+
+	if statefulset.Metadata.Name == "hyperion" {
+		// Already exists
+		GetLogger().Printf("Hyperion statefulset already exists in %s/%s", locationConfig.LocationCode, namespace)
+		return
+	}
+
 	// Create cluster role
-	clusterRoleMapping := GetKubeAPIVersion(kubeVersion, "clusteroles")
+	clusterRoleMapping := GetKubeAPIVersion(kubeVersion, "clusterroles")
 	path := fmt.Sprintf("%s/%s/clusterroles", locationConfig.MasterAPIHost, clusterRoleMapping.Path)
 	req := ExternalKubeRequest{
-		Auth: locationConfig.Auth,
-		Method: http.MethodPost,
-		URL: path,
+		Auth:    locationConfig.Auth,
+		Method:  http.MethodPost,
+		URL:     path,
 		Payload: templates.GetHyperionClusterRole(clusterRoleMapping.APIVersion),
 	}
 
-	_, err := MakeExternalKubeRequest(req)
+	_, err = MakeExternalKubeRequest(req)
 	if err != nil {
 		GetLogger().Printf("Error creating cluster role for hyperion: %s", err.Error())
+	} else {
+		GetLogger().Printf("Created hyperion cluster role in %s/%s", locationConfig.LocationCode, namespace)
 	}
 
 	// Create cluster role binding
 	clusterRoleBindingMapping := GetKubeAPIVersion(kubeVersion, "clusterrolebindings")
 	path = fmt.Sprintf("%s/%s/clusterrolebindings", locationConfig.MasterAPIHost, clusterRoleBindingMapping.Path)
 	req = ExternalKubeRequest{
-		Auth: locationConfig.Auth,
-		Method: http.MethodPost,
-		URL: path,
+		Auth:    locationConfig.Auth,
+		Method:  http.MethodPost,
+		URL:     path,
 		Payload: templates.GetHyperionClusterRoleBinding(clusterRoleBindingMapping.APIVersion, namespace),
 	}
 	_, err = MakeExternalKubeRequest(req)
 	if err != nil {
 		GetLogger().Printf("Error creating cluster role bindings for hyperion: %s", err.Error())
+	} else {
+		GetLogger().Printf("Created hyperion cluster role binding in %s/%s", locationConfig.LocationCode, namespace)
 	}
 
 	// Create stateful set
-	statefulSetMapping := GetKubeAPIVersion(kubeVersion, "statefulsets")
+
 	path = fmt.Sprintf("%s/%s/namespaces/%s/statefulsets", locationConfig.MasterAPIHost, statefulSetMapping.Path, namespace)
 	req = ExternalKubeRequest{
-		Auth: locationConfig.Auth,
-		Method: http.MethodPost,
-		URL: path,
+		Auth:    locationConfig.Auth,
+		Method:  http.MethodPost,
+		URL:     path,
 		Payload: templates.GetHyperionStatefulSet(100, statefulSetMapping.APIVersion),
 	}
 	_, err = MakeExternalKubeRequest(req)
 	if err != nil {
 		GetLogger().Printf("Error creating hyperion statefulset: %s", err.Error())
+	} else {
+		GetLogger().Printf("Created hyperion stateful set in %s/%s", locationConfig.LocationCode, namespace)
 	}
 
 	// Create stateful set
 	serviceMapping := GetKubeAPIVersion(kubeVersion, "services")
-	path = fmt.Sprintf("%s/%s/namespaces/%s/statefulsets", locationConfig.MasterAPIHost, serviceMapping.Path, namespace)
+	path = fmt.Sprintf("%s/%s/namespaces/%s/services", locationConfig.MasterAPIHost, serviceMapping.Path, namespace)
 	req = ExternalKubeRequest{
-		Auth: locationConfig.Auth,
-		Method: http.MethodPost,
-		URL: path,
-		Payload: templates.GetHyperionService(statefulSetMapping.APIVersion),
+		Auth:    locationConfig.Auth,
+		Method:  http.MethodPost,
+		URL:     path,
+		Payload: templates.GetHyperionService(serviceMapping.APIVersion),
 	}
 	_, err = MakeExternalKubeRequest(req)
 	if err != nil {
 		GetLogger().Printf("Error creating hyperion service: %s", err.Error())
+	} else {
+		GetLogger().Printf("Created hyperion service in %s/%s", locationConfig.LocationCode, namespace)
+	}
+
+	GetLogger().Printf("Created hyperion Statefulset")
+}
+
+func CheckAndDeployHyperion(namespace string) {
+	var kubeConfig = dtos.ClusterConfig{}
+	err := json.Unmarshal([]byte(config2.GetKubeConfig()), &kubeConfig)
+
+	if err != nil {
+		GetLogger().Printf("Check and Deploy Hyperion | Error unmarshalling kube config %s", err.Error())
+		return
+	}
+
+	locationCodes := GetLocationCodesOfEnv(kubeConfig.Clusters[namespace])
+
+	for _, locationCode := range locationCodes {
+		locationConfig := kubeConfig.Clusters[namespace][locationCode]
+		if locationConfig.Hyperion.IpfsPort != "" {
+			go _checkAndDeployHyperion(namespace, *locationConfig)
+		} else {
+			GetLogger().Printf("Hyperion not in location %s", locationCode)
+		}
 	}
 }

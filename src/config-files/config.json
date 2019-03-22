@@ -1,18 +1,15 @@
 {
   "dynamo": {
     "dev": "402432300121.dkr.ecr.us-west-2.amazonaws.com/dynamo:dev",
-    "test": "402432300121.dkr.ecr.us-west-2.amazonaws.com/dynamo:test",
-    "staging": "402432300121.dkr.ecr.us-west-2.amazonaws.com/dynamo:staging"
+    "test": "402432300121.dkr.ecr.us-west-2.amazonaws.com/dynamo:test"
   },
   "impulse": {
     "dev": "402432300121.dkr.ecr.us-west-2.amazonaws.com/impulse:dev",
-    "test": "402432300121.dkr.ecr.us-west-2.amazonaws.com/impulse:test",
-    "staging": "402432300121.dkr.ecr.us-west-2.amazonaws.com/impulse:staging"
+    "test": "402432300121.dkr.ecr.us-west-2.amazonaws.com/impulse:test"
   },
   "mongoURL": {
     "dev": "mongodb://35.161.9.16:32153",
-    "test": "mongodb://35.161.9.16:32153",
-    "staging": "mongodb://35.161.9.16:31972"
+    "test": "mongodb://35.161.9.16:32153"
   },
   "redis": {
     "dev": {
@@ -22,16 +19,11 @@
     "test": {
       "host": "redis-master.dev.svc.cluster.local",
       "port": "6379"
-    },
-    "staging": {
-      "host": "redis-master.staging.svc.cluster.local",
-      "port": "6379"
     }
   },
   "webapp": {
     "dev": "402432300121.dkr.ecr.us-west-2.amazonaws.com/webapp:dev",
-    "test": "402432300121.dkr.ecr.us-west-2.amazonaws.com/webapp:test",
-    "staging": "402432300121.dkr.ecr.us-west-2.amazonaws.com/webapp:staging"
+    "test": "402432300121.dkr.ecr.us-west-2.amazonaws.com/webapp:test"
   },
   "smtp": {
     "host": "",
@@ -49,16 +41,11 @@
     "test": {
       "id": "",
       "key": ""
-    },
-    "staging": {
-      "id": "",
-      "key": ""
     }
   },
   "rootUrl": {
     "dev": "https://dev.blockcluster.io",
-    "test": "https://test.blockcluster.io",
-    "staging": "https://staging.blockcluster.io"
+    "test": "https://test.blockcluster.io"
   },
   "Ingress": {
     "dev": {
@@ -92,22 +79,6 @@
       }
     },
     "test": {
-      "blockchains": {
-        "eth": {
-          "testnet": {
-            "url": "wss://rinkeby.infura.io/ws/v3/a71954447581416991b1371b44b305dd"
-          },
-          "mainnet": {
-            "url": "wss://mainnet.infura.io/ws/v3/a71954447581416991b1371b44b305dd"
-          }
-        }
-      },
-      "api_keys": {
-        "coinmarketcap": "5695d8e3-ecf8-47e1-895b-1fd0c67edea9",
-        "ethplorer": "freekey"
-      }
-    },
-    "staging": {
       "blockchains": {
         "eth": {
           "testnet": {

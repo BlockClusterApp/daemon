@@ -5,6 +5,7 @@ import (
 	"crypto/tls"
 	"crypto/x509"
 	"encoding/base64"
+	"encoding/json"
 	"errors"
 	"fmt"
 	"github.com/BlockClusterApp/daemon/src/dtos"
@@ -20,8 +21,8 @@ import (
 type ExternalKubeRequest struct {
 	URL  string
 	Auth struct {
-		User string `json:"user"`
-		Pass string `json:"pass"`
+		User  string `json:"user"`
+		Pass  string `json:"pass"`
 		Token string `json:"token"`
 	}
 	Method  string
@@ -82,9 +83,8 @@ func MakeExternalKubeRequest(params ExternalKubeRequest) (string, error) {
 		req.Header.Set("Authorization", fmt.Sprintf("Bearer %s", params.Auth.Token))
 	} else {
 		GetLogger().Printf("No auth provided for external kube request. %s", params.URL)
-		return "",nil
+		return "", nil
 	}
-
 
 	tr := &http.Transport{
 		TLSClientConfig: &tls.Config{InsecureSkipVerify: true},
@@ -113,8 +113,19 @@ func MakeExternalKubeRequest(params ExternalKubeRequest) (string, error) {
 		}
 
 		return bodyString, nil
-	}
+	} else if resp.StatusCode == http.StatusForbidden || resp.StatusCode == http.StatusBadRequest {
+		bodyBytes, _ := ioutil.ReadAll(resp.Body)
+		status := &dtos.KubeStatus{}
+		err = json.Unmarshal(bodyBytes, status)
 
+		return "", errors.New(fmt.Sprintf("Unhandled status code for %s | %s | %s", params.URL, resp.Status, status.Message))
+	} else if resp.StatusCode == http.StatusConflict {
+		return params.Payload, nil
+	} else if resp.StatusCode == http.StatusUnprocessableEntity {
+		bodyBytes, _ := ioutil.ReadAll(resp.Body)
+		bodyString := string(bodyBytes)
+		return "", errors.New(fmt.Sprintf("Unhandled status code for %s | %s | %s", params.URL, resp.Status, bodyString))
+	}
 	resp.Body.Close()
 	return "", errors.New(fmt.Sprintf("Unhandled status code for %s | %s", params.URL, resp.Status))
 }

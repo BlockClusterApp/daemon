@@ -16,6 +16,11 @@ func GetHyperionStatefulSet(diskSpace int32, apiVersion string) string {
   "spec": {
     "podManagementPolicy": "Parallel",
     "replicas": 3,
+    "selector": {
+      "matchLabels": {
+        "app": "hyperion"
+      }
+    },
     "serviceName": "hyperion",
     "template": {
       "metadata": {

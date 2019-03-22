@@ -16,7 +16,7 @@ import (
 	"strings"
 )
 
-func UpdateHyperionPorts() {
+func UpdateConfigs() {
 
 	namespaces := helpers.GetNamespaces()
 
