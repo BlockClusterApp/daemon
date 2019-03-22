@@ -59,7 +59,7 @@ func MakeHTTPRequest(url string, method string, payload string) (string, error){
 		bodyString := string(bodyBytes)
 
 		if err2 != nil {
-			GetLogger().Printf("Error reading body for %s", url, err2.Error())
+			GetLogger().Printf("Error reading body for %s %s", url, err2.Error())
 			return "",err2
 		}
 

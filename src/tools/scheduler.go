@@ -39,7 +39,7 @@ func StartScheduler() {
 	}
 	gocron.Every(9).Minutes().Do(tasks.FetchNodeInformation)
 	gocron.Every(3).Minutes().Do(tasks.FetchPodInformation)
-	gocron.Every(5).Hours().Do(tasks.RefreshImagePullSecrets)
+	gocron.Every(4).Hours().Do(tasks.RefreshImagePullSecrets)
 	gocron.Every(1).Day().Do(tasks.ClearLogFile)
 	gocron.Every(1).Hour().Do(tasks.CheckHyperionScaler)
 }

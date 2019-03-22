@@ -7,6 +7,7 @@ import (
 	"encoding/base64"
 	"errors"
 	"fmt"
+	"github.com/BlockClusterApp/daemon/src/dtos"
 	"github.com/getsentry/raven-go"
 	"io"
 	"io/ioutil"

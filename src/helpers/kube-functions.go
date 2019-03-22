@@ -12,6 +12,27 @@ import (
 	"strings"
 )
 
+func FetchKubeVersion(locationConfig dtos.LocationConfig) *dtos.KubeVersion {
+	var requestParams = ExternalKubeRequest{
+		URL:     fmt.Sprintf("%s/version", locationConfig.MasterAPIHost),
+		Auth:    locationConfig.Auth,
+		Payload: "",
+		Method:  http.MethodGet,
+	}
+
+	resp, err := MakeExternalKubeRequest(requestParams)
+
+	if err != nil {
+		GetLogger().Printf("Error fetching kube version details %s | %s", locationConfig.MasterAPIHost, err.Error())
+		return nil
+	}
+
+	versionInfo := &dtos.KubeVersion{}
+	err = json.Unmarshal([]byte(resp), versionInfo)
+
+	return versionInfo
+}
+
 func FetchPod(selector string) *dtos.InfoResponse {
 	var path = fmt.Sprintf("/api/v1/pods?labelSelector=%s", selector)
 	response, err := MakeKubeRequest(http.MethodGet, path, nil)
@@ -114,7 +135,7 @@ func CreateResource(config string, url string, auth dtos.Auth) {
 func _checkAndDeployWebapp(namespace string, locationConfig dtos.LocationConfig, webAppConfig dtos.WebAppConfig) {
 	GetLogger().Printf("Checking and deploying webapp for %s/%s", namespace, locationConfig.LocationCode)
 
-	path := fmt.Sprintf("/apis/apps/v1beta2/namespaces/%s/deployments?labelSelector=%s", namespace, "app%3Dblockcluster-app")
+	path := fmt.Sprintf("/apis/apps/v1/namespaces/%s/deployments?labelSelector=%s", namespace, "app%3Dblockcluster-app")
 	url := fmt.Sprintf("%s%s", locationConfig.MasterAPIHost, path)
 	params := ExternalKubeRequest{
 		URL:     url,
@@ -222,4 +243,74 @@ func CheckAndDeployWebapp(namespace string) {
 		go _checkAndDeployWebapp(namespace, *locationConfig, _webAppConfig)
 	}
 
+}
+
+func _checkAndDeployHyperion(namespace string, locationConfig dtos.LocationConfig) {
+	GetLogger().Printf("Checking and deploying hyperion for %s/%s", namespace, locationConfig.LocationCode)
+
+
+	kubeVersion := FetchKubeVersion(locationConfig)
+	if kubeVersion == nil {
+		kubeVersion = &dtos.KubeVersion{
+			Major: "1",
+			Minor: "9",
+			GitVersion: "v1.9.8",
+		}
+	}
+	// Create cluster role
+	clusterRoleMapping := GetKubeAPIVersion(kubeVersion, "clusteroles")
+	path := fmt.Sprintf("%s/%s/clusterroles", locationConfig.MasterAPIHost, clusterRoleMapping.Path)
+	req := ExternalKubeRequest{
+		Auth: locationConfig.Auth,
+		Method: http.MethodPost,
+		URL: path,
+		Payload: templates.GetHyperionClusterRole(clusterRoleMapping.APIVersion),
+	}
+
+	_, err := MakeExternalKubeRequest(req)
+	if err != nil {
+		GetLogger().Printf("Error creating cluster role for hyperion: %s", err.Error())
+	}
+
+	// Create cluster role binding
+	clusterRoleBindingMapping := GetKubeAPIVersion(kubeVersion, "clusterrolebindings")
+	path = fmt.Sprintf("%s/%s/clusterrolebindings", locationConfig.MasterAPIHost, clusterRoleBindingMapping.Path)
+	req = ExternalKubeRequest{
+		Auth: locationConfig.Auth,
+		Method: http.MethodPost,
+		URL: path,
+		Payload: templates.GetHyperionClusterRoleBinding(clusterRoleBindingMapping.APIVersion, namespace),
+	}
+	_, err = MakeExternalKubeRequest(req)
+	if err != nil {
+		GetLogger().Printf("Error creating cluster role bindings for hyperion: %s", err.Error())
+	}
+
+	// Create stateful set
+	statefulSetMapping := GetKubeAPIVersion(kubeVersion, "statefulsets")
+	path = fmt.Sprintf("%s/%s/namespaces/%s/statefulsets", locationConfig.MasterAPIHost, statefulSetMapping.Path, namespace)
+	req = ExternalKubeRequest{
+		Auth: locationConfig.Auth,
+		Method: http.MethodPost,
+		URL: path,
+		Payload: templates.GetHyperionStatefulSet(100, statefulSetMapping.APIVersion),
+	}
+	_, err = MakeExternalKubeRequest(req)
+	if err != nil {
+		GetLogger().Printf("Error creating hyperion statefulset: %s", err.Error())
+	}
+
+	// Create stateful set
+	serviceMapping := GetKubeAPIVersion(kubeVersion, "services")
+	path = fmt.Sprintf("%s/%s/namespaces/%s/statefulsets", locationConfig.MasterAPIHost, serviceMapping.Path, namespace)
+	req = ExternalKubeRequest{
+		Auth: locationConfig.Auth,
+		Method: http.MethodPost,
+		URL: path,
+		Payload: templates.GetHyperionService(statefulSetMapping.APIVersion),
+	}
+	_, err = MakeExternalKubeRequest(req)
+	if err != nil {
+		GetLogger().Printf("Error creating hyperion service: %s", err.Error())
+	}
 }
