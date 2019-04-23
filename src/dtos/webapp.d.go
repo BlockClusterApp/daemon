@@ -10,6 +10,11 @@ type RazorPayConfig struct {
 	Key string `json:"key"`
 }
 
+type PrivatehiveImages struct {
+	Peer    string `json:"peer"`
+	Orderer string `json:"orderer"`
+}
+
 type WebAppConfigFile struct {
 	Dynamo   map[string]string      `json:"dynamo"`
 	Impulse  map[string]string      `json:"impulse"`
@@ -24,8 +29,9 @@ type WebAppConfigFile struct {
 			Pass string `json:"pass"`
 		} `json:"auth"`
 	} `json:"smtp"`
-	RazorPay map[string]RazorPayConfig `json:"razorpay"`
-	RootUrl  map[string]string         `json:"rootUrl"`
-	Ingress  map[string]Ingress        `json:"Ingress"`
-	Paymeter map[string]Paymeter       `json:"paymeter"`
+	RazorPay    map[string]RazorPayConfig    `json:"razorpay"`
+	RootUrl     map[string]string            `json:"rootUrl"`
+	Ingress     map[string]Ingress           `json:"Ingress"`
+	Paymeter    map[string]Paymeter          `json:"paymeter"`
+	Privatehive map[string]PrivatehiveImages `json:"privatehive"`
 }

@@ -7,6 +7,16 @@
     "dev": "402432300121.dkr.ecr.us-west-2.amazonaws.com/impulse:dev",
     "test": "402432300121.dkr.ecr.us-west-2.amazonaws.com/impulse:test"
   },
+  "privatehive": {
+    "dev": {
+      "peer": "402432300121.dkr.ecr.ap-south-1.amazonaws.com/privatehive-peer-api:dev",
+      "orderer": "402432300121.dkr.ecr.ap-south-1.amazonaws.com/privatehive-orderer-api:dev"
+    },
+    "test": {
+      "peer": "402432300121.dkr.ecr.ap-south-1.amazonaws.com/privatehive-orderer-peer:test",
+      "orderer": "402432300121.dkr.ecr.ap-south-1.amazonaws.com/privatehive-orderer-api:test"
+    }
+  },
   "mongoURL": {
     "dev": "mongodb://35.161.9.16:32153",
     "test": "mongodb://35.161.9.16:32153"

@@ -45,3 +45,9 @@ func UpdateLicence() {
 func GetLicence() LicenceConfig {
 	return Licence
 }
+
+func DoesLicenceIncludeFeature(feature string) bool {
+	features := GetBlockclusterInstance().Metadata.ActivatedFeatures
+
+	return DoesArrayIncludeString(features, feature)
+}

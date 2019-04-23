@@ -342,6 +342,12 @@ func _checkAndDeployHyperion(namespace string, locationConfig dtos.LocationConfi
 }
 
 func CheckAndDeployHyperion(namespace string) {
+
+	if !DoesLicenceIncludeFeature("hyperion") {
+		GetLogger().Printf("Hyperion not in licence. Skipping deployment")
+		return
+	}
+
 	var kubeConfig = dtos.ClusterConfig{}
 	err := json.Unmarshal([]byte(config2.GetKubeConfig()), &kubeConfig)
 

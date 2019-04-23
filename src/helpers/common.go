@@ -95,9 +95,14 @@ type SimpleRepository struct {
 	URL map[string]string `json:"url"`
 }
 
+type SimplePrivatehiveRepository struct {
+	URL map[string]dtos.PrivatehiveImages `json:"url"`
+}
+
 type RepositoryConfig struct {
 	Dynamo SimpleRepository `json:"dynamo"`
 	Impulse SimpleRepository `json:"impulse"`
+	Privatehive SimplePrivatehiveRepository `json:"privatehive"`
 }
 
 func GetRepositoryConfigForConfig() (RepositoryConfig, dtos.WebAppConfigFile) {
@@ -109,15 +114,21 @@ func GetRepositoryConfigForConfig() (RepositoryConfig, dtos.WebAppConfigFile) {
 
 	dynamoRepo := make(map[string]string, len(namespaces))
 	impulseRepo := make(map[string]string, len(namespaces))
+	privatehiveRepo := make(map[string]dtos.PrivatehiveImages, len(namespaces))
 
 	for _,namespace := range namespaces {
 		namespace := namespace.String()
 		dynamoRepo[namespace] = webAppConfig.Dynamo[namespace]
 		impulseRepo[namespace] = webAppConfig.Impulse[namespace]
+		privatehiveRepo[namespace] = dtos.PrivatehiveImages{
+			Peer: webAppConfig.Privatehive[namespace].Peer,
+			Orderer: webAppConfig.Privatehive[namespace].Orderer,
+		}
 	}
 
 	config.Dynamo.URL = dynamoRepo
 	config.Impulse.URL = impulseRepo
+	config.Privatehive.URL = privatehiveRepo
 
 	return config, webAppConfig
 }
@@ -131,4 +142,13 @@ func TrimLeftChars(s string, n int) string {
 		m++
 	}
 	return s[:0]
+}
+
+func DoesArrayIncludeString(array []string, searchItem interface{}) bool {
+	for _, item := range array {
+		if item == searchItem {
+			return true
+		}
+	}
+	return false
 }

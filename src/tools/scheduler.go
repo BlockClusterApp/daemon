@@ -17,7 +17,7 @@ func StartScheduler() {
 
 	tasks.ValidateLicence()
 
-	tasks.CheckAllSystems()
+	tasks.UpdateConfigs()
 
 
 	if os.Getenv("GO_ENV") == "development" {
@@ -33,6 +33,7 @@ func StartScheduler() {
 
 	tasks.ClearLogFile()
 	tasks.UpdateConfigs()
+	tasks.CheckAllSystems()
 
 	tasks.CheckHyperionScaler()
 
