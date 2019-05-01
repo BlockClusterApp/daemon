@@ -11,11 +11,12 @@ type LicenceMetadata struct {
 }
 
 type LicenceValidationResponse struct {
-	Success   bool            `json:"success"`
-	Token     string          `json:"message"`
-	Error     string          `json:"error"`
-	ErrorCode int             `json:"errorCode"`
-	Metadata  LicenceMetadata `json:"metadata"`
+	Success     bool            `json:"success"`
+	Token       string          `json:"message"`
+	Error       string          `json:"error"`
+	ErrorCode   int             `json:"errorCode"`
+	Metadata    LicenceMetadata `json:"metadata"`
+	ClusterInfo []ClusterInfo     `json:"clusterInfo"`
 }
 
 type AWSCredsResponse struct {
@@ -30,3 +31,21 @@ type AWSCredsResponse struct {
 		UserName        string `json:"UserName"`
 	} `json:"accessKeys"`
 }
+
+type ClusterInfo struct {
+	MasterAPIHost    string         `json:"masterAPIHost"`
+	WorkerNodeIP     string         `json:"workerNodeIP"`
+	LocationCode     string         `json:"locationCode"`
+	LocationName     string         `json:"locationName"`
+	DynamoDomainName string         `json:"dynamoDomainName"`
+	APIHost          string         `json:"apiHost"`
+	Auth             Auth           `json:"auth"`
+	Hyperion         HyperionConfig `json:"hyperion"`
+}
+
+type OperationType int
+
+const (
+	CLOUD_CONFIG OperationType = 1
+	YAML_CONFIG OperationType = 2
+)

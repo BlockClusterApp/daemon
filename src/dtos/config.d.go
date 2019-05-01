@@ -46,7 +46,7 @@ type Paymeter struct {
 }
 
 type WebAppConfig struct {
-	MongoConnectionURL string         `json:"mongoComongoURLnnectionURL"`
+	MongoConnectionURL string         `json:"mongoConnectionURL"`
 	RedisHost          string         `json:"redisHost"`
 	RedisPort          string         `json:"redisPort"`
 	ImageRepository    string         `json:"webAppImageName"`

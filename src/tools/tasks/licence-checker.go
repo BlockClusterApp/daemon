@@ -74,7 +74,7 @@ func ValidateLicence() {
 	res, err := bc.SendRequest(path, jsonBody)
 
 	if err != nil {
-		helpers.GetLogger().Printf("Error sending request %s" , err.Error())
+		helpers.GetLogger().Printf("Error sending request %s", err.Error())
 		return
 	}
 
@@ -90,6 +90,7 @@ func ValidateLicence() {
 
 	bc.AuthToken = licenceResponse.Token
 	bc.Licence.Key = helpers.GetLicence().Key
+	bc.ClusterInfo = licenceResponse.ClusterInfo
 
 	bc.Metadata = licenceResponse.Metadata
 
@@ -105,5 +106,8 @@ func ValidateLicence() {
 		bc.AuthRetryCount = 0
 	}
 
-	handleVersionMetadata(licenceResponse)
+	if !bc.IsInInitMode {
+		handleVersionMetadata(licenceResponse)
+	}
+
 }

@@ -1,6 +1,8 @@
 package tools
 
 import (
+	"github.com/BlockClusterApp/daemon/src/dtos"
+	"github.com/BlockClusterApp/daemon/src/helpers"
 	"github.com/BlockClusterApp/daemon/src/tools/tasks"
 	"github.com/jasonlvhit/gocron"
 	"log"
@@ -11,19 +13,21 @@ import (
 func StartScheduler() {
 	log.Println("Starting jobs")
 	gocron.Start()
-
+	bc := helpers.GetBlockclusterInstance()
 	sleepDuration := time.Duration(1)
 	time.Sleep(sleepDuration * time.Second)
 
 	tasks.ValidateLicence()
 
-	tasks.UpdateConfigs()
+	if bc.OperationType == dtos.CLOUD_CONFIG {
+		tasks.SendWebappTokenToServer()
+	}
 
+	tasks.UpdateConfigs()
 
 	if os.Getenv("GO_ENV") == "development" {
 		return
 	}
-
 
 	go func() {
 		log.Println("Pulling Image Secrets")
@@ -40,6 +44,9 @@ func StartScheduler() {
 	gocron.Every(5).Minutes().Do(tasks.ValidateLicence)
 	gocron.Every(10).Minutes().Do(tasks.CheckAllSystems)
 
+	if bc.OperationType == dtos.CLOUD_CONFIG {
+		gocron.Every(5).Hours().Do(tasks.SendWebappTokenToServer)
+	}
 
 	gocron.Every(2).Minutes().Do(tasks.UpdateConfigs)
 	gocron.Every(30).Seconds().Do(tasks.UpdateMetrics)

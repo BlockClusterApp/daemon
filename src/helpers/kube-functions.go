@@ -33,6 +33,19 @@ func FetchKubeVersion(locationConfig dtos.LocationConfig) *dtos.KubeVersion {
 	return versionInfo
 }
 
+func FetchLocalKubeVersion() *dtos.KubeVersion {
+	resp, err := MakeKubeRequest(http.MethodGet, "/version", nil)
+	if err != nil {
+		GetLogger().Printf("Error fetching local kube version details | %s", err.Error())
+		return nil
+	}
+
+	versionInfo := &dtos.KubeVersion{}
+	err = json.Unmarshal([]byte(resp), versionInfo)
+
+	return versionInfo
+}
+
 func FetchPod(selector string) *dtos.InfoResponse {
 	var path = fmt.Sprintf("/api/v1/pods?labelSelector=%s", selector)
 	response, err := MakeKubeRequest(http.MethodGet, path, nil)

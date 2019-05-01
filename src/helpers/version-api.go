@@ -8,34 +8,37 @@ import (
 
 type GroupAPIMapping struct {
 	APIVersion string
-	Path string
+	Path       string
 }
 
 var KubeAPIMapping = map[string]map[string]*GroupAPIMapping{
 	"1.9": {
 		"clusterroles": {
 			APIVersion: "rbac.authorization.k8s.io/v1",
-			Path: "apis/rbac.authorization.k8s.io/v1",
+			Path:       "apis/rbac.authorization.k8s.io/v1",
 		},
 		"clusterrolebindings": {
 			APIVersion: "rbac.authorization.k8s.io/v1",
-			Path: "apis/rbac.authorization.k8s.io/v1",
+			Path:       "apis/rbac.authorization.k8s.io/v1",
 		},
 		"deployments": {
 			APIVersion: "apps/v1",
-			Path: "apis/apps/v1",
+			Path:       "apis/apps/v1",
 		},
 		"statefulsets": {
 			APIVersion: "apps/v1",
-			Path: "apis/apps/v1",
+			Path:       "apis/apps/v1",
 		},
 		"services": {
 			APIVersion: "v1",
-			Path: "api/v1",
+			Path:       "api/v1",
+		},
+		"configmaps": {
+			APIVersion: "v1",
+			Path:       "api/v1",
 		},
 	},
 }
-
 
 func GetKubeAPIVersion(kubeVersion *dtos.KubeVersion, service string) GroupAPIMapping {
 	var version string;
@@ -54,7 +57,7 @@ func GetKubeAPIVersion(kubeVersion *dtos.KubeVersion, service string) GroupAPIMa
 	} else {
 		return GroupAPIMapping{
 			APIVersion: "api/v1",
-			Path: "api/v1",
+			Path:       "api/v1",
 		}
 	}
 }

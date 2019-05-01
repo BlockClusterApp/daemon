@@ -27,13 +27,21 @@ func getLicenceFileContent() string {
 }
 
 func getLicenceKey() LicenceConfig {
+	bc := GetBlockclusterInstance()
 	var licence = LicenceConfig{}
-	content := getLicenceFileContent()
-	err := yaml.Unmarshal([]byte(content), &licence)
-	if err != nil {
-		raven.CaptureError(err, map[string]string{})
-		GetLogger().Printf("Error reading licence key %s", err.Error())
+	if bc.IsInInitMode{
+		licence = LicenceConfig{
+			Key: os.Getenv("LICENSE_KEY"),
+		}
+	} else {
+		content := getLicenceFileContent()
+		err := yaml.Unmarshal([]byte(content), &licence)
+		if err != nil {
+			raven.CaptureError(err, map[string]string{})
+			GetLogger().Printf("Error reading licence key %s", err.Error())
+		}
 	}
+
 	return licence
 }
 

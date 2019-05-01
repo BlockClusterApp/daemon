@@ -16,15 +16,17 @@ type BlockClusterType struct {
 	Valid          bool
 	AuthRetryCount int8
 	Metadata       dtos.LicenceMetadata
-	AgentInfo 	   struct {
+	AgentInfo      struct {
 		WebAppVersion string
 	}
+	ClusterInfo  []dtos.ClusterInfo
+	IsInInitMode bool
 }
 
 type CurrentWebAppMeta struct {
-	WebAppVersion string
+	WebAppVersion    string
 	MigrationVersion string
-	MigrationStatus string
+	MigrationStatus  string
 }
 
 var Blockcluster BlockClusterType
@@ -33,7 +35,7 @@ var WebAppMeta CurrentWebAppMeta
 const BASE_URL = "https://enterprise-api.blockcluster.io/daemon"
 
 func getBaseURL() string {
-	if os.Getenv("GO_ENV") == "development" && os.Getenv("KUBERNETES_SERVICE_PORT_HTTPS") == ""{
+	if os.Getenv("GO_ENV") == "development" && os.Getenv("KUBERNETES_SERVICE_PORT_HTTPS") == "" {
 		if os.Getenv("ENTERPRISE_API_URL") != "" && os.Getenv("ENTERPRISE_API_URL") != BASE_URL {
 			return os.Getenv("ENTERPRISE_API_URL")
 		}
@@ -46,6 +48,13 @@ func (bc *BlockClusterType) SendRequest(path string, body string) (string, error
 
 	url := fmt.Sprintf("%s%s", getBaseURL(), path)
 	res, err := MakeHTTPRequest(url, http.MethodPost, body)
+	return res, err
+}
+
+func (bc *BlockClusterType) SendGetRequest(path string) (string, error) {
+
+	url := fmt.Sprintf("%s%s", getBaseURL(), path)
+	res, err := MakeHTTPRequest(url, http.MethodGet, "")
 	return res, err
 }
 

@@ -1,6 +1,7 @@
 package main
 
 import (
+	"flag"
 	"fmt"
 	"github.com/BlockClusterApp/daemon/src/helpers"
 	"github.com/BlockClusterApp/daemon/src/tools"
@@ -18,10 +19,23 @@ func main() {
 	raven.SetDSN("https://3fb09492cf20449aae350ac935dcd26d:8b2fbf9455f34ce08fd51ba7e8042919@sentry.io/1302256")
 
 	log = helpers.GetLogger()
-	router := newRouter()
-	tools.StartScheduler()
+	bc := helpers.GetBlockclusterInstance()
 
-	log.Fatal(http.ListenAndServe(":3005", router))
+	var isInInitMode = false
+
+	flag.Bool("init", isInInitMode, "--init if using in init mode")
+	flag.Parse()
+
+	bc.IsInInitMode = isInInitMode
+
+	if isInInitMode {
+		tools.Init()
+	} else {
+		router := newRouter()
+		tools.StartScheduler()
+
+		log.Fatal(http.ListenAndServe(":3005", router))
+	}
 }
 
 func newRouter() *mux.Router {
