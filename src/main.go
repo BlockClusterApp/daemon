@@ -21,14 +21,14 @@ func main() {
 	log = helpers.GetLogger()
 	bc := helpers.GetBlockclusterInstance()
 
-	var isInInitMode = false
+	var isInInitMode *bool
 
-	flag.Bool("init", isInInitMode, "--init if using in init mode")
+	isInInitMode = flag.Bool("init", false, "--init if using in init mode")
 	flag.Parse()
 
-	bc.IsInInitMode = isInInitMode
+	bc.IsInInitMode = *isInInitMode
 
-	if isInInitMode {
+	if bc.IsInInitMode {
 		tools.Init()
 	} else {
 		router := newRouter()
