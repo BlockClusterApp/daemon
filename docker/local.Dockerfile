@@ -11,6 +11,6 @@ RUN dep ensure -vendor-only
 
 COPY . ./
 
-# RUN go build -o app /go/src/github.com/BlockClusterApp/daemon/**/*.go
+RUN go build -o app /go/src/github.com/BlockClusterApp/daemon/**/*.go
 
 CMD ["go", "run", "src/main.go"]

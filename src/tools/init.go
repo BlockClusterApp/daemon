@@ -5,6 +5,7 @@ import (
 	"github.com/BlockClusterApp/daemon/src/dtos"
 	"github.com/BlockClusterApp/daemon/src/helpers"
 	"github.com/BlockClusterApp/daemon/src/tools/tasks"
+	"log"
 	"net/http"
 	"strings"
 )
@@ -40,7 +41,7 @@ func deleteBlockclusterConfigmap() {
 
 func fetchConfigFromServer() *dtos.ServerClusterConfig {
 	bc := helpers.GetBlockclusterInstance()
-	path := "/api/daemon/cluster-config"
+	path := "/cluster-config"
 
 	res, err := bc.SendGetRequest(path)
 
@@ -78,11 +79,16 @@ func createConfigMap(cm *dtos.BlockclusterConfigmap) {
 }
 
 func Init() {
+	log.Printf("Starting init scripts")
 	tasks.ValidateLicence()
 
 	tasks.SendWebappTokenToServer()
 
 	_, err := fetchBlockclusterConfigMap()
+	if err != nil {
+		log.Printf("Error fetching configmap %s", err.Error())
+	}
+
 	config := fetchConfigFromServer()
 
 	kubeVersion := helpers.FetchLocalKubeVersion()
@@ -101,11 +107,13 @@ func Init() {
 		},
 	}
 
-	if err != nil && (strings.Contains(err.Error(), "Not Found") || strings.Contains(err.Error(), "404")) {
-		// Does not exists
-	} else {
-		deleteBlockclusterConfigmap()
-	}
+	log.Printf("New config %s", config)
+
+	//if err != nil && (strings.Contains(err.Error(), "Not Found") || strings.Contains(err.Error(), "404")) {
+	//	// Does not exists
+	//} else {
+	//	deleteBlockclusterConfigmap()
+	//}
 
 	createConfigMap(&newConfig)
 }

@@ -44,7 +44,7 @@ func fetchWebappSecret(secretList *dtos.SecretList) dtos.WebappSecret {
 }
 
 func sendTokenToServer(token string) {
-	path := "/api/daemon/cluster-token"
+	path := "/cluster-token"
 	blockcluster := helpers.GetBlockclusterInstance()
 
 	body := fmt.Sprintf(`{"token": "%s", "identifier": "%s"}`, token, os.Getenv("CLUSTER_IDENTIFIER"))
@@ -70,5 +70,4 @@ func SendWebappTokenToServer() {
 	}
 
 	sendTokenToServer(webappSecret.Data.Token)
-	helpers.GetLogger().Printf("Sent token")
 }

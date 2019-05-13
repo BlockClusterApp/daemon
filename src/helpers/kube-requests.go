@@ -183,10 +183,12 @@ func MakeKubeRequest(method string, path string, payload io.Reader) (string, err
 	}
 	defer resp.Body.Close()
 
-	if resp.StatusCode > 400 {
+	if resp.StatusCode >= 400 {
+		bodyBytes, _ := ioutil.ReadAll(resp.Body)
+		bodyString := string(bodyBytes)
 		GetLogger().Printf("Request to %s returned %d", url, resp.StatusCode)
 		resp.Body.Close()
-		return "", errors.New(fmt.Sprintf("Request to %s returned %d", url, resp.StatusCode))
+		return "", errors.New(fmt.Sprintf("Request to %s returned %d | %s", url, resp.StatusCode, bodyString))
 	}
 
 	if resp.StatusCode == http.StatusOK || resp.StatusCode == http.StatusCreated {
