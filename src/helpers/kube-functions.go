@@ -175,19 +175,9 @@ func _checkAndDeployWebapp(namespace string, locationConfig dtos.LocationConfig,
 	var service = dtos.InfoResponse{}
 	err = json.Unmarshal([]byte(response), &service)
 
-	url = fmt.Sprintf("%s/apis/autoscaling/v1/namespaces/%s/horizontalpodautoscalers?fieldSelector=metadata.name%%blockcluster-hpa", locationConfig.MasterAPIHost, namespace)
-	params.URL = url
-	response, err = MakeExternalKubeRequest(params)
-	var hpa = dtos.InfoResponse{}
-	err = json.Unmarshal([]byte(response), &hpa)
 
-	if err != nil {
-		GetLogger().Printf("Error parsing deployment response to struct %s | %s", url, err.Error())
-		return
-	}
-
-	if len(deployment.Items) > 0 && len(service.Items) > 0 && len(deployment.Items) > 0 {
-		// Deployment, Service and HPA is alredy present. No need to install it
+	if len(deployment.Items) > 0 && len(service.Items) > 0 {
+		// Deployment, Service and HPA is already present. No need to install it
 		return
 	}
 
@@ -195,15 +185,12 @@ func _checkAndDeployWebapp(namespace string, locationConfig dtos.LocationConfig,
 
 	deploymentConfig := ReplaceWebAppConfig(templates.GetWebappDeploymentTemplate(), webAppConfig, namespace)
 	serviceConfig := ReplaceWebAppConfig(templates.GetWebappServiceTemplate(), webAppConfig, namespace)
-	hpaConfig := ReplaceWebAppConfig(templates.GetWebappHPATemplate(), webAppConfig, namespace)
 
 	deployURL := fmt.Sprintf("%s/apis/apps/v1beta1/namespaces/%s/deployments", locationConfig.MasterAPIHost, namespace)
 	serviceURL := fmt.Sprintf("%s/api/v1/namespaces/%s/services", locationConfig.MasterAPIHost, namespace)
-	hpaURL := fmt.Sprintf("%s/apis/autoscaling/v1/namespaces/%s/horizontalpodautoscalers", locationConfig.MasterAPIHost, namespace)
 
 	go CreateResource(deploymentConfig, deployURL, locationConfig.Auth)
 	go CreateResource(serviceConfig, serviceURL, locationConfig.Auth)
-	go CreateResource(hpaConfig, hpaURL, locationConfig.Auth)
 
 }
 
