@@ -356,7 +356,7 @@ func _checkAndDeployHyperion(namespace string, locationConfig dtos.LocationConfi
 
 func CheckAndDeployHyperion(namespace string) {
 
-	if !DoesLicenceIncludeFeature("hyperion") {
+	if !DoesLicenceIncludeFeature("Hyperion") {
 		GetLogger().Printf("Hyperion not in licence. Skipping deployment")
 		return
 	}
