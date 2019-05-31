@@ -19,10 +19,6 @@ func StartScheduler() {
 
 	tasks.ValidateLicence()
 
-	if bc.OperationType == dtos.CLOUD_CONFIG {
-		tasks.SendWebappTokenToServer()
-	}
-
 	tasks.UpdateConfigs()
 
 	if os.Getenv("GO_ENV") == "development" {
@@ -44,9 +40,6 @@ func StartScheduler() {
 	gocron.Every(5).Minutes().Do(tasks.ValidateLicence)
 	gocron.Every(10).Minutes().Do(tasks.CheckAllSystems)
 
-	if bc.OperationType == dtos.CLOUD_CONFIG {
-		gocron.Every(5).Hours().Do(tasks.SendWebappTokenToServer)
-	}
 
 	gocron.Every(2).Minutes().Do(tasks.UpdateConfigs)
 	gocron.Every(30).Seconds().Do(tasks.UpdateMetrics)
