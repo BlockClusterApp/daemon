@@ -55,9 +55,10 @@ func GetKubeAPIVersion(kubeVersion *dtos.KubeVersion, service string) GroupAPIMa
 		}
 		return *group
 	} else {
-		return GroupAPIMapping{
-			APIVersion: "api/v1",
-			Path:       "api/v1",
+		group := KubeAPIMapping["1.9"][service]
+		if group == nil {
+			log.Fatalf("Invalid service specified %s/%s", group, service)
 		}
+		return *group
 	}
 }
