@@ -186,7 +186,7 @@ func _checkAndDeployWebapp(namespace string, locationConfig dtos.LocationConfig,
 	deploymentConfig := ReplaceWebAppConfig(templates.GetWebappDeploymentTemplate(), webAppConfig, namespace)
 	serviceConfig := ReplaceWebAppConfig(templates.GetWebappServiceTemplate(), webAppConfig, namespace)
 
-	deployURL := fmt.Sprintf("%s/apis/apps/v1beta1/namespaces/%s/deployments", locationConfig.MasterAPIHost, namespace)
+	deployURL := fmt.Sprintf("%s/apis/apps/v1/namespaces/%s/deployments", locationConfig.MasterAPIHost, namespace)
 	serviceURL := fmt.Sprintf("%s/api/v1/namespaces/%s/services", locationConfig.MasterAPIHost, namespace)
 
 	go CreateResource(deploymentConfig, deployURL, locationConfig.Auth)
