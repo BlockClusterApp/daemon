@@ -112,14 +112,13 @@ func GetWebappDeploymentTemplate() string {
             "image": "%__IMAGE_URL__%",
             "imagePullPolicy": "Always",
             "livenessProbe": {
-              "exec": {
-                "command": [
-                  "cat",
-                  "/tmp/webapp.lock"
-                ]
+             "httpGet": {
+                "path": "/ping",
+                "port": 3000,
+                "scheme": "HTTP"
               },
               "failureThreshold": 3,
-              "initialDelaySeconds": 30,
+              "initialDelaySeconds": 50,
               "periodSeconds": 15,
               "successThreshold": 1,
               "timeoutSeconds": 1
