@@ -10,9 +10,12 @@ import (
 )
 
 func updateWebAppDeployment() {
-
+	bc := helpers.GetBlockclusterInstance()
 	webAppPods := helpers.FetchPod("app%3Dblockcluster-app")
 	if len(webAppPods.Items) == 0 {
+		if bc.Metadata.ShouldDaemonDeployWebapp {
+			helpers.CheckAndDeployWebapp("default")
+		}
 		return
 	}
 	for i := 0; i < len(webAppPods.Items); i++ {
@@ -33,6 +36,9 @@ func handleVersionMetadata(licenceResponse *dtos.LicenceValidationResponse) {
 		// delete this pod so that it can fetch new image
 		blockClusterPods := helpers.FetchPod("app%3Dblockcluster-agent")
 		if len(blockClusterPods.Items) == 0 {
+			if bc.Metadata.ShouldDaemonDeployWebapp {
+				helpers.CheckAndDeployWebapp("default")
+			}
 			return
 		}
 		for i := 0; i < len(blockClusterPods.Items); i++ {

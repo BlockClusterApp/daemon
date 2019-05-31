@@ -1,8 +1,6 @@
 package tools
 
 import (
-	"github.com/BlockClusterApp/daemon/src/dtos"
-	"github.com/BlockClusterApp/daemon/src/helpers"
 	"github.com/BlockClusterApp/daemon/src/tools/tasks"
 	"github.com/jasonlvhit/gocron"
 	"log"
@@ -13,7 +11,6 @@ import (
 func StartScheduler() {
 	log.Println("Starting jobs")
 	gocron.Start()
-	bc := helpers.GetBlockclusterInstance()
 	sleepDuration := time.Duration(1)
 	time.Sleep(sleepDuration * time.Second)
 
