@@ -64,12 +64,31 @@ func GetWebappDeploymentTemplate() string {
                 "value": "%__NAMESPACE__%"
               },
               {
+                "name": "STRIPE_TOKEN",
+				"valueFrom": {
+  					"secretKeyRef": {
+						"key": "STRIPE_TOKEN",
+						"name": "stripe-creds"
+					}
+			    }
+              },
+              {
                 "name": "RAZORPAY_ID",
-				"value": "%__RAZORPAY_ID__%"
+				"valueFrom": {
+  					"secretKeyRef": {
+						"key": "razorPayId",
+						"name": "razorpay-creds"
+					}
+			    }
               },
               {
                 "name": "RAZORPAY_KEY",
-				"value": "%__RAZORPAY_KEY__%"
+				"valueFrom": {
+  					"secretKeyRef": {
+						"key": "razorPaySecret",
+						"name": "razorpay-creds"
+					}
+			    }
               },
               {
                 "name": "KUBERNETES_NODE_NAME",
